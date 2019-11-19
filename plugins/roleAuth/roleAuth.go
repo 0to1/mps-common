@@ -7,9 +7,9 @@ import (
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/util/log"
 
-	"github.com/mps-common/utils"
-	rolePb "github.com/mps-common/proto/role"
-	userPb "github.com/mps-common/proto/user"
+	rolePb "github.com/0to1/mps-common/proto/role"
+	userPb "github.com/0to1/mps-common/proto/user"
+	"github.com/0to1/mps-common/utils"
 )
 
 // RoleAuth 基于iris的角色权限验证中间件

@@ -7,8 +7,8 @@ import (
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/util/log"
 
-	userPb "github.com/mps-common/proto/user"
-	"github.com/mps-common/utils"
+	userPb "github.com/0to1/mps-common/proto/user"
+	"github.com/0to1/mps-common/utils"
 )
 
 // SigninAuth 基于iris的登陆验证中间件
