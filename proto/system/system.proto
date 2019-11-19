@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package go.micro.srv.agv.system;
+
+service System {
+  //更新参数，调度系统的IP地址和端口//
+  rpc UpdateParam(Params) returns (Response);
+
+  //系统操作//
+  rpc SystemOperation(Request) returns (Response);
+}
+
+message Params {
+  string serverIp = 1;
+  uint32 serverPort = 2;
+}
+
+message Response {
+  bool res = 1;
+  string message = 2;
+}
+
+message Request {
+  enum OperationCode {
+		Stop = 0;//停止系统连接//
+		Start = 1;//开启系统连接//
+		Restart = 2;//重启系统连接//
+  }
+  OperationCode code = 1;
+}

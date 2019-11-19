@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package go.micro.srv.agv;
+
+service Agv {
+  //获取一个AGV数据//
+  rpc GetAgvByID(AgvReq) returns (AgvMessage);
+  //获取所有的AGV数据//
+  rpc GetAgvs(Query) returns (AgvsResponse);
+  //急停单台AGV//
+  rpc StopAgvByID(AgvReq) returns (Response);
+  //急停所有AGV//
+  rpc StopAgvs(Request) returns (Response);
+}
+
+message Query{
+  uint32 page = 1;
+  uint32 per_page = 2;
+}
+
+message Request{
+
+}
+
+message Response{
+  string message = 1;
+}
+
+message AgvMessage {
+  uint32 agvID = 2;
+  uint32 x  = 3;
+  uint32 y  = 4;
+  uint32 angle  = 5;
+  uint32 point  = 6;
+  uint32 segment  = 7;
+  uint32 type   = 8;
+  uint32 battery  = 9;
+  bool res = 1;
+}
+
+message AgvReq {
+  uint32 agvID = 1;
+}
+
+message AgvsResponse{
+  repeated AgvMessage agvs = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}

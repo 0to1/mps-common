@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package go.micro.srv.agv.order;
+
+service Order {
+  //生成搬运任务
+  rpc NewTask(Task) returns (Response);
+
+  //取消任务
+  rpc CancelTask(CancelReq) returns (Response);
+
+  //修改参数
+  rpc UpdateTask(UpdateReq) returns (Response);
+
+  rpc SendQBMessage(QBMessage) returns (Response);
+  rpc SendMMessage(MMessage) returns (Response);
+}
+
+message UpdateReq {
+  uint32 index = 1;//调度系统的任务编号
+  uint32 paraNo = 2;//参数索引
+  uint32 value = 3;//参数值
+}
+
+message CancelReq {
+  uint32 index = 1;
+}
+
+message Response {
+  bool res = 1;
+  string message = 2;
+}
+
+message Task {
+  uint32 tsId = 1;
+  uint32 priority = 2;
+  uint32 ikey = 3;
+  repeated int32 params = 4;
+}
+
+message QBMessage {
+  uint32 taskID = 1;
+  uint32 tsID = 2;
+  uint32 priority = 3;
+  uint32 code = 4;
+  uint32 ikey = 5;
+  repeated uint32 params = 6;
+}
+
+message MMessage {
+  uint32 taskID = 1;
+  uint32 index = 2;
+  uint32 function = 3;
+  uint32 parNo = 4;
+  repeated uint32 params = 6;
+}
