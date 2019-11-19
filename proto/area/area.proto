@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package go.micro.srv.area;
+
+service AreaService {
+
+   // 添加货位类型
+   rpc AddAreaType(AreaType) returns (Response);
+   // 修改货位类型
+   rpc UpdateAreaType(AreaType) returns (Response);
+   // 删除货位类型
+   rpc DeleteAreaType(AreaType) returns (Response);
+   // 获取货位类型
+   rpc GetAreaType(Query) returns (AreaTypes);
+  // 添加区域
+  rpc AddArea(Area) returns (Response);
+  // 删除区域
+  rpc DeleteArea(AreaIDReq) returns (Response);
+  // 根据ID获取指定区域信息
+  rpc GetOneArea(AreaIDReq) returns (Area);
+  // 根据查询条件获取区域
+  rpc GetAreas(Query) returns (Areas);
+  //根据区域类型条件查询获取区域
+  rpc GetAreasByType(Query) returns(Areas);
+   //对应区域设置货位组
+   rpc AddRacklots(RacklotsReq) returns(Response);
+  // rpc UpdateArea(UpdateAreaReq) returns (Response);
+  // 设置区域类型
+  rpc SetAreaType(TypeReq) returns (Response);
+  // 设置区域的任务容量
+  rpc SetOrderCapacity(CapReq) returns (Response);
+  // 设置是否允许按区域入库
+  rpc AreaInbound(FlagReq) returns (Response);
+  // 设置是否允许按区域出库
+  rpc AreaOutbound(FlagReq) returns (Response);
+  // 设置是否允许存车
+  rpc Inbound(FlagReq) returns (Response);
+  // 设置是否允许取车
+  rpc Outbound(FlagReq) returns (Response);
+  // 禁用/启用货位
+  rpc DisableArea(AreaIDReq) returns (Response);
+  rpc EnableArea(AreaIDReq) returns (Response);
+
+  //该区域 增加一个任务
+  rpc  AddTask(TaskReq) returns(Response);
+  //该区域 减少一个任务
+  rpc  DelTask(TaskReq) returns(Response);
+}
+
+message AreaType {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message AreaTypes {
+  repeated AreaType areaTypes = 1;
+}
+
+message Area {
+  // 区域ID
+  int32 areaID = 20;
+  // 父级区域ID
+  int32 parentAreaID = 21;
+  // 区域类型
+  AreaType type = 22;
+  //区域的货位列表，待仔细考虑
+  repeated int32 racklots = 23;
+  // 区域允许的货位类型
+  int32 racklotType = 24;
+  // 区域任务容量
+  int32 orderCapacity = 25;
+  //是否按区域入库
+  bool areaInbound = 26;
+  //是否按区域出库
+  bool areaOutbound = 27;
+  //是否允许入库
+  bool inbound = 28;
+  //是否允许出库
+  bool outbound = 29;
+  // 所属仓库Ikey
+  string warehouseIkey = 30;
+  //区域任务数量
+  uint32 orderNum = 31;
+  repeated uint32 orderIDs = 32;
+}
+
+message Response {}
+
+message AreaIDReq { int32 id = 1; }
+
+message UpdateAreaReq {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  repeated Parameter queryParams = 6;
+}
+
+message Areas { 
+  repeated Area areas = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message TypeReq {
+  int32 id = 1;
+  int32 type = 2;
+  string name = 3;
+}
+
+message FlagReq {
+  int32 id = 1;
+  bool flag = 2;
+}
+
+message CapReq {
+  int32 id = 1;
+  int32 cap = 2;
+}
+
+message RacklotsReq {
+    int32 id =1;
+    repeated int32 racklots =2;
+}
+
+message TaskReq {
+    int32 id = 1;
+    uint32 taskID = 2;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}
