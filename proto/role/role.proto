@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package go.micro.srv.role;
+
+service Role {
+  // 添加角色
+  rpc AddRole(AddRoleReq) returns (AddRoleResp) {}
+  // 删除指定角色
+  rpc DeleteRole(IdReq) returns (DeleteRoleResp) {}
+  // 修改角色信息
+  rpc Update(UpdateReq) returns (UpdateResp) {}
+  // 根据角色ID获取角色信息
+  rpc GetRoleByID(IdReq) returns (RoleResp) {}
+  // 根据查询条件获取用户列表
+  rpc GetRoles(Query) returns (RolesResp) {}
+  // 验证用户是否具备访问权限
+  rpc AuthRole(AuthReq) returns (AuthResp) {}
+}
+
+message AddRoleReq {
+  uint32 roleID = 1;
+  string roleName = 2;
+  string desc = 3;
+  repeated Route routes = 4;
+}
+
+message AddRoleResp {}
+
+message IdReq { int32 roleID = 1; }
+
+message DeleteRoleResp {}
+
+message UpdateReq {
+  int32 roleID = 1;
+  string roleName = 2;
+  string desc = 3;
+  repeated Route routes = 4;
+}
+
+message UpdateResp {}
+
+message RoleResp {
+  uint32 roleID = 1;
+  string roleName = 2;
+  string desc = 3;
+  repeated Route routes = 4;
+}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  repeated Parameter queryParams = 6;
+}
+
+message RolesResp {
+  repeated RoleResp roles = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message AuthReq {
+  uint32 roleID = 1;
+  string URL = 2;
+  string Method = 3;
+}
+
+message AuthResp {}
+
+// RouteMeta 资源
+message RouteMeta {
+  string title = 1;
+  string icon = 2;
+  bool nocache = 3;
+}
+
+// Route 路径
+message Route {
+  string path = 1;
+  string method = 2;
+  string component = 3;
+  string redirect = 4;
+  string name = 5;
+  repeated Route children = 6;
+  bool hidden = 7;
+  RouteMeta meta = 8;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}

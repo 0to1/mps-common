@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package go.micro.srv.user;
+
+service User {
+  // 注册用户
+  rpc Signup(SignupReq) returns (SignupResp) {}
+  // 用户登陆
+  rpc Signin(SigninReq) returns (UserResp) {}
+  // 用户退出登陆
+  rpc Signout(SignoutReq) returns (SignoutResp) {}
+  // 密码重置
+  rpc Reset(ResetReq) returns (ResetResp) {}
+  // 修改用户信息
+  rpc Update(UpdateReq) returns (UserResp) {}
+  // 根据token获取用户信息
+  rpc GetUserByToken(TokenReq) returns (UserResp) {}
+  // 根据用户ID删除指定用户
+  rpc DeleteUserByID(IdReq) returns (DeleteResp);
+  // 根据用户ID获取用户信息
+  rpc GetUserByID(IdReq) returns (UserResp) {}
+  // 根据分页，条件查询等返回用户列表
+  rpc GetUsers(Query) returns (UsersResp) {}
+
+  rpc SaveConfig(ConfigReq) returns (ConfigResp){}
+  rpc DeleteConfig(ConfigReq) returns (ConfigResp){}
+  rpc GetConfig(ConfigReq) returns (ConfigResp){}
+}
+
+message SignupReq {
+  string phoneNumber = 1;
+  string userName = 2;
+  string password = 3;
+  string email = 4;
+  uint32 role = 5;
+}
+
+message SignupResp {}
+
+message SigninReq {
+  string phoneNumber = 1;
+  string password = 2;
+}
+
+message UserResp {
+  uint32 userID = 1;
+  string userName = 2;
+  string email = 3;
+  string phoneNumber = 4;
+  string Token = 5;
+  uint32 role = 6;
+  // string routes = 7;
+}
+
+message ResetReq {
+  uint32 userID = 1;
+  string oldpassword = 2;
+  string newpassword = 3;
+}
+
+message ResetResp {}
+
+message SignoutReq { uint32 userID = 1; }
+
+message SignoutResp {}
+
+message UpdateReq {
+  uint32 userID = 1;
+  string userName = 2;
+  string email = 3;
+  string phoneNumber = 4;
+  string Token = 5;
+  uint32 role = 6;
+  string routes = 7;
+}
+
+message TokenReq { string token = 1; }
+
+message IdReq { uint32 id = 1; }
+
+message DeleteResp {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  repeated Parameter queryParams = 6;
+}
+
+message UsersResp {
+  repeated UserResp users = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message ConfigReq {
+  uint32 id = 3;
+  uint32 userID = 2;
+  string configs = 1;
+}
+
+message ConfigResp {
+  uint32 id = 3;
+  uint32 userID = 2;
+  string configs = 1;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}
