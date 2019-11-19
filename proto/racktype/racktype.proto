@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package go.micro.srv.racktype;
+
+service RackTypeService {
+  rpc AddRackType(RackType) returns (Response);
+  rpc DeleteRackType(IDReq) returns (Response);
+  rpc UpdateRackType(RackType) returns (Response);
+  rpc GetRackTypes(Query) returns (RackTypes);
+
+  rpc AddCellType(CellType) returns (Response);
+  rpc DeleteCellType(IDReq) returns (Response);
+  rpc UpdateCellType(CellType) returns (Response);
+  rpc GetCellTypes(Query) returns (CellTypes);
+}
+
+message RackType {
+  uint32 id = 1;
+  string name = 2;
+  uint32 length = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  uint32 layers = 7;
+
+  // 拣货面(A、B两面或者只有一面)
+  uint32 pickingSurface = 9;
+  string description = 10;
+  //储位数量
+  uint32 cellNums = 11;
+
+  repeated Cell cells = 12;
+}
+
+message Cell {
+  uint32 type = 1;
+  string tag = 2;
+}
+
+message CellType {
+  uint32 id = 1;
+  string name = 2;
+  uint32 length = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  uint32 maxLoad = 7;
+  string description = 8;
+  bool isValid = 9;
+}
+
+message IDReq { uint32 id = 1; }
+
+message Response {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+}
+
+message RackTypes {
+  repeated RackType rackTypes = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message CellTypes {
+  repeated CellType cellTypes = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}

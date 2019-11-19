@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package go.micro.srv.racklot;
+
+service RacklotService {
+  // 添加货位类型
+  rpc AddRacklotType(RacklotType) returns (AddResp);
+  // 修改货位类型
+  rpc UpdateRacklotType(RacklotType) returns (UpdateResp);
+  // 删除货位类型
+  rpc DeleteRacklotType(RacklotType) returns (DeleteResp);
+  // 获取货位类型
+  rpc GetRacklotType(Query) returns (RacklotTypes);
+  // 添加货位
+  rpc AddRacklot(Racklot) returns (AddResp);
+  // 导入货位
+  rpc BatchAddRacklots(Racklots) returns (Response);
+  // 删除货位
+  rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
+  // 更新货位基础信息
+  rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
+  // 根据查询条件获取货位
+  rpc GetRacklots(Query) returns (Racklots);
+    // 根据查询条件获取货位
+    rpc GetRacklotsByType(Query) returns (Racklots);
+  // 根据ID获取货位信息
+  rpc GetRacklot(RacklotIDReq) returns (Racklot);
+  // 设置重列组
+  rpc SetMultipleGroup(MultipleGroup) returns (Response);
+  // 设置货位组
+  rpc SetRacklotGroup(RacklotGroup) returns (Response);
+  // 为货位绑定/解绑货架
+  rpc BindRack(RackIDReq) returns (Response);
+  rpc UnbindRack(RackIDReq) returns (Response);
+  // 禁用/启用货位
+  rpc DisableRacklots(RacklotIDsReq) returns (Response);
+  rpc EnableRacklots(RacklotIDsReq) returns (Response);
+  //站台分组
+  rpc AddRacklotGroup(RacklotGroupsReq) returns (Response);
+  rpc RemoveRacklotGroup(RacklotGroupsReq) returns (Response);
+  //占用/释放货位
+  rpc OccupyRacklot(RacklotIDReq) returns (Response);
+  rpc ReleaseRacklot(RacklotIDReq) returns (Response);
+  // 判断货位是否存在
+  rpc IsExist(RacklotIDReq) returns (Response);
+  // 判断货位是否有效
+  rpc IsAvailable(RacklotIDReq) returns (Response);
+  // 获取货位关联的货架
+  rpc GetBindedRack(RacklotIDReq) returns (IDReq);
+}
+
+message IDReq {
+  int32 id = 1;
+}
+
+// RacklotType 货位类型
+message RacklotType {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  int32 Length  = 4 ;
+	int32 Width  = 5;
+}
+
+message RacklotTypes {
+  repeated RacklotType racklotTypes = 1;
+}
+
+// MultipleGroup 货位重列组
+message MultipleGroup {
+  int32 racklotID = 1;
+  int32 group = 2;
+  int32 item = 3;
+}
+
+// RacklotGroup 货位组
+message RacklotGroup {
+  int32 racklotID = 1;
+  int32 group = 2;
+}
+
+// RacklotGroup 货位组
+message RacklotsGroup {
+  repeated int32 racklotIDs = 1;
+  int32 group = 2;
+}
+
+// Racklot 货位
+message Racklot {
+  int32 id = 1;
+  RacklotType type = 2;
+  int32 x = 3;
+  int32 y = 4;
+  float angle = 5;
+  int32 length = 6;
+  int32 width = 7;
+  // 站台重列分组信息
+  MultipleGroup multiGroup = 8;
+  // 站台分组的ID
+  int32 groupID = 9;
+  string description = 10;
+  // 站台是否有效，被禁用则无效，启用则有效，默认为有效
+  bool valid = 11;
+  // 关联的货架ID，在货位上没有放置货架时为空
+  int32 rackID = 12;
+  //是否被占用
+  bool IsOccupied = 13;
+}
+
+message UpdateRacklotReq {
+  int32 id = 1;
+  int32 racklotType = 2;
+  int32 x = 3;
+  int32 y = 4;
+  float angle = 5;
+  int32 length = 6;
+  int32 width = 7;
+  string description = 8;
+}
+
+// message RacklotsReq {
+// 	repeated Racklot racklots = 1;
+// }
+
+message Response {}
+
+message AddResp {}
+
+message RacklotIDReq { uint32 id = 1; }
+
+message DeleteResp {}
+
+message UpdateResp {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  repeated Parameter queryParams = 6;
+}
+
+message Racklots { 
+  repeated Racklot racklots = 1;
+  uint32 totals = 4;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message RackIDReq {
+  int32 id = 1;
+  int32 rackID = 2;
+}
+
+message RackIDsReq {
+  repeated RackIDReq rackID = 1;
+}
+
+message RacklotIDsReq { repeated uint32 ids = 1; }
+
+message RacklotGroupsReq {
+  int32 groupID = 1;
+  repeated int32 racklotIDs = 2;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package go.micro.srv.station;
+
+service Station{
+
+    //save station file
+    rpc SaveStationFile(FileRequest) returns (FileResponse){}
+
+    //Get station message according to station id
+    rpc GetStationByID(IdRequest) returns (StationResponse){}
+
+    //Get all stations message
+    rpc GetStations(Query) returns (StationsResponse){}
+}
+
+message FileRequest{
+    string fileName = 1;
+    bytes filebytes = 2;
+}
+
+message FileResponse{
+    bool res = 1;
+}
+
+message IdRequest{
+    uint32 id = 1;
+}
+
+message Query {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 per_page = 4;
+    string queryString = 5;
+}
+
+message StationResponse{
+    uint32 stationID = 1;
+    uint32 pointID = 2;
+    string type = 3;
+    uint32 sysModes = 4;
+    uint32 carrierTypes = 5;
+    string remark = 6;
+    string stationName = 7;
+    uint32 x = 8;
+    uint32 y = 9;
+    uint32 angle = 10;   
+}
+
+message StationsResponse{
+    repeated StationResponse stations = 1;
+    uint32 totalpages = 2;
+    uint32 currpages = 3;
+}

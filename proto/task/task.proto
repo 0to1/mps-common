@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+// import "google/protobuf/any.proto";
+// import "google/protobuf/timestamp.proto";
+
+// import "timestamp/timestamp.proto";
+// import "any/any.proto";
+
+package go.micro.srv.task;
+
+service TaskService {
+  //新任务
+  rpc New(NewTaskReq) returns (Response);
+  // 暂停任务
+  rpc Pause(TaskID) returns (Response);
+  // 取消任务
+  rpc Cancel(TaskID) returns (Response);
+
+  // 增加任务参数
+  rpc AddParameters(Parameters) returns (Parameters);
+  // 修改任务参数
+  rpc ModifyParameters(Parameters) returns (Parameters);
+  // 删除任务参数
+  rpc DeleteParameters(ParameterKeys) returns (Parameters);
+
+  // 获取任务详情
+  rpc GetTask(TaskID) returns (TaskInfo);
+
+  // 根据查询条件获取任务
+  rpc GetTasks(Query) returns (TaskInfos);
+  // 根据查询条件获取历史任务
+  rpc GetHistories(Query) returns (TaskInfos);
+  // 根据特定条件获取任务
+  rpc GetTasksByParameters(Parameters) returns (TaskInfos);
+
+  // 调用python脚本的函数
+  rpc Call(CallOptions) returns (CallResponse);
+  // 执行python脚本
+  rpc Execute(ExecuteOptions) returns (ExecuteResponse);
+}
+
+message NewTaskReq {
+  uint32 taskID = 1;
+  uint32 priority = 2;
+  uint32 scriptIndex = 3;
+  repeated Parameter parameters = 4;
+  string description = 5;
+}
+
+message Response {}
+
+message Path { string path = 1; }
+
+message TaskID { uint32 id = 1; }
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+}
+
+message Parameter {
+  string type = 1;  //参数类型，支持string, int, float三种类型，默认为string类型
+  string key = 2;
+  string value = 3;
+}
+
+message Parameters {
+  uint32 taskID = 1;
+  repeated Parameter parameters = 2;
+}
+
+message ParameterKeys {
+  uint32 taskID = 1;
+  repeated string keys = 2;
+}
+
+message TaskInfo {
+  uint32 taskID = 1;
+  uint32 orderIndex = 2;
+  uint32 schedulerStatus = 3;
+  uint32 type = 4;
+  uint32 priority = 5;
+  uint32 scriptIndex = 6;
+  repeated Parameter parameters = 7;
+  string beginTime = 8;
+  string endTime = 9;
+  uint32 originStation = 10;
+  uint32 targetStation = 11;
+  uint32 agvID = 12;
+  uint32 agvInitPoint = 13;
+  repeated uint32 materials = 14;
+  string sMsgScript = 15;
+  int32 errorCode = 16;
+  string error = 17;
+  string description = 18;
+}
+
+message TaskInfos {
+  repeated TaskInfo tasks = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message CallOptions {
+  string module = 1;
+  string function = 2;
+  repeated Parameter parameters = 3;
+}
+
+message CallResponse {
+  string result = 1;
+  // google.protobuf.Any result = 1;
+  string errorMessage = 2;
+}
+
+message ExecuteOptions {
+  uint32 taskID = 1;
+  uint32 priority = 2;
+  uint32 scriptIndex = 3;
+  repeated Parameter parameters = 4;
+  string description = 5;
+}
+
+message ExecuteResponse {
+}

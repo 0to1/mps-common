@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package go.micro.srv.material;
+
+service MaterialService {
+  // 添加物料类型
+  rpc AddMaterialType(MaterialType) returns (Response);
+  // 移除物料类型
+  rpc DeleteMaterialType(MaterialTypeIDReq) returns (Response);
+  // 更新物料类型
+  rpc UpdateMaterialType(MaterialType) returns (Response);
+  // 根据查询条件获取物料类型列表
+  rpc GetMaterialTypes(Query) returns (MaterialTypesResp);
+  // 根据ID获取指定的物料类型
+  rpc GetOneMaterialType(MaterialTypeIDReq) returns (MaterialType);
+  // 添加物料
+  rpc AddMaterial(Material) returns (Response);
+  // 移除物料
+  rpc DeleteMaterial(Material) returns (Response);
+  // 更新物料
+  rpc UpdateMaterial(Material) returns (Response);
+  // 根据查询条件获取物料信息
+  rpc GetMaterials(Query) returns (MaterialsResp);
+  // 根据ID获取指定的物料类型
+  rpc GetOneMaterial(Material) returns (Material);
+
+  //根据k,v获取对应的物料
+  rpc GetOneMaterialByParameters(QueryParameter) returns (Material);
+}
+
+message Response {}
+
+message MaterialType {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string properties = 4;
+  string fields = 5;
+}
+
+message Material {
+  int32 id = 1;
+  // 物料类型ID
+  int32 typeID = 2;
+  // 物料名称
+  string typeName = 4;
+
+  string properties = 3;
+}
+
+message MaterialTypeIDReq { int32 id = 1; }
+
+message MaterialTypeNameReq {
+  int32 id = 1;
+  string name = 2;
+}
+
+message MaterialIDReq { int32 id = 1; }
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  // 物料类型ID
+  int32 typeID = 6;
+    // 物料名称
+  string typeName = 7;
+}
+
+message MaterialTypesResp { repeated MaterialType materialTypes = 1; }
+
+message MaterialsResp { 
+  repeated Material materials = 1; 
+  uint32 totalpages = 2;
+  uint32 totals = 3;
+}
+
+message QueryParameter {
+    string typeName = 1;
+    repeated Parameter parameters = 2;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}

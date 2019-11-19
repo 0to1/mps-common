@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package go.micro.srv.route;
+
+service Route{
+
+    //GetRouteFromStnToStn
+    rpc GetRouteFromStnToStn(GetRouteRequest) returns (GetRouteResponse){}
+
+    //GetRouteFromPntToPnt
+    rpc GetRouteFromPntToPnt(GetRouteRequest) returns (GetRouteResponse){}
+
+    //GetStationListFromPnt
+    rpc GetStationListFromPnt(GetStationListRequest) returns (GetStationListResponse){}
+
+    //GetStationListFromStn
+    rpc GetStationListFromStn(GetStationListRequest) returns (GetStationListResponse){}
+
+    //更新地图//
+    rpc UpdateRouteSearch (Request) returns (Response);
+}
+
+message Request{
+
+}
+
+message Response{
+    string message = 1;
+}
+
+message GetStationListRequest{
+    uint32 val1 =1;
+}
+
+message StationWeight{
+    uint32 stationID = 1;
+    uint32 weight = 2;
+}
+
+message GetStationListResponse{
+    bool res = 1;
+    repeated StationWeight stations = 2;
+}
+
+message GetRouteRequest{
+    uint32 val1 = 1;
+    uint32 val2 = 2;
+}
+
+message GetRouteResponse{
+    bool res = 1;
+    uint32 weight = 2;
+    repeated uint32 segments = 3;
+}

@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package go.micro.srv.opc;
+
+service OpcService {
+	
+	//read all of signal value for imexport id number
+	rpc	ReadOpcValueById(ReadGroupReq) returns (ReadGroupResp)	{}
+
+	//read signal value by some signal item name
+	rpc ReadOpcValueByItems(ReadItemsReq) returns   (ReadItemsResp)	{}
+
+	//read signal value by one sigal item name
+	rpc ReadOpcValueByItem(ReadItemReq) returns	(ReadItemResp)	{}
+
+	//write  signal value by signal item name
+    rpc WriteOpcValueByItem (WriteItemReq) returns (WriteItemResp) {}
+    
+    //Update Xml by xml import
+	rpc UpdateXml(XmlReq)   returns (XmlResp) {}
+	
+	//
+	rpc SetOpcConfig(OpcConfigReq) returns (OpcConfigResp){}
+	//Read Group Item Value
+	rpc ReadItemValue(ItemReq) returns(ItemResp){}
+	//Write Group Item Value
+	rpc WriteItemValue(ItemReq) returns(ItemResp){}
+}
+
+
+message Result{
+	Server Servers = 1; 
+}
+
+
+message Server{
+	string name = 1;          
+	string IP = 2;            
+	repeated ImExport ImExports = 3; 
+}
+
+
+message ImExport{
+	int32 id  = 1;         
+	repeated Signal Signal = 2;
+}
+
+
+message Signal {
+	string ItemName = 1;    
+	string Description = 2; 
+	int32 Index = 3;          
+	string PlcName = 4;     
+	string Remark = 5;      
+}
+
+
+
+message GroupOpcSignalInfo {
+    string  itemName = 1;
+    string  description = 2;
+    int32   quality = 3;
+    int32   value    = 4; 
+}
+
+message OpcSignalInfo {
+    string itemName = 1;
+    int32   value = 2; 
+}
+
+message ReadGroupReq {
+	uint32 groupID = 1;
+}
+
+message ReadGroupResp{
+	repeated GroupOpcSignalInfo groupItemValues = 1;
+}
+
+message ReadItemsReq {
+	repeated string itemNames = 1;
+}
+
+message ReadItemsResp {
+	repeated OpcSignalInfo itemsValues = 1;
+}
+
+message ReadItemReq {
+	string itemName = 1;
+}
+
+message ReadItemResp {
+	int32 itemValue = 1;
+}
+
+message WriteItemReq {
+	string itemName = 1;
+	int32 itemValue = 2;
+}
+
+message WriteItemResp {
+}
+
+message XmlReq {
+    Result result = 1;
+}
+
+message XmlResp{
+}
+
+message OpcConfigReq {
+	string configXml = 1;
+}
+
+message OpcConfigResp {
+	
+}
+
+message ItemReq {
+	uint32 group = 1;
+	uint32 item  = 2;
+	int32 value = 3;
+}
+
+message ItemResp {
+	uint32 group = 1;
+	uint32 item  = 2;
+	int32 value = 3;
+	string itemName = 4;
+}

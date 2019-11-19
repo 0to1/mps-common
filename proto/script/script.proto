@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+// import "google/protobuf/timestamp.proto";
+
+package go.micro.srv.task.script;
+
+service ScriptService {
+  rpc AddScript(Script) returns (Response);
+  rpc DeleteScript(ScriptIndex) returns (Response);
+  rpc UpdateScript(Script) returns (Response);
+  rpc GetOneScript(ScriptIndex) returns (Script);
+  rpc GetScripts(Query) returns (Scripts);
+}
+
+message Script {
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
+  string cancelFunc = 4;
+  bytes content = 5;
+}
+
+message ScriptIndex { uint32 id = 1; }
+
+message Scripts {
+  repeated Script scripts = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message Response {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+}

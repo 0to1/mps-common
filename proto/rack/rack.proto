@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package go.micro.srv.rack;
+
+service RackService {
+  rpc AddRack(Rack) returns (Response);
+  rpc DeleteRack(RackIDReq) returns (Response);
+  // 更新货架信息
+  rpc UpdateRack(UpdateRackReq) returns (Response);
+  // 根据货架ID获取货架信息
+  rpc GetOneRack(RackIDReq) returns (Rack);
+  // 根据查询条件获取满足条件的货架
+  rpc GetRacks(Query) returns (Racks);
+    // 根据货架类型条件获取满足条件的货架
+    rpc GetRacksByType(Query) returns (Racks);
+  // 启用一组货架
+  rpc EnableRacks(RackIDsReq) returns (Response);
+  // 禁用一组货架
+  rpc DisableRacks(RackIDsReq) returns (Response);
+  // 启用某个货架
+  rpc EnableRack(RackIDReq) returns (Response);
+  // 禁用某个货架
+  rpc DisableRack(RackIDReq) returns (Response);
+  // 绑定货位
+  rpc BindRacklot(RacklotReq) returns (Response);
+  // 解绑货位
+  rpc UnbindRacklot(RacklotReq) returns (Response);
+  // 添加储位
+  rpc AddCells(CellsReq) returns (Response);
+  // 移除储位
+  rpc RemoveCells(CellIDsReq) returns (Response);
+  // 启用储位
+  rpc EnableCells(CellIDsReq) returns (Response);
+  // 禁用储位
+  rpc DisableCells(CellIDsReq) returns (Response);
+  // 绑定物料
+  rpc BindMaterial(MaterialReq) returns (Response);
+  // 解绑物料
+  rpc UnbindMaterial(MaterialReq) returns (Response);
+}
+
+message RackType {
+  uint32 id = 1;
+  string name = 2;
+}
+
+// Cell 储位
+message Cell {
+  // 储位ID
+  uint32 id = 21;
+  // 储位编码
+  string tag = 22;
+  // 储位名称
+  string name = 23;
+  // 储位所在货架
+  uint32 rackID = 24;
+  int32 length = 25;
+  int32 width = 26;
+  int32 height = 27;
+  // 储位在货架的哪一层
+  int32 layer = 28;
+  // 储位在货架上的编号
+  int32 cellCode = 29;
+  // 是否禁用
+  bool isValid = 30;
+  // 存放的物料对于的编号
+  uint32 materialID = 31;
+  // cell类型id
+  uint32 type = 32;
+}
+
+message Rack {
+  // 货架编码
+  uint32 id = 20;
+  string name = 30;
+  // 货架类型
+  RackType type = 21;
+  // 是否禁用
+  bool isValid = 22;
+  int32 length = 23;
+  int32 width = 24;
+  int32 height = 25;
+  // 所在货位
+  int32 racklot = 26;
+  // 货架层数
+  int32 layers = 27;
+  // 货架状态(空、可用、被占用、满等)
+  int32 status = 31;
+  // 拣货面(A、B两面或者只有一面)
+  int32 pickingSurface = 32;
+  string description = 28;
+  // 货架储位
+  repeated Cell cells = 29;
+}
+
+message Response {}
+
+message RackIDReq { uint32 id = 1; }
+
+message UpdateRackReq {
+  uint32 id = 20;
+  string name = 21;
+  RackType type = 22;
+  bool isValid = 23;
+  int32 length = 24;
+  int32 width = 25;
+  int32 height = 26;
+  int32 layers = 27;
+  int32 pickingSurface = 28;
+  string description = 29;
+}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+  repeated Parameter queryParams = 6;
+}
+
+message Racks {
+  repeated Rack racks = 1;
+  uint32 totals = 4;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message TypeReq {
+  uint32 id = 1;
+  uint32 type = 2;
+}
+
+message LayerNumsReq { uint32 id = 1; }
+
+message RackIDsReq { repeated uint32 ids = 1; }
+
+message CellsReq {
+  uint32 rackID = 1;
+  repeated Cell cells = 2;
+}
+
+message CellIDsReq {
+  uint32 rackID = 1;
+  repeated uint32 cellIDs = 2;
+}
+
+message RacklotReq {
+  uint32 rackID = 1;
+  uint32 racklotID = 2;
+}
+
+message MaterialReq {
+  uint32 rackID = 1;
+  uint32 cellID = 2;  //或者使用Cell的tag字段
+  uint32 materialID = 3;
+}
+
+message Parameter {
+    string key = 1;
+    string value = 2;
+}
