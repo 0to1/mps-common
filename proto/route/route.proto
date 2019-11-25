@@ -4,17 +4,20 @@ package go.micro.srv.route;
 
 service Route{
 
-    //GetRouteFromStnToStn
+    //获取站台到站台的路径//
     rpc GetRouteFromStnToStn(GetRouteRequest) returns (GetRouteResponse){}
 
-    //GetRouteFromPntToPnt
+    //获取点到点的路径//
     rpc GetRouteFromPntToPnt(GetRouteRequest) returns (GetRouteResponse){}
 
-    //GetStationListFromPnt
+    //获取点到所有站台的列表//
     rpc GetStationListFromPnt(GetStationListRequest) returns (GetStationListResponse){}
 
-    //GetStationListFromStn
+    //获取站台到所有站台的列表//
     rpc GetStationListFromStn(GetStationListRequest) returns (GetStationListResponse){}
+
+    //对传递过来的起始站台和站台列表进行排序//
+    rpc SortStationList(StationsRequest) returns (GetStationListResponse){}
 
     //更新地图//
     rpc UpdateRouteSearch (Request) returns (Response);
@@ -28,8 +31,13 @@ message Response{
     string message = 1;
 }
 
+message StationsRequest{
+    uint32 startStn = 1;
+    repeated uint32 stations = 2;
+}
+
 message GetStationListRequest{
-    uint32 val1 =1;
+    uint32 val1 = 1;
 }
 
 message StationWeight{
