@@ -52,6 +52,8 @@ type AreaService interface {
 	GetAreas(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error)
 	//根据区域类型条件查询获取区域
 	GetAreasByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error)
+	//通过graphql条件查询
+	GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlAreas, error)
 	//对应区域设置货位组
 	AddRacklots(ctx context.Context, in *RacklotsReq, opts ...client.CallOption) (*Response, error)
 	// rpc UpdateArea(UpdateAreaReq) returns (Response);
@@ -177,6 +179,16 @@ func (c *areaService) GetAreas(ctx context.Context, in *Query, opts ...client.Ca
 func (c *areaService) GetAreasByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error) {
 	req := c.c.NewRequest(c.name, "AreaService.GetAreasByType", in)
 	out := new(Areas)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *areaService) GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlAreas, error) {
+	req := c.c.NewRequest(c.name, "AreaService.GetAreasByGraphql", in)
+	out := new(GraphqlAreas)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -315,6 +327,8 @@ type AreaServiceHandler interface {
 	GetAreas(context.Context, *Query, *Areas) error
 	//根据区域类型条件查询获取区域
 	GetAreasByType(context.Context, *Query, *Areas) error
+	//通过graphql条件查询
+	GetAreasByGraphql(context.Context, *GraphqlQuery, *GraphqlAreas) error
 	//对应区域设置货位组
 	AddRacklots(context.Context, *RacklotsReq, *Response) error
 	// rpc UpdateArea(UpdateAreaReq) returns (Response);
@@ -350,6 +364,7 @@ func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts .
 		GetOneArea(ctx context.Context, in *AreaIDReq, out *Area) error
 		GetAreas(ctx context.Context, in *Query, out *Areas) error
 		GetAreasByType(ctx context.Context, in *Query, out *Areas) error
+		GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlAreas) error
 		AddRacklots(ctx context.Context, in *RacklotsReq, out *Response) error
 		SetAreaType(ctx context.Context, in *TypeReq, out *Response) error
 		SetOrderCapacity(ctx context.Context, in *CapReq, out *Response) error
@@ -407,6 +422,10 @@ func (h *areaServiceHandler) GetAreas(ctx context.Context, in *Query, out *Areas
 
 func (h *areaServiceHandler) GetAreasByType(ctx context.Context, in *Query, out *Areas) error {
 	return h.AreaServiceHandler.GetAreasByType(ctx, in, out)
+}
+
+func (h *areaServiceHandler) GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlAreas) error {
+	return h.AreaServiceHandler.GetAreasByGraphql(ctx, in, out)
 }
 
 func (h *areaServiceHandler) AddRacklots(ctx context.Context, in *RacklotsReq, out *Response) error {

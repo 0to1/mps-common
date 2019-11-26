@@ -22,6 +22,8 @@ service AreaService {
   rpc GetAreas(Query) returns (Areas);
   //根据区域类型条件查询获取区域
   rpc GetAreasByType(Query) returns(Areas);
+  //通过graphql条件查询
+  rpc GetAreasByGraphql(GraphqlQuery)returns(GraphqlAreas);
    //对应区域设置货位组
    rpc AddRacklots(RacklotsReq) returns(Response);
   // rpc UpdateArea(UpdateAreaReq) returns (Response);
@@ -98,6 +100,15 @@ message Query {
   uint32 per_page = 4;
   string queryString = 5;
   repeated Parameter queryParams = 6;
+}
+
+message GraphqlQuery {
+    string query = 1;
+    // repeated string
+}
+
+message GraphqlAreas {
+    string response =1;
 }
 
 message Areas { 

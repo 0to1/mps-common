@@ -3,6 +3,7 @@ module github.com/0to1/mps-common
 go 1.13
 
 require (
+	github.com/99designs/gqlgen v0.10.1
 	github.com/CloudyKit/fastprinter v0.0.0-20170127035650-74b38d55f37a // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
