@@ -54,6 +54,8 @@ type RacklotService interface {
 	GetRacklots(ctx context.Context, in *Query, opts ...client.CallOption) (*Racklots, error)
 	// 根据查询条件获取货位
 	GetRacklotsByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Racklots, error)
+	//通过graphql条件查询
+	GetRacklotsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacklots, error)
 	// 根据ID获取货位信息
 	GetRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Racklot, error)
 	// 设置重列组
@@ -191,6 +193,16 @@ func (c *racklotService) GetRacklots(ctx context.Context, in *Query, opts ...cli
 func (c *racklotService) GetRacklotsByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Racklots, error) {
 	req := c.c.NewRequest(c.name, "RacklotService.GetRacklotsByType", in)
 	out := new(Racklots)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *racklotService) GetRacklotsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacklots, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetRacklotsByGraphql", in)
+	out := new(GraphqlRacklots)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -361,6 +373,8 @@ type RacklotServiceHandler interface {
 	GetRacklots(context.Context, *Query, *Racklots) error
 	// 根据查询条件获取货位
 	GetRacklotsByType(context.Context, *Query, *Racklots) error
+	//通过graphql条件查询
+	GetRacklotsByGraphql(context.Context, *GraphqlQuery, *GraphqlRacklots) error
 	// 根据ID获取货位信息
 	GetRacklot(context.Context, *RacklotIDReq, *Racklot) error
 	// 设置重列组
@@ -399,6 +413,7 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, out *UpdateResp) error
 		GetRacklots(ctx context.Context, in *Query, out *Racklots) error
 		GetRacklotsByType(ctx context.Context, in *Query, out *Racklots) error
+		GetRacklotsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacklots) error
 		GetRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error
 		SetMultipleGroup(ctx context.Context, in *MultipleGroup, out *Response) error
 		SetRacklotGroup(ctx context.Context, in *RacklotGroup, out *Response) error
@@ -463,6 +478,10 @@ func (h *racklotServiceHandler) GetRacklots(ctx context.Context, in *Query, out 
 
 func (h *racklotServiceHandler) GetRacklotsByType(ctx context.Context, in *Query, out *Racklots) error {
 	return h.RacklotServiceHandler.GetRacklotsByType(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) GetRacklotsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacklots) error {
+	return h.RacklotServiceHandler.GetRacklotsByGraphql(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) GetRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error {

@@ -23,6 +23,8 @@ service RacklotService {
   rpc GetRacklots(Query) returns (Racklots);
     // 根据查询条件获取货位
     rpc GetRacklotsByType(Query) returns (Racklots);
+  //通过graphql条件查询
+  rpc GetRacklotsByGraphql(GraphqlQuery)returns(GraphqlRacklots);
   // 根据ID获取货位信息
   rpc GetRacklot(RacklotIDReq) returns (Racklot);
   // 设置重列组
@@ -105,6 +107,8 @@ message Racklot {
   int32 rackID = 12;
   //是否被占用
   bool IsOccupied = 13;
+
+  int32 areaID = 14;
 }
 
 message UpdateRacklotReq {
@@ -139,6 +143,14 @@ message Query {
   uint32 per_page = 4;
   string queryString = 5;
   repeated Parameter queryParams = 6;
+}
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlRacklots {
+    string response =1;
 }
 
 message Racklots { 
