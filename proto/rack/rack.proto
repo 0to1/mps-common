@@ -11,6 +11,8 @@ service RackService {
   rpc GetOneRack(RackIDReq) returns (Rack);
   // 根据查询条件获取满足条件的货架
   rpc GetRacks(Query) returns (Racks);
+    //通过graphql条件查询
+    rpc GetRacksByGraphql(GraphqlQuery)returns(GraphqlRacks);
     // 根据货架类型条件获取满足条件的货架
     rpc GetRacksByType(Query) returns (Racks);
   // 启用一组货架
@@ -67,6 +69,8 @@ message Cell {
   uint32 materialID = 31;
   // cell类型id
   uint32 type = 32;
+  //是否被占用
+  bool isOccupied = 33;
 }
 
 message Rack {
@@ -108,6 +112,14 @@ message UpdateRackReq {
   int32 layers = 27;
   int32 pickingSurface = 28;
   string description = 29;
+}
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlRacks {
+    string response =1;
 }
 
 message Query {

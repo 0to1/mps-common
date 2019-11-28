@@ -42,6 +42,8 @@ type RackService interface {
 	GetOneRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Rack, error)
 	// 根据查询条件获取满足条件的货架
 	GetRacks(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error)
+	//通过graphql条件查询
+	GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacks, error)
 	// 根据货架类型条件获取满足条件的货架
 	GetRacksByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error)
 	// 启用一组货架
@@ -131,6 +133,16 @@ func (c *rackService) GetOneRack(ctx context.Context, in *RackIDReq, opts ...cli
 func (c *rackService) GetRacks(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error) {
 	req := c.c.NewRequest(c.name, "RackService.GetRacks", in)
 	out := new(Racks)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacks, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetRacksByGraphql", in)
+	out := new(GraphqlRacks)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -279,6 +291,8 @@ type RackServiceHandler interface {
 	GetOneRack(context.Context, *RackIDReq, *Rack) error
 	// 根据查询条件获取满足条件的货架
 	GetRacks(context.Context, *Query, *Racks) error
+	//通过graphql条件查询
+	GetRacksByGraphql(context.Context, *GraphqlQuery, *GraphqlRacks) error
 	// 根据货架类型条件获取满足条件的货架
 	GetRacksByType(context.Context, *Query, *Racks) error
 	// 启用一组货架
@@ -314,6 +328,7 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		UpdateRack(ctx context.Context, in *UpdateRackReq, out *Response) error
 		GetOneRack(ctx context.Context, in *RackIDReq, out *Rack) error
 		GetRacks(ctx context.Context, in *Query, out *Racks) error
+		GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacks) error
 		GetRacksByType(ctx context.Context, in *Query, out *Racks) error
 		EnableRacks(ctx context.Context, in *RackIDsReq, out *Response) error
 		DisableRacks(ctx context.Context, in *RackIDsReq, out *Response) error
@@ -357,6 +372,10 @@ func (h *rackServiceHandler) GetOneRack(ctx context.Context, in *RackIDReq, out 
 
 func (h *rackServiceHandler) GetRacks(ctx context.Context, in *Query, out *Racks) error {
 	return h.RackServiceHandler.GetRacks(ctx, in, out)
+}
+
+func (h *rackServiceHandler) GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacks) error {
+	return h.RackServiceHandler.GetRacksByGraphql(ctx, in, out)
 }
 
 func (h *rackServiceHandler) GetRacksByType(ctx context.Context, in *Query, out *Racks) error {
