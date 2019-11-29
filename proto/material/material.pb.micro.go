@@ -54,6 +54,8 @@ type MaterialService interface {
 	GetMaterials(ctx context.Context, in *Query, opts ...client.CallOption) (*MaterialsResp, error)
 	// 根据ID获取指定的物料类型
 	GetOneMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Material, error)
+	//通过graphql条件查询
+	GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlMaterials, error)
 	//根据k,v获取对应的物料
 	GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, opts ...client.CallOption) (*Material, error)
 }
@@ -176,6 +178,16 @@ func (c *materialService) GetOneMaterial(ctx context.Context, in *Material, opts
 	return out, nil
 }
 
+func (c *materialService) GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlMaterials, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.GetMaterialsByGraphql", in)
+	out := new(GraphqlMaterials)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *materialService) GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, opts ...client.CallOption) (*Material, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.GetOneMaterialByParameters", in)
 	out := new(Material)
@@ -209,6 +221,8 @@ type MaterialServiceHandler interface {
 	GetMaterials(context.Context, *Query, *MaterialsResp) error
 	// 根据ID获取指定的物料类型
 	GetOneMaterial(context.Context, *Material, *Material) error
+	//通过graphql条件查询
+	GetMaterialsByGraphql(context.Context, *GraphqlQuery, *GraphqlMaterials) error
 	//根据k,v获取对应的物料
 	GetOneMaterialByParameters(context.Context, *QueryParameter, *Material) error
 }
@@ -225,6 +239,7 @@ func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler
 		UpdateMaterial(ctx context.Context, in *Material, out *Response) error
 		GetMaterials(ctx context.Context, in *Query, out *MaterialsResp) error
 		GetOneMaterial(ctx context.Context, in *Material, out *Material) error
+		GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlMaterials) error
 		GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, out *Material) error
 	}
 	type MaterialService struct {
@@ -276,6 +291,10 @@ func (h *materialServiceHandler) GetMaterials(ctx context.Context, in *Query, ou
 
 func (h *materialServiceHandler) GetOneMaterial(ctx context.Context, in *Material, out *Material) error {
 	return h.MaterialServiceHandler.GetOneMaterial(ctx, in, out)
+}
+
+func (h *materialServiceHandler) GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlMaterials) error {
+	return h.MaterialServiceHandler.GetMaterialsByGraphql(ctx, in, out)
 }
 
 func (h *materialServiceHandler) GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, out *Material) error {
