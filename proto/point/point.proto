@@ -18,7 +18,7 @@ service Point{
 }
 
 message Request{
-
+    uint32 garageID = 1;
 }
 
 message Response{
@@ -26,8 +26,9 @@ message Response{
 }
 
 message FileRequest{
-    string fileName = 1;
-    bytes filebytes = 2;
+    uint32 garageID = 1;
+    string fileName = 2;
+    bytes filebytes = 3;
 }
 
 message FileResponse{
@@ -35,15 +36,17 @@ message FileResponse{
 }
 
 message IdRequest{
-    uint32 id = 1;
+    uint32 garageID = 1;
+    uint32 id = 2;
 }
 
 message Query {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 per_page = 4;
-    string queryString = 5;
+    uint32 garageID = 1;
+    uint32 limit = 2;
+    uint32 offset = 3;
+    uint32 page = 4;
+    uint32 per_page = 5;
+    string queryString = 6;
 }
 
 message PointResponse{

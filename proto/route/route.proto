@@ -24,7 +24,7 @@ service Route{
 }
 
 message Request{
-
+    uint32 garageID = 1;
 }
 
 message Response{
@@ -32,12 +32,14 @@ message Response{
 }
 
 message StationsRequest{
-    uint32 startStn = 1;
-    repeated uint32 stations = 2;
+    uint32 garageID = 1;
+    uint32 startStn = 2;
+    repeated uint32 stations = 3;
 }
 
 message GetStationListRequest{
-    uint32 val1 = 1;
+    uint32 garageID = 1;
+    uint32 val1 = 2;
 }
 
 message StationWeight{
@@ -51,8 +53,9 @@ message GetStationListResponse{
 }
 
 message GetRouteRequest{
-    uint32 val1 = 1;
-    uint32 val2 = 2;
+    uint32 garageID = 1;
+    uint32 val1 = 2;
+    uint32 val2 = 3;
 }
 
 message GetRouteResponse{
