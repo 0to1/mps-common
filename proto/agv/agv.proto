@@ -15,7 +15,7 @@ service Agv {
 
 message Query{
   uint32 page = 1;
-  uint32 per_page = 2;
+  uint32 perPage = 2;
 }
 
 message Request{
