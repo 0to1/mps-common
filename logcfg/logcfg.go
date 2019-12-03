@@ -15,6 +15,7 @@ var (
 	LogDir        = "logs"
 	LogFileFormat = "YF.MPS-%Y%m%d%H%M.log"
 	RecentLogFile = "YF.MPS-recent.log"
+	Formatter     = "json"
 )
 
 // type Fields map[string]interface{}
@@ -23,12 +24,20 @@ var (
 func Config(opts ...Option) error {
 	options := newOptions(opts...)
 
-	// 配置格式为文本格式
-	logrus.SetFormatter(&logrus.TextFormatter{
-		TimestampFormat: "2006-01-02 15:04:05.000",
-		// FullTimestamp: true, //text专用
-		// PrettyPrint: true, //json专用
-	})
+	if Formatter == "json" {
+		// 配置格式为json格式
+		logrus.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: "2006-01-02 15:04:05.000",
+			// FullTimestamp: true, //text专用
+			PrettyPrint: true, //json专用
+		})
+	} else {
+		// 配置格式为文本格式
+		logrus.SetFormatter(&logrus.TextFormatter{
+			TimestampFormat: "2006-01-02 15:04:05.000",
+			FullTimestamp:   true, //text专用
+		})
+	}
 
 	// 加载钩子函数
 	for _, v := range options.Hooks {
@@ -36,7 +45,7 @@ func Config(opts ...Option) error {
 	}
 
 	// 设置允许打印函数调用信息
-	logrus.SetReportCaller(true)
+	// logrus.SetReportCaller(true)
 
 	// 设置日志级别
 	logrus.SetLevel(logrus.TraceLevel)
