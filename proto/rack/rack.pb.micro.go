@@ -70,6 +70,10 @@ type RackService interface {
 	BindMaterial(ctx context.Context, in *MaterialReq, opts ...client.CallOption) (*Response, error)
 	// 解绑物料
 	UnbindMaterial(ctx context.Context, in *MaterialReq, opts ...client.CallOption) (*Response, error)
+	OccupyRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
+	ReleaseRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
+	OccupyCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error)
+	ReleaseCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error)
 }
 
 type rackService struct {
@@ -280,6 +284,46 @@ func (c *rackService) UnbindMaterial(ctx context.Context, in *MaterialReq, opts 
 	return out, nil
 }
 
+func (c *rackService) OccupyRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.OccupyRack", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) ReleaseRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.ReleaseRack", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) OccupyCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.OccupyCell", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) ReleaseCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.ReleaseCell", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RackService service
 
 type RackServiceHandler interface {
@@ -319,6 +363,10 @@ type RackServiceHandler interface {
 	BindMaterial(context.Context, *MaterialReq, *Response) error
 	// 解绑物料
 	UnbindMaterial(context.Context, *MaterialReq, *Response) error
+	OccupyRack(context.Context, *RackIDReq, *Response) error
+	ReleaseRack(context.Context, *RackIDReq, *Response) error
+	OccupyCell(context.Context, *CellIDReq, *Response) error
+	ReleaseCell(context.Context, *CellIDReq, *Response) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
@@ -342,6 +390,10 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		DisableCells(ctx context.Context, in *CellIDsReq, out *Response) error
 		BindMaterial(ctx context.Context, in *MaterialReq, out *Response) error
 		UnbindMaterial(ctx context.Context, in *MaterialReq, out *Response) error
+		OccupyRack(ctx context.Context, in *RackIDReq, out *Response) error
+		ReleaseRack(ctx context.Context, in *RackIDReq, out *Response) error
+		OccupyCell(ctx context.Context, in *CellIDReq, out *Response) error
+		ReleaseCell(ctx context.Context, in *CellIDReq, out *Response) error
 	}
 	type RackService struct {
 		rackService
@@ -428,4 +480,20 @@ func (h *rackServiceHandler) BindMaterial(ctx context.Context, in *MaterialReq, 
 
 func (h *rackServiceHandler) UnbindMaterial(ctx context.Context, in *MaterialReq, out *Response) error {
 	return h.RackServiceHandler.UnbindMaterial(ctx, in, out)
+}
+
+func (h *rackServiceHandler) OccupyRack(ctx context.Context, in *RackIDReq, out *Response) error {
+	return h.RackServiceHandler.OccupyRack(ctx, in, out)
+}
+
+func (h *rackServiceHandler) ReleaseRack(ctx context.Context, in *RackIDReq, out *Response) error {
+	return h.RackServiceHandler.ReleaseRack(ctx, in, out)
+}
+
+func (h *rackServiceHandler) OccupyCell(ctx context.Context, in *CellIDReq, out *Response) error {
+	return h.RackServiceHandler.OccupyCell(ctx, in, out)
+}
+
+func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *CellIDReq, out *Response) error {
+	return h.RackServiceHandler.ReleaseCell(ctx, in, out)
 }

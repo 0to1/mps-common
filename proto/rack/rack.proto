@@ -39,6 +39,13 @@ service RackService {
   rpc BindMaterial(MaterialReq) returns (Response);
   // 解绑物料
   rpc UnbindMaterial(MaterialReq) returns (Response);
+
+  rpc  OccupyRack(RackIDReq) returns (Response);
+
+  rpc ReleaseRack(RackIDReq) returns (Response);
+
+  rpc OccupyCell(CellIDReq) returns(Response);
+  rpc ReleaseCell(CellIDReq) returns(Response);
 }
 
 message RackType {
@@ -95,11 +102,15 @@ message Rack {
   string description = 28;
   // 货架储位
   repeated Cell cells = 29;
+
+    //是否被占用
+    bool isOccupied = 33;
 }
 
 message Response {}
 
 message RackIDReq { uint32 id = 1; }
+message CellIDReq { uint32 id = 1; }
 
 message UpdateRackReq {
   uint32 id = 20;

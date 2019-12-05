@@ -109,6 +109,8 @@ message Racklot {
   bool IsOccupied = 13;
 
   int32 areaID = 14;
+
+  int32 stationID = 15;
 }
 
 message UpdateRacklotReq {
@@ -120,6 +122,7 @@ message UpdateRacklotReq {
   int32 length = 6;
   int32 width = 7;
   string description = 8;
+  int32 stationID = 15;
 }
 
 // message RacklotsReq {
