@@ -31,7 +31,10 @@ service MaterialService {
   rpc GetOneMaterialByParameters(QueryParameter) returns (Material);
 }
 
-message Response {}
+message Response {
+    //物料id 所有数据库唯一
+    int64 materialID = 1;
+}
 
 message MaterialType {
   int32 id = 1;
@@ -49,6 +52,9 @@ message Material {
   string typeName = 4;
 
   string properties = 3;
+
+  //物料id 所有数据库唯一
+  int64 materialID = 5;
 }
 
 message MaterialTypeIDReq { int32 id = 1; }
