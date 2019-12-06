@@ -179,7 +179,7 @@ message MaterialReq {
   uint32 rackID = 1;
   uint32 cellID = 2;  //或者使用Cell的tag字段
   int64  materialID = 3;
-  string materType = 4;
+  string materialType = 4;
 }
 
 message Parameter {
