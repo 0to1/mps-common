@@ -40,12 +40,12 @@ service RackService {
   // 解绑物料
   rpc UnbindMaterial(MaterialReq) returns (Response);
 
+
   rpc  OccupyRack(RackIDReq) returns (Response);
-
   rpc ReleaseRack(RackIDReq) returns (Response);
-
   rpc OccupyCell(CellIDReq) returns(Response);
   rpc ReleaseCell(CellIDReq) returns(Response);
+
 }
 
 message RackType {
@@ -73,7 +73,9 @@ message Cell {
   // 是否禁用
   bool isValid = 30;
   // 存放的物料对于的编号
-  uint32 materialID = 31;
+  int64 materialID = 31;
+  //物料类型
+  string materialType = 34;
   // cell类型id
   uint32 type = 32;
   //是否被占用
@@ -176,7 +178,8 @@ message RacklotReq {
 message MaterialReq {
   uint32 rackID = 1;
   uint32 cellID = 2;  //或者使用Cell的tag字段
-  uint32 materialID = 3;
+  int64  materialID = 3;
+  string materType = 4;
 }
 
 message Parameter {
