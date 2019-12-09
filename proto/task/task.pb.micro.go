@@ -48,6 +48,8 @@ type TaskService interface {
 	DeleteParameters(ctx context.Context, in *ParameterKeys, opts ...client.CallOption) (*Parameters, error)
 	// 获取任务详情
 	GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
+	//通过graphql条件查询
+	GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlTasks, error)
 	// 根据查询条件获取任务
 	GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
 	// 根据查询条件获取历史任务
@@ -148,6 +150,16 @@ func (c *taskService) GetTask(ctx context.Context, in *TaskID, opts ...client.Ca
 	return out, nil
 }
 
+func (c *taskService) GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlTasks, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetTasksByGraphql", in)
+	out := new(GraphqlTasks)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskService) GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error) {
 	req := c.c.NewRequest(c.name, "TaskService.GetTasks", in)
 	out := new(TaskInfos)
@@ -215,6 +227,8 @@ type TaskServiceHandler interface {
 	DeleteParameters(context.Context, *ParameterKeys, *Parameters) error
 	// 获取任务详情
 	GetTask(context.Context, *TaskID, *TaskInfo) error
+	//通过graphql条件查询
+	GetTasksByGraphql(context.Context, *GraphqlQuery, *GraphqlTasks) error
 	// 根据查询条件获取任务
 	GetTasks(context.Context, *Query, *TaskInfos) error
 	// 根据查询条件获取历史任务
@@ -236,6 +250,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		ModifyParameters(ctx context.Context, in *Parameters, out *Parameters) error
 		DeleteParameters(ctx context.Context, in *ParameterKeys, out *Parameters) error
 		GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error
+		GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlTasks) error
 		GetTasks(ctx context.Context, in *Query, out *TaskInfos) error
 		GetHistories(ctx context.Context, in *Query, out *TaskInfos) error
 		GetTasksByParameters(ctx context.Context, in *Parameters, out *TaskInfos) error
@@ -279,6 +294,10 @@ func (h *taskServiceHandler) DeleteParameters(ctx context.Context, in *Parameter
 
 func (h *taskServiceHandler) GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
 	return h.TaskServiceHandler.GetTask(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlTasks) error {
+	return h.TaskServiceHandler.GetTasksByGraphql(ctx, in, out)
 }
 
 func (h *taskServiceHandler) GetTasks(ctx context.Context, in *Query, out *TaskInfos) error {

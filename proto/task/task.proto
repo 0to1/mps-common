@@ -26,6 +26,9 @@ service TaskService {
   // 获取任务详情
   rpc GetTask(TaskID) returns (TaskInfo);
 
+      //通过graphql条件查询
+      rpc GetTasksByGraphql(GraphqlQuery)returns(GraphqlTasks);
+
   // 根据查询条件获取任务
   rpc GetTasks(Query) returns (TaskInfos);
   // 根据查询条件获取历史任务
@@ -52,6 +55,14 @@ message Response {}
 message Path { string path = 1; }
 
 message TaskID { uint32 id = 1; }
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlTasks {
+    string response =1;
+}
 
 message Query {
   uint32 limit = 1;
