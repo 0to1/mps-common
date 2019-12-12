@@ -14,12 +14,17 @@ service Order {
 
   rpc SendQBMessage(QBMessage) returns (Response);
   rpc SendMMessage(MMessage) returns (Response);
+  rpc HostIsConnected(Request) returns(Response);
 }
 
 message UpdateReq {
   uint32 index = 1;//调度系统的任务编号
   uint32 paraNo = 2;//参数索引
   uint32 value = 3;//参数值
+}
+
+message Request{
+
 }
 
 message CancelReq {
