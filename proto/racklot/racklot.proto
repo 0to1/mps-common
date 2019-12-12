@@ -13,12 +13,16 @@ service RacklotService {
   rpc GetRacklotType(Query) returns (RacklotTypes);
   // 添加货位
   rpc AddRacklot(Racklot) returns (AddResp);
-  // 导入货位
+  // 批量导入货位
   rpc BatchAddRacklots(Racklots) returns (Response);
   // 删除货位
   rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
+  // 批量删除货位
+  rpc BatchDeleteRacklots(DeleteRacklotsReq) returns (Response);
   // 更新货位基础信息
   rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
+    // 批量修改货位
+    rpc BatchUpdateRacklots(UpdateRacklotsReq) returns (Response);
   // 根据查询条件获取货位
   rpc GetRacklots(Query) returns (Racklots);
     // 根据查询条件获取货位
@@ -124,6 +128,16 @@ message UpdateRacklotReq {
   string description = 8;
   int32 stationID = 15;
 }
+
+message UpdateRacklotsReq {
+    repeated int32 ids = 1;
+    int32 racklotType = 2;
+  }
+
+  message DeleteRacklotsReq {
+    repeated int32 ids = 1;
+    repeated int32 stationIDs = 2;
+  }
 
 // message RacklotsReq {
 // 	repeated Racklot racklots = 1;

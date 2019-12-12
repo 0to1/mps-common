@@ -44,12 +44,16 @@ type RacklotService interface {
 	GetRacklotType(ctx context.Context, in *Query, opts ...client.CallOption) (*RacklotTypes, error)
 	// 添加货位
 	AddRacklot(ctx context.Context, in *Racklot, opts ...client.CallOption) (*AddResp, error)
-	// 导入货位
+	// 批量导入货位
 	BatchAddRacklots(ctx context.Context, in *Racklots, opts ...client.CallOption) (*Response, error)
 	// 删除货位
 	DeleteRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*DeleteResp, error)
+	// 批量删除货位
+	BatchDeleteRacklots(ctx context.Context, in *DeleteRacklotsReq, opts ...client.CallOption) (*Response, error)
 	// 更新货位基础信息
 	UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, opts ...client.CallOption) (*UpdateResp, error)
+	// 批量修改货位
+	BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, opts ...client.CallOption) (*Response, error)
 	// 根据查询条件获取货位
 	GetRacklots(ctx context.Context, in *Query, opts ...client.CallOption) (*Racklots, error)
 	// 根据查询条件获取货位
@@ -170,9 +174,29 @@ func (c *racklotService) DeleteRacklot(ctx context.Context, in *RacklotIDReq, op
 	return out, nil
 }
 
+func (c *racklotService) BatchDeleteRacklots(ctx context.Context, in *DeleteRacklotsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.BatchDeleteRacklots", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *racklotService) UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, opts ...client.CallOption) (*UpdateResp, error) {
 	req := c.c.NewRequest(c.name, "RacklotService.UpdateRacklot", in)
 	out := new(UpdateResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *racklotService) BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.BatchUpdateRacklots", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -363,12 +387,16 @@ type RacklotServiceHandler interface {
 	GetRacklotType(context.Context, *Query, *RacklotTypes) error
 	// 添加货位
 	AddRacklot(context.Context, *Racklot, *AddResp) error
-	// 导入货位
+	// 批量导入货位
 	BatchAddRacklots(context.Context, *Racklots, *Response) error
 	// 删除货位
 	DeleteRacklot(context.Context, *RacklotIDReq, *DeleteResp) error
+	// 批量删除货位
+	BatchDeleteRacklots(context.Context, *DeleteRacklotsReq, *Response) error
 	// 更新货位基础信息
 	UpdateRacklot(context.Context, *UpdateRacklotReq, *UpdateResp) error
+	// 批量修改货位
+	BatchUpdateRacklots(context.Context, *UpdateRacklotsReq, *Response) error
 	// 根据查询条件获取货位
 	GetRacklots(context.Context, *Query, *Racklots) error
 	// 根据查询条件获取货位
@@ -410,7 +438,9 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		AddRacklot(ctx context.Context, in *Racklot, out *AddResp) error
 		BatchAddRacklots(ctx context.Context, in *Racklots, out *Response) error
 		DeleteRacklot(ctx context.Context, in *RacklotIDReq, out *DeleteResp) error
+		BatchDeleteRacklots(ctx context.Context, in *DeleteRacklotsReq, out *Response) error
 		UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, out *UpdateResp) error
+		BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, out *Response) error
 		GetRacklots(ctx context.Context, in *Query, out *Racklots) error
 		GetRacklotsByType(ctx context.Context, in *Query, out *Racklots) error
 		GetRacklotsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacklots) error
@@ -468,8 +498,16 @@ func (h *racklotServiceHandler) DeleteRacklot(ctx context.Context, in *RacklotID
 	return h.RacklotServiceHandler.DeleteRacklot(ctx, in, out)
 }
 
+func (h *racklotServiceHandler) BatchDeleteRacklots(ctx context.Context, in *DeleteRacklotsReq, out *Response) error {
+	return h.RacklotServiceHandler.BatchDeleteRacklots(ctx, in, out)
+}
+
 func (h *racklotServiceHandler) UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, out *UpdateResp) error {
 	return h.RacklotServiceHandler.UpdateRacklot(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, out *Response) error {
+	return h.RacklotServiceHandler.BatchUpdateRacklots(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) GetRacklots(ctx context.Context, in *Query, out *Racklots) error {

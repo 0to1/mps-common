@@ -6,6 +6,7 @@ service RackService {
   rpc AddRack(Rack) returns (Response);
   rpc BatchAddRacks(Racks) returns (Response);
   rpc DeleteRack(RackIDReq) returns (Response);
+  rpc BatchDeleteRacks(DeleteRacksReq) returns (Response);
   // 更新货架信息
   rpc UpdateRack(UpdateRackReq) returns (Response);
   // 根据货架ID获取货架信息
@@ -126,6 +127,10 @@ message UpdateRackReq {
   int32 layers = 27;
   int32 pickingSurface = 28;
   string description = 29;
+}
+
+message DeleteRacksReq {
+    repeated int32 ids = 1;
 }
 
 message GraphqlQuery {
