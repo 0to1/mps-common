@@ -35,6 +35,7 @@ var _ server.Option
 
 type RackService interface {
 	AddRack(ctx context.Context, in *Rack, opts ...client.CallOption) (*Response, error)
+	BatchAddRacks(ctx context.Context, in *Racks, opts ...client.CallOption) (*Response, error)
 	DeleteRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
 	// 更新货架信息
 	UpdateRack(ctx context.Context, in *UpdateRackReq, opts ...client.CallOption) (*Response, error)
@@ -96,6 +97,16 @@ func NewRackService(name string, c client.Client) RackService {
 
 func (c *rackService) AddRack(ctx context.Context, in *Rack, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.AddRack", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) BatchAddRacks(ctx context.Context, in *Racks, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.BatchAddRacks", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -328,6 +339,7 @@ func (c *rackService) ReleaseCell(ctx context.Context, in *CellIDReq, opts ...cl
 
 type RackServiceHandler interface {
 	AddRack(context.Context, *Rack, *Response) error
+	BatchAddRacks(context.Context, *Racks, *Response) error
 	DeleteRack(context.Context, *RackIDReq, *Response) error
 	// 更新货架信息
 	UpdateRack(context.Context, *UpdateRackReq, *Response) error
@@ -372,6 +384,7 @@ type RackServiceHandler interface {
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
 	type rackService interface {
 		AddRack(ctx context.Context, in *Rack, out *Response) error
+		BatchAddRacks(ctx context.Context, in *Racks, out *Response) error
 		DeleteRack(ctx context.Context, in *RackIDReq, out *Response) error
 		UpdateRack(ctx context.Context, in *UpdateRackReq, out *Response) error
 		GetOneRack(ctx context.Context, in *RackIDReq, out *Rack) error
@@ -408,6 +421,10 @@ type rackServiceHandler struct {
 
 func (h *rackServiceHandler) AddRack(ctx context.Context, in *Rack, out *Response) error {
 	return h.RackServiceHandler.AddRack(ctx, in, out)
+}
+
+func (h *rackServiceHandler) BatchAddRacks(ctx context.Context, in *Racks, out *Response) error {
+	return h.RackServiceHandler.BatchAddRacks(ctx, in, out)
 }
 
 func (h *rackServiceHandler) DeleteRack(ctx context.Context, in *RackIDReq, out *Response) error {

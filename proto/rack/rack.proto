@@ -4,6 +4,7 @@ package go.micro.srv.rack;
 
 service RackService {
   rpc AddRack(Rack) returns (Response);
+  rpc BatchAddRacks(Racks) returns (Response);
   rpc DeleteRack(RackIDReq) returns (Response);
   // 更新货架信息
   rpc UpdateRack(UpdateRackReq) returns (Response);
