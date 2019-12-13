@@ -44,6 +44,8 @@ type AreaService interface {
 	GetAreaType(ctx context.Context, in *Query, opts ...client.CallOption) (*AreaTypes, error)
 	// 添加区域
 	AddArea(ctx context.Context, in *Area, opts ...client.CallOption) (*Response, error)
+	// 修改区域
+	UpdateArea(ctx context.Context, in *UpdateAreaReq, opts ...client.CallOption) (*Response, error)
 	// 删除区域
 	DeleteArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Response, error)
 	// 根据ID获取指定区域信息
@@ -138,6 +140,16 @@ func (c *areaService) GetAreaType(ctx context.Context, in *Query, opts ...client
 
 func (c *areaService) AddArea(ctx context.Context, in *Area, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "AreaService.AddArea", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *areaService) UpdateArea(ctx context.Context, in *UpdateAreaReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "AreaService.UpdateArea", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -319,6 +331,8 @@ type AreaServiceHandler interface {
 	GetAreaType(context.Context, *Query, *AreaTypes) error
 	// 添加区域
 	AddArea(context.Context, *Area, *Response) error
+	// 修改区域
+	UpdateArea(context.Context, *UpdateAreaReq, *Response) error
 	// 删除区域
 	DeleteArea(context.Context, *AreaIDReq, *Response) error
 	// 根据ID获取指定区域信息
@@ -360,6 +374,7 @@ func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts .
 		DeleteAreaType(ctx context.Context, in *AreaType, out *Response) error
 		GetAreaType(ctx context.Context, in *Query, out *AreaTypes) error
 		AddArea(ctx context.Context, in *Area, out *Response) error
+		UpdateArea(ctx context.Context, in *UpdateAreaReq, out *Response) error
 		DeleteArea(ctx context.Context, in *AreaIDReq, out *Response) error
 		GetOneArea(ctx context.Context, in *AreaIDReq, out *Area) error
 		GetAreas(ctx context.Context, in *Query, out *Areas) error
@@ -406,6 +421,10 @@ func (h *areaServiceHandler) GetAreaType(ctx context.Context, in *Query, out *Ar
 
 func (h *areaServiceHandler) AddArea(ctx context.Context, in *Area, out *Response) error {
 	return h.AreaServiceHandler.AddArea(ctx, in, out)
+}
+
+func (h *areaServiceHandler) UpdateArea(ctx context.Context, in *UpdateAreaReq, out *Response) error {
+	return h.AreaServiceHandler.UpdateArea(ctx, in, out)
 }
 
 func (h *areaServiceHandler) DeleteArea(ctx context.Context, in *AreaIDReq, out *Response) error {

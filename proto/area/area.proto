@@ -14,6 +14,8 @@ service AreaService {
    rpc GetAreaType(Query) returns (AreaTypes);
   // 添加区域
   rpc AddArea(Area) returns (Response);
+    // 修改区域
+    rpc UpdateArea(UpdateAreaReq) returns (Response);
   // 删除区域
   rpc DeleteArea(AreaIDReq) returns (Response);
   // 根据ID获取指定区域信息
@@ -61,7 +63,7 @@ message AreaTypes {
 
 message Area {
   // 区域ID
-  int32 areaID = 20;
+  int32 id = 20;
   // 父级区域ID
   int32 parentAreaID = 21;
   // 区域类型
@@ -87,11 +89,14 @@ message Area {
   repeated uint32 orderIDs = 32;
 }
 
+message UpdateAreaReq {
+    int32 id = 1;
+    Area area = 2;
+}
+
 message Response {}
 
 message AreaIDReq { int32 id = 1; }
-
-message UpdateAreaReq {}
 
 message Query {
   uint32 limit = 1;
