@@ -15,6 +15,9 @@ const (
 	TopicTypeHide = "hide"
 )
 
+// TopicRoute ..
+const TopicRoute = "go.micro.topic.map.route"
+
 // TopicStation ..
 const TopicStation = "go.micro.topic.map.station"
 

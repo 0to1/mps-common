@@ -23,16 +23,10 @@ service Route{
     rpc UpdateRouteSearch (Request) returns (Response);
 
     //显示路径//
-    rpc ShowRoute(RouteShowRequest) returns (Response);
+    rpc ShowRoute(GetRouteRequest) returns (Response);
 
     //隐藏路径//
-    rpc HideRoute(RouteShowRequest) returns (Response);
-}
-
-message RouteShowRequest{
-    uint32 garageID = 1;
-    uint32 startStn = 2;
-    uint32 endStn = 3;
+    rpc HideRoute(GetRouteRequest) returns (Response);
 }
 
 message Request{
