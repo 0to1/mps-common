@@ -46,6 +46,10 @@ type RouteService interface {
 	SortStationList(ctx context.Context, in *StationsRequest, opts ...client.CallOption) (*GetStationListResponse, error)
 	//更新地图//
 	UpdateRouteSearch(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	//显示路径//
+	ShowRoute(ctx context.Context, in *RouteShowRequest, opts ...client.CallOption) (*Response, error)
+	//隐藏路径//
+	HideRoute(ctx context.Context, in *RouteShowRequest, opts ...client.CallOption) (*Response, error)
 }
 
 type routeService struct {
@@ -126,6 +130,26 @@ func (c *routeService) UpdateRouteSearch(ctx context.Context, in *Request, opts 
 	return out, nil
 }
 
+func (c *routeService) ShowRoute(ctx context.Context, in *RouteShowRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Route.ShowRoute", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *routeService) HideRoute(ctx context.Context, in *RouteShowRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Route.HideRoute", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Route service
 
 type RouteHandler interface {
@@ -141,6 +165,10 @@ type RouteHandler interface {
 	SortStationList(context.Context, *StationsRequest, *GetStationListResponse) error
 	//更新地图//
 	UpdateRouteSearch(context.Context, *Request, *Response) error
+	//显示路径//
+	ShowRoute(context.Context, *RouteShowRequest, *Response) error
+	//隐藏路径//
+	HideRoute(context.Context, *RouteShowRequest, *Response) error
 }
 
 func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.HandlerOption) error {
@@ -151,6 +179,8 @@ func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.Han
 		GetStationListFromStn(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error
 		SortStationList(ctx context.Context, in *StationsRequest, out *GetStationListResponse) error
 		UpdateRouteSearch(ctx context.Context, in *Request, out *Response) error
+		ShowRoute(ctx context.Context, in *RouteShowRequest, out *Response) error
+		HideRoute(ctx context.Context, in *RouteShowRequest, out *Response) error
 	}
 	type Route struct {
 		route
@@ -185,4 +215,12 @@ func (h *routeHandler) SortStationList(ctx context.Context, in *StationsRequest,
 
 func (h *routeHandler) UpdateRouteSearch(ctx context.Context, in *Request, out *Response) error {
 	return h.RouteHandler.UpdateRouteSearch(ctx, in, out)
+}
+
+func (h *routeHandler) ShowRoute(ctx context.Context, in *RouteShowRequest, out *Response) error {
+	return h.RouteHandler.ShowRoute(ctx, in, out)
+}
+
+func (h *routeHandler) HideRoute(ctx context.Context, in *RouteShowRequest, out *Response) error {
+	return h.RouteHandler.HideRoute(ctx, in, out)
 }
