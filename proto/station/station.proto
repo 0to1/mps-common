@@ -12,6 +12,17 @@ service Station{
 
     //Get all stations message
     rpc GetStations(Query) returns (StationsResponse){}
+
+    //Get stations by graphql
+    rpc GetStationsByGraphql(GraphqlQuery) returns (GraphqlStations){}
+}
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlStations {
+    string response = 1;
 }
 
 message FileRequest{

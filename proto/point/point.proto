@@ -15,6 +15,17 @@ service Point{
 
     //删除所有点//
     rpc DeleteAllPoints(Request) returns (Response){}
+
+     //Get points by graphql
+     rpc GetPointsByGraphql(GraphqlQuery) returns (GraphqlPoints){}
+}
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlPoints {
+    string response = 1;
 }
 
 message Request{

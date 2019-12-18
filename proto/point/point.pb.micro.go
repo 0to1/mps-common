@@ -42,6 +42,8 @@ type PointService interface {
 	GetPoints(ctx context.Context, in *Query, opts ...client.CallOption) (*PointsResponse, error)
 	//删除所有点//
 	DeleteAllPoints(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	//Get points by graphql
+	GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlPoints, error)
 }
 
 type pointService struct {
@@ -102,6 +104,16 @@ func (c *pointService) DeleteAllPoints(ctx context.Context, in *Request, opts ..
 	return out, nil
 }
 
+func (c *pointService) GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlPoints, error) {
+	req := c.c.NewRequest(c.name, "Point.GetPointsByGraphql", in)
+	out := new(GraphqlPoints)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Point service
 
 type PointHandler interface {
@@ -113,6 +125,8 @@ type PointHandler interface {
 	GetPoints(context.Context, *Query, *PointsResponse) error
 	//删除所有点//
 	DeleteAllPoints(context.Context, *Request, *Response) error
+	//Get points by graphql
+	GetPointsByGraphql(context.Context, *GraphqlQuery, *GraphqlPoints) error
 }
 
 func RegisterPointHandler(s server.Server, hdlr PointHandler, opts ...server.HandlerOption) error {
@@ -121,6 +135,7 @@ func RegisterPointHandler(s server.Server, hdlr PointHandler, opts ...server.Han
 		GetPointByID(ctx context.Context, in *IdRequest, out *PointResponse) error
 		GetPoints(ctx context.Context, in *Query, out *PointsResponse) error
 		DeleteAllPoints(ctx context.Context, in *Request, out *Response) error
+		GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlPoints) error
 	}
 	type Point struct {
 		point
@@ -147,4 +162,8 @@ func (h *pointHandler) GetPoints(ctx context.Context, in *Query, out *PointsResp
 
 func (h *pointHandler) DeleteAllPoints(ctx context.Context, in *Request, out *Response) error {
 	return h.PointHandler.DeleteAllPoints(ctx, in, out)
+}
+
+func (h *pointHandler) GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlPoints) error {
+	return h.PointHandler.GetPointsByGraphql(ctx, in, out)
 }

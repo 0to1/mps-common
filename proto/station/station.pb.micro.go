@@ -40,6 +40,8 @@ type StationService interface {
 	GetStationByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*StationResponse, error)
 	//Get all stations message
 	GetStations(ctx context.Context, in *Query, opts ...client.CallOption) (*StationsResponse, error)
+	//Get stations by graphql
+	GetStationsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlStations, error)
 }
 
 type stationService struct {
@@ -90,6 +92,16 @@ func (c *stationService) GetStations(ctx context.Context, in *Query, opts ...cli
 	return out, nil
 }
 
+func (c *stationService) GetStationsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlStations, error) {
+	req := c.c.NewRequest(c.name, "Station.GetStationsByGraphql", in)
+	out := new(GraphqlStations)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Station service
 
 type StationHandler interface {
@@ -99,6 +111,8 @@ type StationHandler interface {
 	GetStationByID(context.Context, *IdRequest, *StationResponse) error
 	//Get all stations message
 	GetStations(context.Context, *Query, *StationsResponse) error
+	//Get stations by graphql
+	GetStationsByGraphql(context.Context, *GraphqlQuery, *GraphqlStations) error
 }
 
 func RegisterStationHandler(s server.Server, hdlr StationHandler, opts ...server.HandlerOption) error {
@@ -106,6 +120,7 @@ func RegisterStationHandler(s server.Server, hdlr StationHandler, opts ...server
 		SaveStationFile(ctx context.Context, in *FileRequest, out *FileResponse) error
 		GetStationByID(ctx context.Context, in *IdRequest, out *StationResponse) error
 		GetStations(ctx context.Context, in *Query, out *StationsResponse) error
+		GetStationsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlStations) error
 	}
 	type Station struct {
 		station
@@ -128,4 +143,8 @@ func (h *stationHandler) GetStationByID(ctx context.Context, in *IdRequest, out 
 
 func (h *stationHandler) GetStations(ctx context.Context, in *Query, out *StationsResponse) error {
 	return h.StationHandler.GetStations(ctx, in, out)
+}
+
+func (h *stationHandler) GetStationsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlStations) error {
+	return h.StationHandler.GetStationsByGraphql(ctx, in, out)
 }

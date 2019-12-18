@@ -40,6 +40,8 @@ type SegmentService interface {
 	GetSegmentByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*SegmentResponse, error)
 	//Get all segments message
 	GetSegments(ctx context.Context, in *Query, opts ...client.CallOption) (*SegmentsResponse, error)
+	//Get segments by graphql
+	GetSegmentsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlSegments, error)
 }
 
 type segmentService struct {
@@ -90,6 +92,16 @@ func (c *segmentService) GetSegments(ctx context.Context, in *Query, opts ...cli
 	return out, nil
 }
 
+func (c *segmentService) GetSegmentsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlSegments, error) {
+	req := c.c.NewRequest(c.name, "Segment.GetSegmentsByGraphql", in)
+	out := new(GraphqlSegments)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Segment service
 
 type SegmentHandler interface {
@@ -99,6 +111,8 @@ type SegmentHandler interface {
 	GetSegmentByID(context.Context, *IdRequest, *SegmentResponse) error
 	//Get all segments message
 	GetSegments(context.Context, *Query, *SegmentsResponse) error
+	//Get segments by graphql
+	GetSegmentsByGraphql(context.Context, *GraphqlQuery, *GraphqlSegments) error
 }
 
 func RegisterSegmentHandler(s server.Server, hdlr SegmentHandler, opts ...server.HandlerOption) error {
@@ -106,6 +120,7 @@ func RegisterSegmentHandler(s server.Server, hdlr SegmentHandler, opts ...server
 		SaveSegmentFile(ctx context.Context, in *FileRequest, out *FileResponse) error
 		GetSegmentByID(ctx context.Context, in *IdRequest, out *SegmentResponse) error
 		GetSegments(ctx context.Context, in *Query, out *SegmentsResponse) error
+		GetSegmentsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlSegments) error
 	}
 	type Segment struct {
 		segment
@@ -128,4 +143,8 @@ func (h *segmentHandler) GetSegmentByID(ctx context.Context, in *IdRequest, out 
 
 func (h *segmentHandler) GetSegments(ctx context.Context, in *Query, out *SegmentsResponse) error {
 	return h.SegmentHandler.GetSegments(ctx, in, out)
+}
+
+func (h *segmentHandler) GetSegmentsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlSegments) error {
+	return h.SegmentHandler.GetSegmentsByGraphql(ctx, in, out)
 }

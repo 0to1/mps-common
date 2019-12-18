@@ -12,12 +12,23 @@ service Segment{
 
     //Get all segments message
     rpc GetSegments(Query) returns (SegmentsResponse){}
+
+    //Get segments by graphql
+    rpc GetSegmentsByGraphql(GraphqlQuery) returns (GraphqlSegments){}
 }
 
 message FileRequest{
     uint32 garageID = 1;
     string fileName = 2;
     bytes filebytes = 3;
+}
+
+message GraphqlQuery {
+    string query = 1;
+}
+
+message GraphqlSegments {
+    string response = 1;
 }
 
 message FileResponse{
