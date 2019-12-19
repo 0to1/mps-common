@@ -20,7 +20,7 @@ service Route{
     rpc SortStationList(StationsRequest) returns (GetStationListResponse){}
 
     //更新地图//
-    rpc UpdateRouteSearch (Request) returns (Response){}
+    rpc UpdateRouteSearch(Request) returns (Response){}
 
     //显示路径//
     rpc ShowRoute(GetRouteRequest) returns (Response){}
