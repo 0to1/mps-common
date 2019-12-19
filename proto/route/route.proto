@@ -20,13 +20,13 @@ service Route{
     rpc SortStationList(StationsRequest) returns (GetStationListResponse){}
 
     //更新地图//
-    rpc UpdateRouteSearch (Request) returns (Response);
+    rpc UpdateRouteSearch (Request) returns (Response){}
 
     //显示路径//
-    rpc ShowRoute(GetRouteRequest) returns (Response);
+    rpc ShowRoute(GetRouteRequest) returns (Response){}
 
     //隐藏路径//
-    rpc HideRoute(GetRouteRequest) returns (Response);
+    rpc HideRoute(GetRouteRequest) returns (Response){}
 }
 
 message Request{
