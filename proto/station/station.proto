@@ -4,9 +4,6 @@ package go.micro.srv.station;
 
 service Station{
 
-    //save station file
-    rpc SaveStationFile(FileRequest) returns (FileResponse){}
-
     //Get station message according to station id
     rpc GetStationByID(IdRequest) returns (StationResponse){}
 
@@ -25,16 +22,6 @@ message GraphqlStations {
     string response = 1;
 }
 
-message FileRequest{
-    uint32 garageID = 1;
-    string fileName = 2;
-    bytes filebytes = 3;
-}
-
-message FileResponse{
-    bool res = 1;
-}
-
 message IdRequest{
     uint32 garageID = 1;
     uint32 id = 2;
@@ -42,28 +29,26 @@ message IdRequest{
 
 message Query {
     uint32 garageID = 1;
-    uint32 limit = 2;
-    uint32 offset = 3;
-    uint32 page = 4;
-    uint32 perPage = 5;
-    string queryString = 6;
+    uint32 page = 2;
+    uint32 perPage = 3;
 }
 
 message StationResponse{
-    uint32 stationID = 1;
-    uint32 pointID = 2;
-    string type = 3;
-    uint32 sysModes = 4;
-    uint32 carrierTypes = 5;
-    string remark = 6;
-    string stationName = 7;
-    uint32 x = 8;
-    uint32 y = 9;
-    uint32 angle = 10;   
+    uint32 garageID = 1;
+    uint32 stationID = 2;
+    uint32 pointID = 3;
+    string type = 4;
+    uint32 sysModes = 5;
+    uint32 carrierTypes = 6;
+    string remark = 7;
+    string stationName = 8;
+    uint32 x = 9;
+    uint32 y = 10;
+    uint32 angle = 11;   
 }
 
 message StationsResponse{
     repeated StationResponse stations = 1;
     uint32 totalpages = 2;
-    uint32 currpages = 3;
+    uint32 totalNumber = 3;
 }

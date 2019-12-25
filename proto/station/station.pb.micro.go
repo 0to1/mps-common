@@ -34,8 +34,6 @@ var _ server.Option
 // Client API for Station service
 
 type StationService interface {
-	//save station file
-	SaveStationFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error)
 	//Get station message according to station id
 	GetStationByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*StationResponse, error)
 	//Get all stations message
@@ -60,16 +58,6 @@ func NewStationService(name string, c client.Client) StationService {
 		c:    c,
 		name: name,
 	}
-}
-
-func (c *stationService) SaveStationFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error) {
-	req := c.c.NewRequest(c.name, "Station.SaveStationFile", in)
-	out := new(FileResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *stationService) GetStationByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*StationResponse, error) {
@@ -105,8 +93,6 @@ func (c *stationService) GetStationsByGraphql(ctx context.Context, in *GraphqlQu
 // Server API for Station service
 
 type StationHandler interface {
-	//save station file
-	SaveStationFile(context.Context, *FileRequest, *FileResponse) error
 	//Get station message according to station id
 	GetStationByID(context.Context, *IdRequest, *StationResponse) error
 	//Get all stations message
@@ -117,7 +103,6 @@ type StationHandler interface {
 
 func RegisterStationHandler(s server.Server, hdlr StationHandler, opts ...server.HandlerOption) error {
 	type station interface {
-		SaveStationFile(ctx context.Context, in *FileRequest, out *FileResponse) error
 		GetStationByID(ctx context.Context, in *IdRequest, out *StationResponse) error
 		GetStations(ctx context.Context, in *Query, out *StationsResponse) error
 		GetStationsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlStations) error
@@ -131,10 +116,6 @@ func RegisterStationHandler(s server.Server, hdlr StationHandler, opts ...server
 
 type stationHandler struct {
 	StationHandler
-}
-
-func (h *stationHandler) SaveStationFile(ctx context.Context, in *FileRequest, out *FileResponse) error {
-	return h.StationHandler.SaveStationFile(ctx, in, out)
 }
 
 func (h *stationHandler) GetStationByID(ctx context.Context, in *IdRequest, out *StationResponse) error {

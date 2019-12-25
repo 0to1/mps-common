@@ -4,17 +4,11 @@ package go.micro.srv.point;
 
 service Point{
 
-    //save point file
-    rpc SavePointFile(FileRequest) returns (FileResponse){}
-
     //Get point message according to point id
     rpc GetPointByID(IdRequest) returns (PointResponse){}
 
     //Get all points message
     rpc GetPoints(Query) returns (PointsResponse){}
-
-    //删除所有点//
-    rpc DeleteAllPoints(Request) returns (Response){}
 
      //Get points by graphql
      rpc GetPointsByGraphql(GraphqlQuery) returns (GraphqlPoints){}
@@ -26,24 +20,6 @@ message GraphqlQuery {
 
 message GraphqlPoints {
     string response = 1;
-}
-
-message Request{
-    uint32 garageID = 1;
-}
-
-message Response{
-    bool res = 1;
-}
-
-message FileRequest{
-    uint32 garageID = 1;
-    string fileName = 2;
-    bytes filebytes = 3;
-}
-
-message FileResponse{
-    bool res = 1;
 }
 
 message IdRequest{
@@ -61,20 +37,21 @@ message Query {
 }
 
 message PointResponse{
-    uint32 pointID = 1;
-    uint32 x = 2;
-    uint32 y = 3;
-    uint32 angle = 4; 
-    uint32 curvature = 5; 
-    uint32 plcBits = 6; 
-    uint32 plcWord = 7; 
-    uint32 plcWord2 = 8; 
-    uint32 changeTime = 9;
-    string remark = 10;
+    uint32 garageID = 1;
+    uint32 pointID = 2;
+    uint32 x = 3;
+    uint32 y = 4;
+    uint32 angle = 5; 
+    uint32 curvature = 6; 
+    uint32 plcBits = 7; 
+    uint32 plcWord = 8; 
+    uint32 plcWord2 = 9; 
+    uint32 changeTime = 10;
+    string remark = 11;
 }
 
 message PointsResponse{
     repeated PointResponse points = 1;
     uint32 totalpages = 2;
-    uint32 currpages = 3;
+    uint32 totalNumber = 3;
 }

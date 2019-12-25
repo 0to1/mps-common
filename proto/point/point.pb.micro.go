@@ -34,14 +34,10 @@ var _ server.Option
 // Client API for Point service
 
 type PointService interface {
-	//save point file
-	SavePointFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error)
 	//Get point message according to point id
 	GetPointByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*PointResponse, error)
 	//Get all points message
 	GetPoints(ctx context.Context, in *Query, opts ...client.CallOption) (*PointsResponse, error)
-	//删除所有点//
-	DeleteAllPoints(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	//Get points by graphql
 	GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlPoints, error)
 }
@@ -64,16 +60,6 @@ func NewPointService(name string, c client.Client) PointService {
 	}
 }
 
-func (c *pointService) SavePointFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error) {
-	req := c.c.NewRequest(c.name, "Point.SavePointFile", in)
-	out := new(FileResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *pointService) GetPointByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*PointResponse, error) {
 	req := c.c.NewRequest(c.name, "Point.GetPointByID", in)
 	out := new(PointResponse)
@@ -94,16 +80,6 @@ func (c *pointService) GetPoints(ctx context.Context, in *Query, opts ...client.
 	return out, nil
 }
 
-func (c *pointService) DeleteAllPoints(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Point.DeleteAllPoints", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *pointService) GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlPoints, error) {
 	req := c.c.NewRequest(c.name, "Point.GetPointsByGraphql", in)
 	out := new(GraphqlPoints)
@@ -117,24 +93,18 @@ func (c *pointService) GetPointsByGraphql(ctx context.Context, in *GraphqlQuery,
 // Server API for Point service
 
 type PointHandler interface {
-	//save point file
-	SavePointFile(context.Context, *FileRequest, *FileResponse) error
 	//Get point message according to point id
 	GetPointByID(context.Context, *IdRequest, *PointResponse) error
 	//Get all points message
 	GetPoints(context.Context, *Query, *PointsResponse) error
-	//删除所有点//
-	DeleteAllPoints(context.Context, *Request, *Response) error
 	//Get points by graphql
 	GetPointsByGraphql(context.Context, *GraphqlQuery, *GraphqlPoints) error
 }
 
 func RegisterPointHandler(s server.Server, hdlr PointHandler, opts ...server.HandlerOption) error {
 	type point interface {
-		SavePointFile(ctx context.Context, in *FileRequest, out *FileResponse) error
 		GetPointByID(ctx context.Context, in *IdRequest, out *PointResponse) error
 		GetPoints(ctx context.Context, in *Query, out *PointsResponse) error
-		DeleteAllPoints(ctx context.Context, in *Request, out *Response) error
 		GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlPoints) error
 	}
 	type Point struct {
@@ -148,20 +118,12 @@ type pointHandler struct {
 	PointHandler
 }
 
-func (h *pointHandler) SavePointFile(ctx context.Context, in *FileRequest, out *FileResponse) error {
-	return h.PointHandler.SavePointFile(ctx, in, out)
-}
-
 func (h *pointHandler) GetPointByID(ctx context.Context, in *IdRequest, out *PointResponse) error {
 	return h.PointHandler.GetPointByID(ctx, in, out)
 }
 
 func (h *pointHandler) GetPoints(ctx context.Context, in *Query, out *PointsResponse) error {
 	return h.PointHandler.GetPoints(ctx, in, out)
-}
-
-func (h *pointHandler) DeleteAllPoints(ctx context.Context, in *Request, out *Response) error {
-	return h.PointHandler.DeleteAllPoints(ctx, in, out)
 }
 
 func (h *pointHandler) GetPointsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlPoints) error {

@@ -34,8 +34,6 @@ var _ server.Option
 // Client API for Segment service
 
 type SegmentService interface {
-	//save segment file
-	SaveSegmentFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error)
 	//Get segment message according to segment id
 	GetSegmentByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*SegmentResponse, error)
 	//Get all segments message
@@ -60,16 +58,6 @@ func NewSegmentService(name string, c client.Client) SegmentService {
 		c:    c,
 		name: name,
 	}
-}
-
-func (c *segmentService) SaveSegmentFile(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileResponse, error) {
-	req := c.c.NewRequest(c.name, "Segment.SaveSegmentFile", in)
-	out := new(FileResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *segmentService) GetSegmentByID(ctx context.Context, in *IdRequest, opts ...client.CallOption) (*SegmentResponse, error) {
@@ -105,8 +93,6 @@ func (c *segmentService) GetSegmentsByGraphql(ctx context.Context, in *GraphqlQu
 // Server API for Segment service
 
 type SegmentHandler interface {
-	//save segment file
-	SaveSegmentFile(context.Context, *FileRequest, *FileResponse) error
 	//Get segment message according to segment id
 	GetSegmentByID(context.Context, *IdRequest, *SegmentResponse) error
 	//Get all segments message
@@ -117,7 +103,6 @@ type SegmentHandler interface {
 
 func RegisterSegmentHandler(s server.Server, hdlr SegmentHandler, opts ...server.HandlerOption) error {
 	type segment interface {
-		SaveSegmentFile(ctx context.Context, in *FileRequest, out *FileResponse) error
 		GetSegmentByID(ctx context.Context, in *IdRequest, out *SegmentResponse) error
 		GetSegments(ctx context.Context, in *Query, out *SegmentsResponse) error
 		GetSegmentsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlSegments) error
@@ -131,10 +116,6 @@ func RegisterSegmentHandler(s server.Server, hdlr SegmentHandler, opts ...server
 
 type segmentHandler struct {
 	SegmentHandler
-}
-
-func (h *segmentHandler) SaveSegmentFile(ctx context.Context, in *FileRequest, out *FileResponse) error {
-	return h.SegmentHandler.SaveSegmentFile(ctx, in, out)
 }
 
 func (h *segmentHandler) GetSegmentByID(ctx context.Context, in *IdRequest, out *SegmentResponse) error {

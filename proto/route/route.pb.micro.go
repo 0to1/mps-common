@@ -34,6 +34,8 @@ var _ server.Option
 // Client API for Route service
 
 type RouteService interface {
+	//接收地图文件//
+	LoadMapFiles(ctx context.Context, in *MapFiles, opts ...client.CallOption) (*Response, error)
 	//获取站台到站台的路径//
 	GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error)
 	//获取点到点的路径//
@@ -44,8 +46,6 @@ type RouteService interface {
 	GetStationListFromStn(ctx context.Context, in *GetStationListRequest, opts ...client.CallOption) (*GetStationListResponse, error)
 	//对传递过来的起始站台和站台列表进行排序//
 	SortStationList(ctx context.Context, in *StationsRequest, opts ...client.CallOption) (*GetStationListResponse, error)
-	//更新地图//
-	UpdateRouteSearch(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	//显示路径//
 	ShowRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*Response, error)
 	//隐藏路径//
@@ -68,6 +68,16 @@ func NewRouteService(name string, c client.Client) RouteService {
 		c:    c,
 		name: name,
 	}
+}
+
+func (c *routeService) LoadMapFiles(ctx context.Context, in *MapFiles, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Route.LoadMapFiles", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *routeService) GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error) {
@@ -120,16 +130,6 @@ func (c *routeService) SortStationList(ctx context.Context, in *StationsRequest,
 	return out, nil
 }
 
-func (c *routeService) UpdateRouteSearch(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Route.UpdateRouteSearch", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *routeService) ShowRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Route.ShowRoute", in)
 	out := new(Response)
@@ -153,6 +153,8 @@ func (c *routeService) HideRoute(ctx context.Context, in *GetRouteRequest, opts 
 // Server API for Route service
 
 type RouteHandler interface {
+	//接收地图文件//
+	LoadMapFiles(context.Context, *MapFiles, *Response) error
 	//获取站台到站台的路径//
 	GetRouteFromStnToStn(context.Context, *GetRouteRequest, *GetRouteResponse) error
 	//获取点到点的路径//
@@ -163,8 +165,6 @@ type RouteHandler interface {
 	GetStationListFromStn(context.Context, *GetStationListRequest, *GetStationListResponse) error
 	//对传递过来的起始站台和站台列表进行排序//
 	SortStationList(context.Context, *StationsRequest, *GetStationListResponse) error
-	//更新地图//
-	UpdateRouteSearch(context.Context, *Request, *Response) error
 	//显示路径//
 	ShowRoute(context.Context, *GetRouteRequest, *Response) error
 	//隐藏路径//
@@ -173,12 +173,12 @@ type RouteHandler interface {
 
 func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.HandlerOption) error {
 	type route interface {
+		LoadMapFiles(ctx context.Context, in *MapFiles, out *Response) error
 		GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error
 		GetRouteFromPntToPnt(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error
 		GetStationListFromPnt(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error
 		GetStationListFromStn(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error
 		SortStationList(ctx context.Context, in *StationsRequest, out *GetStationListResponse) error
-		UpdateRouteSearch(ctx context.Context, in *Request, out *Response) error
 		ShowRoute(ctx context.Context, in *GetRouteRequest, out *Response) error
 		HideRoute(ctx context.Context, in *GetRouteRequest, out *Response) error
 	}
@@ -191,6 +191,10 @@ func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.Han
 
 type routeHandler struct {
 	RouteHandler
+}
+
+func (h *routeHandler) LoadMapFiles(ctx context.Context, in *MapFiles, out *Response) error {
+	return h.RouteHandler.LoadMapFiles(ctx, in, out)
 }
 
 func (h *routeHandler) GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error {
@@ -211,10 +215,6 @@ func (h *routeHandler) GetStationListFromStn(ctx context.Context, in *GetStation
 
 func (h *routeHandler) SortStationList(ctx context.Context, in *StationsRequest, out *GetStationListResponse) error {
 	return h.RouteHandler.SortStationList(ctx, in, out)
-}
-
-func (h *routeHandler) UpdateRouteSearch(ctx context.Context, in *Request, out *Response) error {
-	return h.RouteHandler.UpdateRouteSearch(ctx, in, out)
 }
 
 func (h *routeHandler) ShowRoute(ctx context.Context, in *GetRouteRequest, out *Response) error {

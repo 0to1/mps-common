@@ -4,6 +4,9 @@ package go.micro.srv.route;
 
 service Route{
 
+    //接收地图文件//
+    rpc LoadMapFiles(MapFiles) returns (Response){}
+
     //获取站台到站台的路径//
     rpc GetRouteFromStnToStn(GetRouteRequest) returns (GetRouteResponse){}
 
@@ -19,14 +22,21 @@ service Route{
     //对传递过来的起始站台和站台列表进行排序//
     rpc SortStationList(StationsRequest) returns (GetStationListResponse){}
 
-    //更新地图//
-    rpc UpdateRouteSearch(Request) returns (Response){}
-
     //显示路径//
     rpc ShowRoute(GetRouteRequest) returns (Response){}
 
     //隐藏路径//
     rpc HideRoute(GetRouteRequest) returns (Response){}
+}
+
+message MapFile{
+    uint32 garageID = 1;
+    string fileName = 2;
+    bytes filebytes = 3;
+}
+
+message MapFiles{
+    repeated MapFile files = 1;
 }
 
 message Request{

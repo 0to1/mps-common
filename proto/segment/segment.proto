@@ -4,9 +4,6 @@ package go.micro.srv.segment;
 
 service Segment{
 
-    //save segment file
-    rpc SaveSegmentFile(FileRequest) returns (FileResponse){}
-
     //Get segment message according to segment id
     rpc GetSegmentByID(IdRequest) returns (SegmentResponse){}
 
@@ -17,22 +14,12 @@ service Segment{
     rpc GetSegmentsByGraphql(GraphqlQuery) returns (GraphqlSegments){}
 }
 
-message FileRequest{
-    uint32 garageID = 1;
-    string fileName = 2;
-    bytes filebytes = 3;
-}
-
 message GraphqlQuery {
     string query = 1;
 }
 
 message GraphqlSegments {
     string response = 1;
-}
-
-message FileResponse{
-    bool res = 1;
 }
 
 message IdRequest{
@@ -42,34 +29,32 @@ message IdRequest{
 
 message Query {
     uint32 garageID = 1;
-    uint32 limit = 2;
-    uint32 offset = 3;
-    uint32 page = 4;
-    uint32 perPage = 5;
-    string queryString = 6;
+    uint32 page = 2;
+    uint32 perPage = 3;
 }
 
 message SegmentResponse{
-    uint32 segmentID = 1;
-    uint32 startPoint = 2;
-    uint32 endPoint = 3;
-    string segmentTemplate = 4;
-    string vehicle = 5;
-    uint32 travelTime = 6;
-    uint32 startsAsStartPoint = 7;  
-    uint32 endsAsEndPoint = 8; 
-    uint32 direction = 9;     
-    uint32 plcBits = 10;
-    uint32 plcWord = 11;
-    uint32 plcWord2 = 12;
-    uint32 addWeight = 13;
-    uint32 length = 14;
-    uint32 carrierTypes = 15;
-    string remark = 16;
+    uint32 garageID = 1;
+    uint32 segmentID = 2;
+    uint32 startPoint = 3;
+    uint32 endPoint = 4;
+    string segmentTemplate = 5;
+    string vehicle = 6;
+    uint32 travelTime = 7;
+    uint32 startsAsStartPoint = 8;  
+    uint32 endsAsEndPoint = 9; 
+    uint32 direction = 10;     
+    uint32 plcBits = 11;
+    uint32 plcWord = 12;
+    uint32 plcWord2 = 13;
+    uint32 addWeight = 14;
+    uint32 length = 15;
+    uint32 carrierTypes = 16;
+    string remark = 17;
 }
 
 message SegmentsResponse{
     repeated SegmentResponse segments = 1;
     uint32 totalpages = 2;
-    uint32 currpages = 3;
+    uint32 totalNumber = 3;
 }
