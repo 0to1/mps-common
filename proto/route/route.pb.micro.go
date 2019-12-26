@@ -38,10 +38,6 @@ type RouteService interface {
 	LoadMapFiles(ctx context.Context, in *MapFiles, opts ...client.CallOption) (*Response, error)
 	//获取站台到站台的路径//
 	GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error)
-	//获取点到点的路径//
-	GetRouteFromPntToPnt(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error)
-	//获取点到所有站台的列表//
-	GetStationListFromPnt(ctx context.Context, in *GetStationListRequest, opts ...client.CallOption) (*GetStationListResponse, error)
 	//获取站台到所有站台的列表//
 	GetStationListFromStn(ctx context.Context, in *GetStationListRequest, opts ...client.CallOption) (*GetStationListResponse, error)
 	//对传递过来的起始站台和站台列表进行排序//
@@ -83,26 +79,6 @@ func (c *routeService) LoadMapFiles(ctx context.Context, in *MapFiles, opts ...c
 func (c *routeService) GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error) {
 	req := c.c.NewRequest(c.name, "Route.GetRouteFromStnToStn", in)
 	out := new(GetRouteResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *routeService) GetRouteFromPntToPnt(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error) {
-	req := c.c.NewRequest(c.name, "Route.GetRouteFromPntToPnt", in)
-	out := new(GetRouteResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *routeService) GetStationListFromPnt(ctx context.Context, in *GetStationListRequest, opts ...client.CallOption) (*GetStationListResponse, error) {
-	req := c.c.NewRequest(c.name, "Route.GetStationListFromPnt", in)
-	out := new(GetStationListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -157,10 +133,6 @@ type RouteHandler interface {
 	LoadMapFiles(context.Context, *MapFiles, *Response) error
 	//获取站台到站台的路径//
 	GetRouteFromStnToStn(context.Context, *GetRouteRequest, *GetRouteResponse) error
-	//获取点到点的路径//
-	GetRouteFromPntToPnt(context.Context, *GetRouteRequest, *GetRouteResponse) error
-	//获取点到所有站台的列表//
-	GetStationListFromPnt(context.Context, *GetStationListRequest, *GetStationListResponse) error
 	//获取站台到所有站台的列表//
 	GetStationListFromStn(context.Context, *GetStationListRequest, *GetStationListResponse) error
 	//对传递过来的起始站台和站台列表进行排序//
@@ -175,8 +147,6 @@ func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.Han
 	type route interface {
 		LoadMapFiles(ctx context.Context, in *MapFiles, out *Response) error
 		GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error
-		GetRouteFromPntToPnt(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error
-		GetStationListFromPnt(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error
 		GetStationListFromStn(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error
 		SortStationList(ctx context.Context, in *StationsRequest, out *GetStationListResponse) error
 		ShowRoute(ctx context.Context, in *GetRouteRequest, out *Response) error
@@ -199,14 +169,6 @@ func (h *routeHandler) LoadMapFiles(ctx context.Context, in *MapFiles, out *Resp
 
 func (h *routeHandler) GetRouteFromStnToStn(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error {
 	return h.RouteHandler.GetRouteFromStnToStn(ctx, in, out)
-}
-
-func (h *routeHandler) GetRouteFromPntToPnt(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error {
-	return h.RouteHandler.GetRouteFromPntToPnt(ctx, in, out)
-}
-
-func (h *routeHandler) GetStationListFromPnt(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error {
-	return h.RouteHandler.GetStationListFromPnt(ctx, in, out)
 }
 
 func (h *routeHandler) GetStationListFromStn(ctx context.Context, in *GetStationListRequest, out *GetStationListResponse) error {

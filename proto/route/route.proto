@@ -10,12 +10,6 @@ service Route{
     //获取站台到站台的路径//
     rpc GetRouteFromStnToStn(GetRouteRequest) returns (GetRouteResponse){}
 
-    //获取点到点的路径//
-    rpc GetRouteFromPntToPnt(GetRouteRequest) returns (GetRouteResponse){}
-
-    //获取点到所有站台的列表//
-    rpc GetStationListFromPnt(GetStationListRequest) returns (GetStationListResponse){}
-
     //获取站台到所有站台的列表//
     rpc GetStationListFromStn(GetStationListRequest) returns (GetStationListResponse){}
 
