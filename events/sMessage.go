@@ -5,10 +5,15 @@ import "encoding/json"
 const SMessageTopic = "go.micro.topic.smessage"
 
 type SMessage struct {
-	Index  uint16
-	Magic1 uint16
-	Magic2 uint16
-	Magic3 uint16
+	Index          uint16
+	Magic1         uint16
+	Magic2         uint16
+	Magic3         uint16
+	Ts             uint16
+	OrderStatus    uint16
+	CarrierNo      uint16
+	CarrierStatus  uint16
+	CarrierStation uint16
 }
 
 func (s SMessage) Marshal() []byte {

@@ -4,7 +4,10 @@ import (
 	"net/http"
 
 	"github.com/kataras/iris"
+	"sync"
 )
+
+var mu sync.Mutex
 
 // SendErrJSON 有错误发生时，发送错误JSON
 func SendErrJSON(msg string, args ...interface{}) {
@@ -35,11 +38,14 @@ func SendErrJSON(msg string, args ...interface{}) {
 	}
 
 	ctx.StatusCode(http.StatusBadRequest)
+
+	mu.Lock()
 	ctx.JSON(iris.Map{
 		"errNo": errNo,
 		"msg":   msg,
 		"data":  struct{}{},
 	})
+	mu.Unlock()
 
 	// 终止请求链
 	ctx.EndRequest()
