@@ -3,7 +3,7 @@ package utils
 import (
 	"net/http"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"sync"
 )
 
@@ -48,5 +48,5 @@ func SendErrJSON(msg string, args ...interface{}) {
 	mu.Unlock()
 
 	// 终止请求链
-	ctx.EndRequest()
+	// ctx.EndRequest()
 }

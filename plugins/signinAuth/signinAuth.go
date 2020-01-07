@@ -3,7 +3,7 @@ package signinauth
 import (
 	"context"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/util/log"
 

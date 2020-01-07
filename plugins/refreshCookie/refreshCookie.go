@@ -5,7 +5,7 @@ import (
 
 	"github.com/micro/go-micro/util/log"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 )
 
 // RefreshCookie 基于iris的cookie刷新中间件，刷新Cookie中token的过期时间
