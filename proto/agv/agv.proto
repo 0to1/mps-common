@@ -27,15 +27,16 @@ message Response{
 }
 
 message AgvMessage {
-  uint32 agvID = 2;
-  uint32 x  = 3;
-  uint32 y  = 4;
+  uint32 id = 1;
+  uint32 type  = 2;
+  uint32 x = 3;
+  uint32 y = 4;
   uint32 angle  = 5;
   uint32 point  = 6;
-  uint32 segment  = 7;
-  uint32 type   = 8;
-  uint32 battery  = 9;
-  bool res = 1;
+  uint32 segment   = 7;
+  uint32 battery  = 8;
+  uint32 plc  = 9;
+  uint32 status  = 10;
 }
 
 message AgvReq {
@@ -44,6 +45,4 @@ message AgvReq {
 
 message AgvsResponse{
   repeated AgvMessage agvs = 1;
-  uint32 totalpages = 2;
-  uint32 currpages = 3;
 }
