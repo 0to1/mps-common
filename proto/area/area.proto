@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package go.micro.srv.area;
 
+import "google/protobuf/wrappers.proto";
+
+
 service AreaService {
 
    // 添加货位类型
@@ -11,44 +14,38 @@ service AreaService {
    // 删除货位类型
    rpc DeleteAreaType(AreaType) returns (Response);
    // 获取货位类型
-   rpc GetAreaType(Query) returns (AreaTypes);
+   rpc GetAreaType(AreaTypeQuery) returns (AreaTypes);
+  // 获取货位类型
+  rpc GetOneAreaType(AreaType) returns (AreaType);
   // 添加区域
   rpc AddArea(Area) returns (Response);
-    // 修改区域
-    rpc UpdateArea(UpdateAreaReq) returns (Response);
+  // 修改区域
+  rpc UpdateArea(UpdateAreaReq) returns (Response);
   // 删除区域
   rpc DeleteArea(AreaIDReq) returns (Response);
   // 根据ID获取指定区域信息
   rpc GetOneArea(AreaIDReq) returns (Area);
   // 根据查询条件获取区域
-  rpc GetAreas(Query) returns (Areas);
-  //根据区域类型条件查询获取区域
-  rpc GetAreasByType(Query) returns(Areas);
-  //通过graphql条件查询
-  rpc GetAreasByGraphql(GraphqlQuery)returns(GraphqlAreas);
-   //对应区域设置货位组
-   rpc AddRacklots(RacklotsReq) returns(Response);
+  rpc GetAreas(AreaQuery) returns (Areas);
+  //对应区域设置货位组
+  rpc AddRacklots(RacklotsReq) returns(Response);
+  rpc AddChildAreas(ChildsReq) returns(Response);
   // rpc UpdateArea(UpdateAreaReq) returns (Response);
   // 设置区域类型
   rpc SetAreaType(TypeReq) returns (Response);
   // 设置区域的任务容量
   rpc SetOrderCapacity(CapReq) returns (Response);
-  // 设置是否允许按区域入库
-  rpc AreaInbound(FlagReq) returns (Response);
-  // 设置是否允许按区域出库
-  rpc AreaOutbound(FlagReq) returns (Response);
   // 设置是否允许存车
   rpc Inbound(FlagReq) returns (Response);
   // 设置是否允许取车
   rpc Outbound(FlagReq) returns (Response);
-  // 禁用/启用货位
-  rpc DisableArea(AreaIDReq) returns (Response);
-  rpc EnableArea(AreaIDReq) returns (Response);
+  // 设置是否启用
+  rpc SetValid(FlagReq) returns (Response);
+  //设置父区域
+  rpc setParentArea(ParentReq) returns(Response);
 
-  //该区域 增加一个任务
-  rpc  AddTask(TaskReq) returns(Response);
-  //该区域 减少一个任务
-  rpc  DelTask(TaskReq) returns(Response);
+  //增加属性
+  rpc SetProperties(PropertiesReq) returns(Response);
 }
 
 message AreaType {
@@ -59,6 +56,9 @@ message AreaType {
 
 message AreaTypes {
   repeated AreaType areaTypes = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
 }
 
 message Area {
@@ -74,46 +74,92 @@ message Area {
   int32 racklotType = 24;
   // 区域任务容量
   int32 orderCapacity = 25;
-  //是否按区域入库
-  bool areaInbound = 26;
-  //是否按区域出库
-  bool areaOutbound = 27;
   //是否允许入库
   bool inbound = 28;
   //是否允许出库
   bool outbound = 29;
+  bool valid =  32;
   // 所属仓库Ikey
   string warehouseIkey = 30;
-  //区域任务数量
-  uint32 orderNum = 31;
-  repeated uint32 orderIDs = 32;
+  repeated Property props = 31;
+}
+
+message UpdateArea {warehouseIkey
+  // 区域任务容量
+  google.protobuf.Int32Value orderCapacity = 25;
+  //是否有效
+  google.protobuf.BoolValue valid = 27;
+  //是否允许入库
+  google.protobuf.BoolValue inbound = 28;
+  //是否允许出库
+  google.protobuf.BoolValue outbound = 29;
+  // 所属仓库Ikey
+  google.protobuf.StringValue warehouseIkey = 30;
+  //区域的货位列表，待仔细考虑
+  repeated int32 racklots = 23;
+
+  repeated Property props = 31;
 }
 
 message UpdateAreaReq {
     int32 id = 1;
-    Area area = 2;
+    UpdateArea area = 2;
 }
+
+
+
+// message UpdateAreaType {
+//   int32 id = 1;
+//   UpdateAreaType areaType = 2;
+// }
 
 message Response {}
 
 message AreaIDReq { int32 id = 1; }
 
-message Query {
+message AreaFilter {
+  repeated AreaFilter and = 1;
+  repeated AreaFilter or = 2;
+  repeated int32 idIn = 3;                                 
+	repeated int32 childIDIn =4;                        
+  repeated int32 racklotIDIn = 5;          
+  google.protobuf.BoolValue inBound = 6;             
+	google.protobuf.BoolValue outBound = 7;             
+  google.protobuf.BoolValue isValid = 8;     
+  google.protobuf.Int32Value parentID = 9;   
+  google.protobuf.StringValue warehouseIkey  = 10; 
+  AreaTypeFilter typeFilter  = 11;
+  AreaPropertiesFilter  propertiesFilter = 12;     
+}
+
+message AreaTypeFilter {
+  repeated AreaTypeFilter and = 1;
+  repeated AreaTypeFilter or = 2;
+  repeated int32 idIn = 3;
+  repeated string nameIn = 4;
+  google.protobuf.Int32Value id = 5;  
+  google.protobuf.StringValue name = 6;  
+}
+
+message AreaPropertiesFilter {
+  string key  = 1;
+  string value = 2; 
+}
+
+message AreaQuery {
   uint32 limit = 1;
   uint32 offset = 2;
   uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
-  repeated Parameter queryParams = 6;
+  uint32 perPage = 4;
+  AreaFilter filter = 7;
 }
 
-message GraphqlQuery {
-    string query = 1;
-    // repeated string
-}
-
-message GraphqlAreas {
-    string response =1;
+message AreaTypeQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  AreaTypeFilter filter = 7;
 }
 
 message Areas { 
@@ -149,7 +195,22 @@ message TaskReq {
     uint32 taskID = 2;
 }
 
-message Parameter {
+message PropertiesReq {
+  int32 id = 1;
+  repeated Property properties = 2;
+}
+
+message Property{
     string key = 1;
     string value = 2;
+}
+
+message ParentReq {
+  int32 id = 1;
+  int32 parentID = 2;
+}
+
+message ChildsReq {
+  int32 id = 1;
+  repeated int32 childIDs = 2;
 }

@@ -6,13 +6,14 @@ package go_micro_srv_area
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
 import (
 	context "context"
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
+	client "github.com/micro/go-micro/v2/client"
+	server "github.com/micro/go-micro/v2/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -41,7 +42,9 @@ type AreaService interface {
 	// 删除货位类型
 	DeleteAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*Response, error)
 	// 获取货位类型
-	GetAreaType(ctx context.Context, in *Query, opts ...client.CallOption) (*AreaTypes, error)
+	GetAreaType(ctx context.Context, in *AreaTypeQuery, opts ...client.CallOption) (*AreaTypes, error)
+	// 获取货位类型
+	GetOneAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*AreaType, error)
 	// 添加区域
 	AddArea(ctx context.Context, in *Area, opts ...client.CallOption) (*Response, error)
 	// 修改区域
@@ -51,33 +54,25 @@ type AreaService interface {
 	// 根据ID获取指定区域信息
 	GetOneArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Area, error)
 	// 根据查询条件获取区域
-	GetAreas(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error)
-	//根据区域类型条件查询获取区域
-	GetAreasByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error)
-	//通过graphql条件查询
-	GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlAreas, error)
+	GetAreas(ctx context.Context, in *AreaQuery, opts ...client.CallOption) (*Areas, error)
 	//对应区域设置货位组
 	AddRacklots(ctx context.Context, in *RacklotsReq, opts ...client.CallOption) (*Response, error)
+	AddChildAreas(ctx context.Context, in *ChildsReq, opts ...client.CallOption) (*Response, error)
 	// rpc UpdateArea(UpdateAreaReq) returns (Response);
 	// 设置区域类型
 	SetAreaType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
 	// 设置区域的任务容量
 	SetOrderCapacity(ctx context.Context, in *CapReq, opts ...client.CallOption) (*Response, error)
-	// 设置是否允许按区域入库
-	AreaInbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
-	// 设置是否允许按区域出库
-	AreaOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	// 设置是否允许存车
 	Inbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	// 设置是否允许取车
 	Outbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
-	// 禁用/启用货位
-	DisableArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Response, error)
-	EnableArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Response, error)
-	//该区域 增加一个任务
-	AddTask(ctx context.Context, in *TaskReq, opts ...client.CallOption) (*Response, error)
-	//该区域 减少一个任务
-	DelTask(ctx context.Context, in *TaskReq, opts ...client.CallOption) (*Response, error)
+	// 设置是否启用
+	SetValid(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
+	//设置父区域
+	SetParentArea(ctx context.Context, in *ParentReq, opts ...client.CallOption) (*Response, error)
+	//增加属性
+	SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
 }
 
 type areaService struct {
@@ -86,12 +81,6 @@ type areaService struct {
 }
 
 func NewAreaService(name string, c client.Client) AreaService {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(name) == 0 {
-		name = "go.micro.srv.area"
-	}
 	return &areaService{
 		c:    c,
 		name: name,
@@ -128,9 +117,19 @@ func (c *areaService) DeleteAreaType(ctx context.Context, in *AreaType, opts ...
 	return out, nil
 }
 
-func (c *areaService) GetAreaType(ctx context.Context, in *Query, opts ...client.CallOption) (*AreaTypes, error) {
+func (c *areaService) GetAreaType(ctx context.Context, in *AreaTypeQuery, opts ...client.CallOption) (*AreaTypes, error) {
 	req := c.c.NewRequest(c.name, "AreaService.GetAreaType", in)
 	out := new(AreaTypes)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *areaService) GetOneAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*AreaType, error) {
+	req := c.c.NewRequest(c.name, "AreaService.GetOneAreaType", in)
+	out := new(AreaType)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -178,7 +177,7 @@ func (c *areaService) GetOneArea(ctx context.Context, in *AreaIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *areaService) GetAreas(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error) {
+func (c *areaService) GetAreas(ctx context.Context, in *AreaQuery, opts ...client.CallOption) (*Areas, error) {
 	req := c.c.NewRequest(c.name, "AreaService.GetAreas", in)
 	out := new(Areas)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -188,28 +187,18 @@ func (c *areaService) GetAreas(ctx context.Context, in *Query, opts ...client.Ca
 	return out, nil
 }
 
-func (c *areaService) GetAreasByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Areas, error) {
-	req := c.c.NewRequest(c.name, "AreaService.GetAreasByType", in)
-	out := new(Areas)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *areaService) GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlAreas, error) {
-	req := c.c.NewRequest(c.name, "AreaService.GetAreasByGraphql", in)
-	out := new(GraphqlAreas)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *areaService) AddRacklots(ctx context.Context, in *RacklotsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "AreaService.AddRacklots", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *areaService) AddChildAreas(ctx context.Context, in *ChildsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "AreaService.AddChildAreas", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -238,26 +227,6 @@ func (c *areaService) SetOrderCapacity(ctx context.Context, in *CapReq, opts ...
 	return out, nil
 }
 
-func (c *areaService) AreaInbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.AreaInbound", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *areaService) AreaOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.AreaOutbound", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *areaService) Inbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "AreaService.Inbound", in)
 	out := new(Response)
@@ -278,8 +247,8 @@ func (c *areaService) Outbound(ctx context.Context, in *FlagReq, opts ...client.
 	return out, nil
 }
 
-func (c *areaService) DisableArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.DisableArea", in)
+func (c *areaService) SetValid(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "AreaService.SetValid", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -288,8 +257,8 @@ func (c *areaService) DisableArea(ctx context.Context, in *AreaIDReq, opts ...cl
 	return out, nil
 }
 
-func (c *areaService) EnableArea(ctx context.Context, in *AreaIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.EnableArea", in)
+func (c *areaService) SetParentArea(ctx context.Context, in *ParentReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "AreaService.setParentArea", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -298,18 +267,8 @@ func (c *areaService) EnableArea(ctx context.Context, in *AreaIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *areaService) AddTask(ctx context.Context, in *TaskReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.AddTask", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *areaService) DelTask(ctx context.Context, in *TaskReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.DelTask", in)
+func (c *areaService) SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "AreaService.SetProperties", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -328,7 +287,9 @@ type AreaServiceHandler interface {
 	// 删除货位类型
 	DeleteAreaType(context.Context, *AreaType, *Response) error
 	// 获取货位类型
-	GetAreaType(context.Context, *Query, *AreaTypes) error
+	GetAreaType(context.Context, *AreaTypeQuery, *AreaTypes) error
+	// 获取货位类型
+	GetOneAreaType(context.Context, *AreaType, *AreaType) error
 	// 添加区域
 	AddArea(context.Context, *Area, *Response) error
 	// 修改区域
@@ -338,33 +299,25 @@ type AreaServiceHandler interface {
 	// 根据ID获取指定区域信息
 	GetOneArea(context.Context, *AreaIDReq, *Area) error
 	// 根据查询条件获取区域
-	GetAreas(context.Context, *Query, *Areas) error
-	//根据区域类型条件查询获取区域
-	GetAreasByType(context.Context, *Query, *Areas) error
-	//通过graphql条件查询
-	GetAreasByGraphql(context.Context, *GraphqlQuery, *GraphqlAreas) error
+	GetAreas(context.Context, *AreaQuery, *Areas) error
 	//对应区域设置货位组
 	AddRacklots(context.Context, *RacklotsReq, *Response) error
+	AddChildAreas(context.Context, *ChildsReq, *Response) error
 	// rpc UpdateArea(UpdateAreaReq) returns (Response);
 	// 设置区域类型
 	SetAreaType(context.Context, *TypeReq, *Response) error
 	// 设置区域的任务容量
 	SetOrderCapacity(context.Context, *CapReq, *Response) error
-	// 设置是否允许按区域入库
-	AreaInbound(context.Context, *FlagReq, *Response) error
-	// 设置是否允许按区域出库
-	AreaOutbound(context.Context, *FlagReq, *Response) error
 	// 设置是否允许存车
 	Inbound(context.Context, *FlagReq, *Response) error
 	// 设置是否允许取车
 	Outbound(context.Context, *FlagReq, *Response) error
-	// 禁用/启用货位
-	DisableArea(context.Context, *AreaIDReq, *Response) error
-	EnableArea(context.Context, *AreaIDReq, *Response) error
-	//该区域 增加一个任务
-	AddTask(context.Context, *TaskReq, *Response) error
-	//该区域 减少一个任务
-	DelTask(context.Context, *TaskReq, *Response) error
+	// 设置是否启用
+	SetValid(context.Context, *FlagReq, *Response) error
+	//设置父区域
+	SetParentArea(context.Context, *ParentReq, *Response) error
+	//增加属性
+	SetProperties(context.Context, *PropertiesReq, *Response) error
 }
 
 func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts ...server.HandlerOption) error {
@@ -372,25 +325,22 @@ func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts .
 		AddAreaType(ctx context.Context, in *AreaType, out *Response) error
 		UpdateAreaType(ctx context.Context, in *AreaType, out *Response) error
 		DeleteAreaType(ctx context.Context, in *AreaType, out *Response) error
-		GetAreaType(ctx context.Context, in *Query, out *AreaTypes) error
+		GetAreaType(ctx context.Context, in *AreaTypeQuery, out *AreaTypes) error
+		GetOneAreaType(ctx context.Context, in *AreaType, out *AreaType) error
 		AddArea(ctx context.Context, in *Area, out *Response) error
 		UpdateArea(ctx context.Context, in *UpdateAreaReq, out *Response) error
 		DeleteArea(ctx context.Context, in *AreaIDReq, out *Response) error
 		GetOneArea(ctx context.Context, in *AreaIDReq, out *Area) error
-		GetAreas(ctx context.Context, in *Query, out *Areas) error
-		GetAreasByType(ctx context.Context, in *Query, out *Areas) error
-		GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlAreas) error
+		GetAreas(ctx context.Context, in *AreaQuery, out *Areas) error
 		AddRacklots(ctx context.Context, in *RacklotsReq, out *Response) error
+		AddChildAreas(ctx context.Context, in *ChildsReq, out *Response) error
 		SetAreaType(ctx context.Context, in *TypeReq, out *Response) error
 		SetOrderCapacity(ctx context.Context, in *CapReq, out *Response) error
-		AreaInbound(ctx context.Context, in *FlagReq, out *Response) error
-		AreaOutbound(ctx context.Context, in *FlagReq, out *Response) error
 		Inbound(ctx context.Context, in *FlagReq, out *Response) error
 		Outbound(ctx context.Context, in *FlagReq, out *Response) error
-		DisableArea(ctx context.Context, in *AreaIDReq, out *Response) error
-		EnableArea(ctx context.Context, in *AreaIDReq, out *Response) error
-		AddTask(ctx context.Context, in *TaskReq, out *Response) error
-		DelTask(ctx context.Context, in *TaskReq, out *Response) error
+		SetValid(ctx context.Context, in *FlagReq, out *Response) error
+		SetParentArea(ctx context.Context, in *ParentReq, out *Response) error
+		SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error
 	}
 	type AreaService struct {
 		areaService
@@ -415,8 +365,12 @@ func (h *areaServiceHandler) DeleteAreaType(ctx context.Context, in *AreaType, o
 	return h.AreaServiceHandler.DeleteAreaType(ctx, in, out)
 }
 
-func (h *areaServiceHandler) GetAreaType(ctx context.Context, in *Query, out *AreaTypes) error {
+func (h *areaServiceHandler) GetAreaType(ctx context.Context, in *AreaTypeQuery, out *AreaTypes) error {
 	return h.AreaServiceHandler.GetAreaType(ctx, in, out)
+}
+
+func (h *areaServiceHandler) GetOneAreaType(ctx context.Context, in *AreaType, out *AreaType) error {
+	return h.AreaServiceHandler.GetOneAreaType(ctx, in, out)
 }
 
 func (h *areaServiceHandler) AddArea(ctx context.Context, in *Area, out *Response) error {
@@ -435,20 +389,16 @@ func (h *areaServiceHandler) GetOneArea(ctx context.Context, in *AreaIDReq, out 
 	return h.AreaServiceHandler.GetOneArea(ctx, in, out)
 }
 
-func (h *areaServiceHandler) GetAreas(ctx context.Context, in *Query, out *Areas) error {
+func (h *areaServiceHandler) GetAreas(ctx context.Context, in *AreaQuery, out *Areas) error {
 	return h.AreaServiceHandler.GetAreas(ctx, in, out)
-}
-
-func (h *areaServiceHandler) GetAreasByType(ctx context.Context, in *Query, out *Areas) error {
-	return h.AreaServiceHandler.GetAreasByType(ctx, in, out)
-}
-
-func (h *areaServiceHandler) GetAreasByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlAreas) error {
-	return h.AreaServiceHandler.GetAreasByGraphql(ctx, in, out)
 }
 
 func (h *areaServiceHandler) AddRacklots(ctx context.Context, in *RacklotsReq, out *Response) error {
 	return h.AreaServiceHandler.AddRacklots(ctx, in, out)
+}
+
+func (h *areaServiceHandler) AddChildAreas(ctx context.Context, in *ChildsReq, out *Response) error {
+	return h.AreaServiceHandler.AddChildAreas(ctx, in, out)
 }
 
 func (h *areaServiceHandler) SetAreaType(ctx context.Context, in *TypeReq, out *Response) error {
@@ -459,14 +409,6 @@ func (h *areaServiceHandler) SetOrderCapacity(ctx context.Context, in *CapReq, o
 	return h.AreaServiceHandler.SetOrderCapacity(ctx, in, out)
 }
 
-func (h *areaServiceHandler) AreaInbound(ctx context.Context, in *FlagReq, out *Response) error {
-	return h.AreaServiceHandler.AreaInbound(ctx, in, out)
-}
-
-func (h *areaServiceHandler) AreaOutbound(ctx context.Context, in *FlagReq, out *Response) error {
-	return h.AreaServiceHandler.AreaOutbound(ctx, in, out)
-}
-
 func (h *areaServiceHandler) Inbound(ctx context.Context, in *FlagReq, out *Response) error {
 	return h.AreaServiceHandler.Inbound(ctx, in, out)
 }
@@ -475,18 +417,14 @@ func (h *areaServiceHandler) Outbound(ctx context.Context, in *FlagReq, out *Res
 	return h.AreaServiceHandler.Outbound(ctx, in, out)
 }
 
-func (h *areaServiceHandler) DisableArea(ctx context.Context, in *AreaIDReq, out *Response) error {
-	return h.AreaServiceHandler.DisableArea(ctx, in, out)
+func (h *areaServiceHandler) SetValid(ctx context.Context, in *FlagReq, out *Response) error {
+	return h.AreaServiceHandler.SetValid(ctx, in, out)
 }
 
-func (h *areaServiceHandler) EnableArea(ctx context.Context, in *AreaIDReq, out *Response) error {
-	return h.AreaServiceHandler.EnableArea(ctx, in, out)
+func (h *areaServiceHandler) SetParentArea(ctx context.Context, in *ParentReq, out *Response) error {
+	return h.AreaServiceHandler.SetParentArea(ctx, in, out)
 }
 
-func (h *areaServiceHandler) AddTask(ctx context.Context, in *TaskReq, out *Response) error {
-	return h.AreaServiceHandler.AddTask(ctx, in, out)
-}
-
-func (h *areaServiceHandler) DelTask(ctx context.Context, in *TaskReq, out *Response) error {
-	return h.AreaServiceHandler.DelTask(ctx, in, out)
+func (h *areaServiceHandler) SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
+	return h.AreaServiceHandler.SetProperties(ctx, in, out)
 }
