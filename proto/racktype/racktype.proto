@@ -2,16 +2,20 @@ syntax = "proto3";
 
 package go.micro.srv.racktype;
 
+import "google/protobuf/wrappers.proto";
+
 service RackTypeService {
   rpc AddRackType(RackType) returns (Response);
   rpc DeleteRackType(IDReq) returns (Response);
   rpc UpdateRackType(RackType) returns (Response);
-  rpc GetRackTypes(Query) returns (RackTypes);
+  rpc GetOneRackTypes(RackTypeQuery) returns (RackType);
+  rpc GetRackTypes(IDReq) returns (RackTypes);
 
   rpc AddCellType(CellType) returns (Response);
   rpc DeleteCellType(IDReq) returns (Response);
   rpc UpdateCellType(CellType) returns (Response);
-  rpc GetCellTypes(Query) returns (CellTypes);
+  rpc GetCellTypes(IDReq) returns (CellType);
+  rpc GetOneCellTypes(CellTypeQuery) returns (CellTypes);
 }
 
 message RackType {
@@ -27,7 +31,6 @@ message RackType {
   string description = 10;
   //储位数量
   uint32 cellNums = 11;
-
   repeated Cell cells = 12;
 }
 
@@ -51,13 +54,39 @@ message IDReq { uint32 id = 1; }
 
 message Response {}
 
-message Query {
-  uint32 limit = 1;
-  uint32 offset = 2;
-  uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
-}
+message RackTypeQuery {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    RackTypeFilter filter = 7;
+  }
+
+  message CellTypeQuery {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    CellTypeFilter filter = 7;
+  }
+
+message RackTypeFilter {
+    repeated RackTypeFilter and = 1;
+    repeated RackTypeFilter or = 2;
+    repeated int32 idIn = 3;
+    repeated string nameIn = 4;
+    google.protobuf.Int32Value id = 5;  
+    google.protobuf.StringValue name = 6;  
+  }
+
+  message CellTypeFilter {
+    repeated CellTypeFilter and = 1;
+    repeated CellTypeFilter or = 2;
+    repeated int32 idIn = 3;
+    repeated string nameIn = 4;
+    google.protobuf.Int32Value id = 5;  
+    google.protobuf.StringValue name = 6;  
+  }
 
 message RackTypes {
   repeated RackType rackTypes = 1;

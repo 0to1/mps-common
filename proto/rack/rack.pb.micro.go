@@ -6,13 +6,14 @@ package go_micro_srv_rack
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
 import (
 	context "context"
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
+	client "github.com/micro/go-micro/v2/client"
+	server "github.com/micro/go-micro/v2/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -36,46 +37,42 @@ var _ server.Option
 type RackService interface {
 	AddRack(ctx context.Context, in *Rack, opts ...client.CallOption) (*Response, error)
 	BatchAddRacks(ctx context.Context, in *Racks, opts ...client.CallOption) (*Response, error)
-	DeleteRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
-	BatchDeleteRacks(ctx context.Context, in *DeleteRacksReq, opts ...client.CallOption) (*Response, error)
+	DeleteRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	BatchDeleteRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 更新货架信息
 	UpdateRack(ctx context.Context, in *UpdateRackReq, opts ...client.CallOption) (*Response, error)
 	// 根据货架ID获取货架信息
-	GetOneRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Rack, error)
+	GetOneRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Rack, error)
 	// 根据查询条件获取满足条件的货架
-	GetRacks(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error)
-	//通过graphql条件查询
-	GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacks, error)
-	// 根据货架类型条件获取满足条件的货架
-	GetRacksByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error)
+	GetRacks(ctx context.Context, in *RackQuery, opts ...client.CallOption) (*Racks, error)
 	// 启用一组货架
-	EnableRacks(ctx context.Context, in *RackIDsReq, opts ...client.CallOption) (*Response, error)
+	EnableRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 禁用一组货架
-	DisableRacks(ctx context.Context, in *RackIDsReq, opts ...client.CallOption) (*Response, error)
+	DisableRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 启用某个货架
-	EnableRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
+	EnableRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	// 禁用某个货架
-	DisableRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
+	DisableRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	// 绑定货位
 	BindRacklot(ctx context.Context, in *RacklotReq, opts ...client.CallOption) (*Response, error)
 	// 解绑货位
-	UnbindRacklot(ctx context.Context, in *RacklotReq, opts ...client.CallOption) (*Response, error)
+	UnbindRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	// 添加储位
 	AddCells(ctx context.Context, in *CellsReq, opts ...client.CallOption) (*Response, error)
 	// 移除储位
-	RemoveCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error)
+	RemoveCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 启用储位
-	EnableCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error)
+	EnableCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 禁用储位
-	DisableCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error)
+	DisableCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 绑定物料
 	BindMaterial(ctx context.Context, in *MaterialReq, opts ...client.CallOption) (*Response, error)
 	// 解绑物料
-	UnbindMaterial(ctx context.Context, in *MaterialReq, opts ...client.CallOption) (*Response, error)
-	OccupyRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
-	ReleaseRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
-	OccupyCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error)
-	ReleaseCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error)
+	UnbindMaterial(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	OccupyRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	ReleaseRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	OccupyCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	ReleaseCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 }
 
 type rackService struct {
@@ -84,12 +81,6 @@ type rackService struct {
 }
 
 func NewRackService(name string, c client.Client) RackService {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(name) == 0 {
-		name = "go.micro.srv.rack"
-	}
 	return &rackService{
 		c:    c,
 		name: name,
@@ -116,7 +107,7 @@ func (c *rackService) BatchAddRacks(ctx context.Context, in *Racks, opts ...clie
 	return out, nil
 }
 
-func (c *rackService) DeleteRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) DeleteRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.DeleteRack", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -126,7 +117,7 @@ func (c *rackService) DeleteRack(ctx context.Context, in *RackIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *rackService) BatchDeleteRacks(ctx context.Context, in *DeleteRacksReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) BatchDeleteRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.BatchDeleteRacks", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -146,7 +137,7 @@ func (c *rackService) UpdateRack(ctx context.Context, in *UpdateRackReq, opts ..
 	return out, nil
 }
 
-func (c *rackService) GetOneRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Rack, error) {
+func (c *rackService) GetOneRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Rack, error) {
 	req := c.c.NewRequest(c.name, "RackService.GetOneRack", in)
 	out := new(Rack)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -156,7 +147,7 @@ func (c *rackService) GetOneRack(ctx context.Context, in *RackIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *rackService) GetRacks(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error) {
+func (c *rackService) GetRacks(ctx context.Context, in *RackQuery, opts ...client.CallOption) (*Racks, error) {
 	req := c.c.NewRequest(c.name, "RackService.GetRacks", in)
 	out := new(Racks)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -166,27 +157,7 @@ func (c *rackService) GetRacks(ctx context.Context, in *Query, opts ...client.Ca
 	return out, nil
 }
 
-func (c *rackService) GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlRacks, error) {
-	req := c.c.NewRequest(c.name, "RackService.GetRacksByGraphql", in)
-	out := new(GraphqlRacks)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rackService) GetRacksByType(ctx context.Context, in *Query, opts ...client.CallOption) (*Racks, error) {
-	req := c.c.NewRequest(c.name, "RackService.GetRacksByType", in)
-	out := new(Racks)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rackService) EnableRacks(ctx context.Context, in *RackIDsReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) EnableRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.EnableRacks", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -196,7 +167,7 @@ func (c *rackService) EnableRacks(ctx context.Context, in *RackIDsReq, opts ...c
 	return out, nil
 }
 
-func (c *rackService) DisableRacks(ctx context.Context, in *RackIDsReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) DisableRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.DisableRacks", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -206,7 +177,7 @@ func (c *rackService) DisableRacks(ctx context.Context, in *RackIDsReq, opts ...
 	return out, nil
 }
 
-func (c *rackService) EnableRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) EnableRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.EnableRack", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -216,8 +187,8 @@ func (c *rackService) EnableRack(ctx context.Context, in *RackIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *rackService) DisableRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.DisableRack", in)
+func (c *rackService) DisableRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.DisableRacklot", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -236,8 +207,8 @@ func (c *rackService) BindRacklot(ctx context.Context, in *RacklotReq, opts ...c
 	return out, nil
 }
 
-func (c *rackService) UnbindRacklot(ctx context.Context, in *RacklotReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.UnbindRacklot", in)
+func (c *rackService) UnbindRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.UnbindRack", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -256,7 +227,7 @@ func (c *rackService) AddCells(ctx context.Context, in *CellsReq, opts ...client
 	return out, nil
 }
 
-func (c *rackService) RemoveCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) RemoveCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.RemoveCells", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -266,7 +237,7 @@ func (c *rackService) RemoveCells(ctx context.Context, in *CellIDsReq, opts ...c
 	return out, nil
 }
 
-func (c *rackService) EnableCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) EnableCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.EnableCells", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -276,7 +247,7 @@ func (c *rackService) EnableCells(ctx context.Context, in *CellIDsReq, opts ...c
 	return out, nil
 }
 
-func (c *rackService) DisableCells(ctx context.Context, in *CellIDsReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) DisableCells(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.DisableCells", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -296,7 +267,7 @@ func (c *rackService) BindMaterial(ctx context.Context, in *MaterialReq, opts ..
 	return out, nil
 }
 
-func (c *rackService) UnbindMaterial(ctx context.Context, in *MaterialReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) UnbindMaterial(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.UnbindMaterial", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -306,7 +277,7 @@ func (c *rackService) UnbindMaterial(ctx context.Context, in *MaterialReq, opts 
 	return out, nil
 }
 
-func (c *rackService) OccupyRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) OccupyRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.OccupyRack", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -316,7 +287,7 @@ func (c *rackService) OccupyRack(ctx context.Context, in *RackIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *rackService) ReleaseRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) ReleaseRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.ReleaseRack", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -326,7 +297,7 @@ func (c *rackService) ReleaseRack(ctx context.Context, in *RackIDReq, opts ...cl
 	return out, nil
 }
 
-func (c *rackService) OccupyCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) OccupyCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.OccupyCell", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -336,7 +307,7 @@ func (c *rackService) OccupyCell(ctx context.Context, in *CellIDReq, opts ...cli
 	return out, nil
 }
 
-func (c *rackService) ReleaseCell(ctx context.Context, in *CellIDReq, opts ...client.CallOption) (*Response, error) {
+func (c *rackService) ReleaseCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.ReleaseCell", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -351,75 +322,69 @@ func (c *rackService) ReleaseCell(ctx context.Context, in *CellIDReq, opts ...cl
 type RackServiceHandler interface {
 	AddRack(context.Context, *Rack, *Response) error
 	BatchAddRacks(context.Context, *Racks, *Response) error
-	DeleteRack(context.Context, *RackIDReq, *Response) error
-	BatchDeleteRacks(context.Context, *DeleteRacksReq, *Response) error
+	DeleteRack(context.Context, *IDReq, *Response) error
+	BatchDeleteRacks(context.Context, *IDsReq, *Response) error
 	// 更新货架信息
 	UpdateRack(context.Context, *UpdateRackReq, *Response) error
 	// 根据货架ID获取货架信息
-	GetOneRack(context.Context, *RackIDReq, *Rack) error
+	GetOneRack(context.Context, *IDReq, *Rack) error
 	// 根据查询条件获取满足条件的货架
-	GetRacks(context.Context, *Query, *Racks) error
-	//通过graphql条件查询
-	GetRacksByGraphql(context.Context, *GraphqlQuery, *GraphqlRacks) error
-	// 根据货架类型条件获取满足条件的货架
-	GetRacksByType(context.Context, *Query, *Racks) error
+	GetRacks(context.Context, *RackQuery, *Racks) error
 	// 启用一组货架
-	EnableRacks(context.Context, *RackIDsReq, *Response) error
+	EnableRacks(context.Context, *IDsReq, *Response) error
 	// 禁用一组货架
-	DisableRacks(context.Context, *RackIDsReq, *Response) error
+	DisableRacks(context.Context, *IDsReq, *Response) error
 	// 启用某个货架
-	EnableRack(context.Context, *RackIDReq, *Response) error
+	EnableRack(context.Context, *IDReq, *Response) error
 	// 禁用某个货架
-	DisableRack(context.Context, *RackIDReq, *Response) error
+	DisableRacklot(context.Context, *IDReq, *Response) error
 	// 绑定货位
 	BindRacklot(context.Context, *RacklotReq, *Response) error
 	// 解绑货位
-	UnbindRacklot(context.Context, *RacklotReq, *Response) error
+	UnbindRack(context.Context, *IDReq, *Response) error
 	// 添加储位
 	AddCells(context.Context, *CellsReq, *Response) error
 	// 移除储位
-	RemoveCells(context.Context, *CellIDsReq, *Response) error
+	RemoveCells(context.Context, *IDsReq, *Response) error
 	// 启用储位
-	EnableCells(context.Context, *CellIDsReq, *Response) error
+	EnableCells(context.Context, *IDsReq, *Response) error
 	// 禁用储位
-	DisableCells(context.Context, *CellIDsReq, *Response) error
+	DisableCells(context.Context, *IDsReq, *Response) error
 	// 绑定物料
 	BindMaterial(context.Context, *MaterialReq, *Response) error
 	// 解绑物料
-	UnbindMaterial(context.Context, *MaterialReq, *Response) error
-	OccupyRack(context.Context, *RackIDReq, *Response) error
-	ReleaseRack(context.Context, *RackIDReq, *Response) error
-	OccupyCell(context.Context, *CellIDReq, *Response) error
-	ReleaseCell(context.Context, *CellIDReq, *Response) error
+	UnbindMaterial(context.Context, *IDReq, *Response) error
+	OccupyRack(context.Context, *IDReq, *Response) error
+	ReleaseRack(context.Context, *IDReq, *Response) error
+	OccupyCell(context.Context, *IDReq, *Response) error
+	ReleaseCell(context.Context, *IDReq, *Response) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
 	type rackService interface {
 		AddRack(ctx context.Context, in *Rack, out *Response) error
 		BatchAddRacks(ctx context.Context, in *Racks, out *Response) error
-		DeleteRack(ctx context.Context, in *RackIDReq, out *Response) error
-		BatchDeleteRacks(ctx context.Context, in *DeleteRacksReq, out *Response) error
+		DeleteRack(ctx context.Context, in *IDReq, out *Response) error
+		BatchDeleteRacks(ctx context.Context, in *IDsReq, out *Response) error
 		UpdateRack(ctx context.Context, in *UpdateRackReq, out *Response) error
-		GetOneRack(ctx context.Context, in *RackIDReq, out *Rack) error
-		GetRacks(ctx context.Context, in *Query, out *Racks) error
-		GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacks) error
-		GetRacksByType(ctx context.Context, in *Query, out *Racks) error
-		EnableRacks(ctx context.Context, in *RackIDsReq, out *Response) error
-		DisableRacks(ctx context.Context, in *RackIDsReq, out *Response) error
-		EnableRack(ctx context.Context, in *RackIDReq, out *Response) error
-		DisableRack(ctx context.Context, in *RackIDReq, out *Response) error
+		GetOneRack(ctx context.Context, in *IDReq, out *Rack) error
+		GetRacks(ctx context.Context, in *RackQuery, out *Racks) error
+		EnableRacks(ctx context.Context, in *IDsReq, out *Response) error
+		DisableRacks(ctx context.Context, in *IDsReq, out *Response) error
+		EnableRack(ctx context.Context, in *IDReq, out *Response) error
+		DisableRacklot(ctx context.Context, in *IDReq, out *Response) error
 		BindRacklot(ctx context.Context, in *RacklotReq, out *Response) error
-		UnbindRacklot(ctx context.Context, in *RacklotReq, out *Response) error
+		UnbindRack(ctx context.Context, in *IDReq, out *Response) error
 		AddCells(ctx context.Context, in *CellsReq, out *Response) error
-		RemoveCells(ctx context.Context, in *CellIDsReq, out *Response) error
-		EnableCells(ctx context.Context, in *CellIDsReq, out *Response) error
-		DisableCells(ctx context.Context, in *CellIDsReq, out *Response) error
+		RemoveCells(ctx context.Context, in *IDsReq, out *Response) error
+		EnableCells(ctx context.Context, in *IDsReq, out *Response) error
+		DisableCells(ctx context.Context, in *IDsReq, out *Response) error
 		BindMaterial(ctx context.Context, in *MaterialReq, out *Response) error
-		UnbindMaterial(ctx context.Context, in *MaterialReq, out *Response) error
-		OccupyRack(ctx context.Context, in *RackIDReq, out *Response) error
-		ReleaseRack(ctx context.Context, in *RackIDReq, out *Response) error
-		OccupyCell(ctx context.Context, in *CellIDReq, out *Response) error
-		ReleaseCell(ctx context.Context, in *CellIDReq, out *Response) error
+		UnbindMaterial(ctx context.Context, in *IDReq, out *Response) error
+		OccupyRack(ctx context.Context, in *IDReq, out *Response) error
+		ReleaseRack(ctx context.Context, in *IDReq, out *Response) error
+		OccupyCell(ctx context.Context, in *IDReq, out *Response) error
+		ReleaseCell(ctx context.Context, in *IDReq, out *Response) error
 	}
 	type RackService struct {
 		rackService
@@ -440,11 +405,11 @@ func (h *rackServiceHandler) BatchAddRacks(ctx context.Context, in *Racks, out *
 	return h.RackServiceHandler.BatchAddRacks(ctx, in, out)
 }
 
-func (h *rackServiceHandler) DeleteRack(ctx context.Context, in *RackIDReq, out *Response) error {
+func (h *rackServiceHandler) DeleteRack(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.DeleteRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) BatchDeleteRacks(ctx context.Context, in *DeleteRacksReq, out *Response) error {
+func (h *rackServiceHandler) BatchDeleteRacks(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.BatchDeleteRacks(ctx, in, out)
 }
 
@@ -452,59 +417,51 @@ func (h *rackServiceHandler) UpdateRack(ctx context.Context, in *UpdateRackReq, 
 	return h.RackServiceHandler.UpdateRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) GetOneRack(ctx context.Context, in *RackIDReq, out *Rack) error {
+func (h *rackServiceHandler) GetOneRack(ctx context.Context, in *IDReq, out *Rack) error {
 	return h.RackServiceHandler.GetOneRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) GetRacks(ctx context.Context, in *Query, out *Racks) error {
+func (h *rackServiceHandler) GetRacks(ctx context.Context, in *RackQuery, out *Racks) error {
 	return h.RackServiceHandler.GetRacks(ctx, in, out)
 }
 
-func (h *rackServiceHandler) GetRacksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlRacks) error {
-	return h.RackServiceHandler.GetRacksByGraphql(ctx, in, out)
-}
-
-func (h *rackServiceHandler) GetRacksByType(ctx context.Context, in *Query, out *Racks) error {
-	return h.RackServiceHandler.GetRacksByType(ctx, in, out)
-}
-
-func (h *rackServiceHandler) EnableRacks(ctx context.Context, in *RackIDsReq, out *Response) error {
+func (h *rackServiceHandler) EnableRacks(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.EnableRacks(ctx, in, out)
 }
 
-func (h *rackServiceHandler) DisableRacks(ctx context.Context, in *RackIDsReq, out *Response) error {
+func (h *rackServiceHandler) DisableRacks(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.DisableRacks(ctx, in, out)
 }
 
-func (h *rackServiceHandler) EnableRack(ctx context.Context, in *RackIDReq, out *Response) error {
+func (h *rackServiceHandler) EnableRack(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.EnableRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) DisableRack(ctx context.Context, in *RackIDReq, out *Response) error {
-	return h.RackServiceHandler.DisableRack(ctx, in, out)
+func (h *rackServiceHandler) DisableRacklot(ctx context.Context, in *IDReq, out *Response) error {
+	return h.RackServiceHandler.DisableRacklot(ctx, in, out)
 }
 
 func (h *rackServiceHandler) BindRacklot(ctx context.Context, in *RacklotReq, out *Response) error {
 	return h.RackServiceHandler.BindRacklot(ctx, in, out)
 }
 
-func (h *rackServiceHandler) UnbindRacklot(ctx context.Context, in *RacklotReq, out *Response) error {
-	return h.RackServiceHandler.UnbindRacklot(ctx, in, out)
+func (h *rackServiceHandler) UnbindRack(ctx context.Context, in *IDReq, out *Response) error {
+	return h.RackServiceHandler.UnbindRack(ctx, in, out)
 }
 
 func (h *rackServiceHandler) AddCells(ctx context.Context, in *CellsReq, out *Response) error {
 	return h.RackServiceHandler.AddCells(ctx, in, out)
 }
 
-func (h *rackServiceHandler) RemoveCells(ctx context.Context, in *CellIDsReq, out *Response) error {
+func (h *rackServiceHandler) RemoveCells(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.RemoveCells(ctx, in, out)
 }
 
-func (h *rackServiceHandler) EnableCells(ctx context.Context, in *CellIDsReq, out *Response) error {
+func (h *rackServiceHandler) EnableCells(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.EnableCells(ctx, in, out)
 }
 
-func (h *rackServiceHandler) DisableCells(ctx context.Context, in *CellIDsReq, out *Response) error {
+func (h *rackServiceHandler) DisableCells(ctx context.Context, in *IDsReq, out *Response) error {
 	return h.RackServiceHandler.DisableCells(ctx, in, out)
 }
 
@@ -512,22 +469,22 @@ func (h *rackServiceHandler) BindMaterial(ctx context.Context, in *MaterialReq, 
 	return h.RackServiceHandler.BindMaterial(ctx, in, out)
 }
 
-func (h *rackServiceHandler) UnbindMaterial(ctx context.Context, in *MaterialReq, out *Response) error {
+func (h *rackServiceHandler) UnbindMaterial(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.UnbindMaterial(ctx, in, out)
 }
 
-func (h *rackServiceHandler) OccupyRack(ctx context.Context, in *RackIDReq, out *Response) error {
+func (h *rackServiceHandler) OccupyRack(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.OccupyRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) ReleaseRack(ctx context.Context, in *RackIDReq, out *Response) error {
+func (h *rackServiceHandler) ReleaseRack(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.ReleaseRack(ctx, in, out)
 }
 
-func (h *rackServiceHandler) OccupyCell(ctx context.Context, in *CellIDReq, out *Response) error {
+func (h *rackServiceHandler) OccupyCell(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.OccupyCell(ctx, in, out)
 }
 
-func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *CellIDReq, out *Response) error {
+func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.ReleaseCell(ctx, in, out)
 }

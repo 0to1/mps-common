@@ -2,51 +2,49 @@ syntax = "proto3";
 
 package go.micro.srv.rack;
 
+import "google/protobuf/wrappers.proto";
+
 service RackService {
   rpc AddRack(Rack) returns (Response);
   rpc BatchAddRacks(Racks) returns (Response);
-  rpc DeleteRack(RackIDReq) returns (Response);
-  rpc BatchDeleteRacks(DeleteRacksReq) returns (Response);
+  rpc DeleteRack(IDReq) returns (Response);
+  rpc BatchDeleteRacks(IDsReq) returns (Response);
   // 更新货架信息
   rpc UpdateRack(UpdateRackReq) returns (Response);
   // 根据货架ID获取货架信息
-  rpc GetOneRack(RackIDReq) returns (Rack);
+  rpc GetOneRack(IDReq) returns (Rack);
   // 根据查询条件获取满足条件的货架
-  rpc GetRacks(Query) returns (Racks);
-    //通过graphql条件查询
-    rpc GetRacksByGraphql(GraphqlQuery)returns(GraphqlRacks);
-    // 根据货架类型条件获取满足条件的货架
-    rpc GetRacksByType(Query) returns (Racks);
+  rpc GetRacks(RackQuery) returns (Racks);
   // 启用一组货架
-  rpc EnableRacks(RackIDsReq) returns (Response);
+  rpc EnableRacks(IDsReq) returns (Response);
   // 禁用一组货架
-  rpc DisableRacks(RackIDsReq) returns (Response);
+  rpc DisableRacks(IDsReq) returns (Response);
   // 启用某个货架
-  rpc EnableRack(RackIDReq) returns (Response);
+  rpc EnableRack(IDReq) returns (Response);
   // 禁用某个货架
-  rpc DisableRack(RackIDReq) returns (Response);
+  rpc DisableRacklot(IDReq) returns (Response);
   // 绑定货位
   rpc BindRacklot(RacklotReq) returns (Response);
   // 解绑货位
-  rpc UnbindRacklot(RacklotReq) returns (Response);
+  rpc UnbindRack(IDReq) returns (Response);
   // 添加储位
   rpc AddCells(CellsReq) returns (Response);
   // 移除储位
-  rpc RemoveCells(CellIDsReq) returns (Response);
+  rpc RemoveCells(IDsReq) returns (Response);
   // 启用储位
-  rpc EnableCells(CellIDsReq) returns (Response);
+  rpc EnableCells(IDsReq) returns (Response);
   // 禁用储位
-  rpc DisableCells(CellIDsReq) returns (Response);
+  rpc DisableCells(IDsReq) returns (Response);
   // 绑定物料
   rpc BindMaterial(MaterialReq) returns (Response);
   // 解绑物料
-  rpc UnbindMaterial(MaterialReq) returns (Response);
+  rpc UnbindMaterial(IDReq) returns (Response);
 
 
-  rpc  OccupyRack(RackIDReq) returns (Response);
-  rpc ReleaseRack(RackIDReq) returns (Response);
-  rpc OccupyCell(CellIDReq) returns(Response);
-  rpc ReleaseCell(CellIDReq) returns(Response);
+  rpc  OccupyRack(IDReq) returns (Response);
+  rpc ReleaseRack(IDReq) returns (Response);
+  rpc OccupyCell(IDReq) returns(Response);
+  rpc ReleaseCell(IDReq) returns(Response);
 
 }
 
@@ -54,6 +52,10 @@ message RackType {
   uint32 id = 1;
   string name = 2;
 }
+
+message IDReq { uint32 id = 1; }
+
+message IDsReq { repeated uint32 id = 1; }
 
 // Cell 储位
 message Cell {
@@ -82,6 +84,9 @@ message Cell {
   uint32 type = 32;
   //是否被占用
   bool isOccupied = 33;
+
+  //最大负载
+  int32 maxLoad = 35;
 }
 
 message Rack {
@@ -96,7 +101,7 @@ message Rack {
   int32 width = 24;
   int32 height = 25;
   // 所在货位
-  int32 racklot = 26;
+  int32 Rack = 26;
   // 货架层数
   int32 layers = 27;
   // 货架状态(空、可用、被占用、满等)
@@ -113,9 +118,6 @@ message Rack {
 
 message Response {}
 
-message RackIDReq { uint32 id = 1; }
-message CellIDReq { uint32 id = 1; }
-
 message UpdateRackReq {
   uint32 id = 20;
   string name = 21;
@@ -129,27 +131,6 @@ message UpdateRackReq {
   string description = 29;
 }
 
-message DeleteRacksReq {
-    repeated int32 ids = 1;
-}
-
-message GraphqlQuery {
-    string query = 1;
-}
-
-message GraphqlRacks {
-    string response =1;
-}
-
-message Query {
-  uint32 limit = 1;
-  uint32 offset = 2;
-  uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
-  repeated Parameter queryParams = 6;
-}
-
 message Racks {
   repeated Rack racks = 1;
   uint32 totals = 4;
@@ -157,28 +138,9 @@ message Racks {
   uint32 currpages = 3;
 }
 
-message TypeReq {
-  uint32 id = 1;
-  uint32 type = 2;
-}
-
-message LayerNumsReq { uint32 id = 1; }
-
-message RackIDsReq { repeated uint32 ids = 1; }
-
 message CellsReq {
   uint32 rackID = 1;
   repeated Cell cells = 2;
-}
-
-message CellIDsReq {
-  uint32 rackID = 1;
-  repeated uint32 cellIDs = 2;
-}
-
-message RacklotReq {
-  uint32 rackID = 1;
-  uint32 racklotID = 2;
 }
 
 message MaterialReq {
@@ -188,7 +150,80 @@ message MaterialReq {
   string materialType = 4;
 }
 
-message Parameter {
+message RackQuery {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    RackFilter filter = 7;
+  }
+  
+  message RackTypeQuery {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    RackTypeFilter filter = 7;
+  }
+
+  message RackFilter {
+    repeated RackFilter and = 1;
+    repeated RackFilter or = 2;
+    repeated int32 idIn = 3;                                 
+
+    google.protobuf.Int32Value racklotID = 5;          
+         
+    google.protobuf.BoolValue isValid = 8;     
+    google.protobuf.BoolValue isOccupied = 9; 
+    RackTypeFilter typeFilter  = 11;
+    CellFilter cellFilter = 13;
+    PropertiesFilter  propertiesFilter = 12;     
+  }
+
+  message CellFilter {
+    repeated CellFilter and = 1;
+    repeated CellFilter or = 2;
+    repeated int32 idIn = 3;
+    repeated string nameIn = 4;
+    google.protobuf.Int32Value id = 5;
+    google.protobuf.Int32Value rackID = 7;     
+
+    google.protobuf.BoolValue isValid = 8;     
+    google.protobuf.BoolValue isOccupied = 9; 
+    google.protobuf.StringValue name = 6;
+    repeated int64 materialIDIn= 10;
+    google.protobuf.Int64Value materialID= 13;
+    // repeated int64 materialIDIN = 14;
+    
+    google.protobuf.Int32Value cellCode = 11;
+    repeated int32 cellCodeIn = 12;
+  }
+  
+  message RackTypeFilter {
+    repeated RackTypeFilter and = 1;
+    repeated RackTypeFilter or = 2;
+    repeated int32 idIn = 3;
+    repeated string nameIn = 4;
+    google.protobuf.Int32Value id = 5;  
+    google.protobuf.StringValue name = 6;  
+  }
+
+  message PropertiesFilter {
+    string key  = 1;
+    string value = 2; 
+  }
+
+  message Property{
     string key = 1;
     string value = 2;
 }
+
+message FlagReq {
+    int32 id = 1;
+    bool flag = 2;
+  }
+
+  message RacklotReq {
+    uint32 rackID = 1;
+    uint32 racklotID = 2;
+  }
