@@ -20,13 +20,13 @@ service RackService {
   // 禁用一组货架
   rpc DisableRacks(IDsReq) returns (Response);
   // 启用某个货架
-  rpc EnableRack(IDReq) returns (Response);
-  // 禁用某个货架
-  rpc DisableRacklot(IDReq) returns (Response);
+//   rpc EnableRack(IDReq) returns (Response);
+//   // 禁用某个货架
+//   rpc DisableRack(IDReq) returns (Response);
   // 绑定货位
   rpc BindRacklot(RacklotReq) returns (Response);
   // 解绑货位
-  rpc UnbindRack(IDReq) returns (Response);
+  rpc UnbindRacklot(IDReq) returns (Response);
   // 添加储位
   rpc AddCells(CellsReq) returns (Response);
   // 移除储位
@@ -46,6 +46,9 @@ service RackService {
   rpc OccupyCell(IDReq) returns(Response);
   rpc ReleaseCell(IDReq) returns(Response);
 
+      // 设置类型
+     rpc SetRacklotType(TypeReq) returns (Response);
+
 }
 
 message RackType {
@@ -55,7 +58,7 @@ message RackType {
 
 message IDReq { uint32 id = 1; }
 
-message IDsReq { repeated uint32 id = 1; }
+message IDsReq { repeated uint32 ids = 1; }
 
 // Cell 储位
 message Cell {
@@ -101,7 +104,7 @@ message Rack {
   int32 width = 24;
   int32 height = 25;
   // 所在货位
-  int32 Rack = 26;
+  int32 Racklot = 26;
   // 货架层数
   int32 layers = 27;
   // 货架状态(空、可用、被占用、满等)
@@ -145,7 +148,7 @@ message CellsReq {
 
 message MaterialReq {
   uint32 rackID = 1;
-  uint32 cellCode = 2;  //或者使用Cell的tag字段
+  uint32 cellID = 2;  //或者使用Cell的tag字段
   int64  materialID = 3;
   string materialType = 4;
 }
@@ -226,4 +229,10 @@ message FlagReq {
   message RacklotReq {
     uint32 rackID = 1;
     uint32 racklotID = 2;
+  }
+
+  message TypeReq {
+    int32 id = 1;
+    int32 type = 2;
+    string name = 3;
   }

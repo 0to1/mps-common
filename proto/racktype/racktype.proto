@@ -8,14 +8,14 @@ service RackTypeService {
   rpc AddRackType(RackType) returns (Response);
   rpc DeleteRackType(IDReq) returns (Response);
   rpc UpdateRackType(RackType) returns (Response);
-  rpc GetOneRackTypes(RackTypeQuery) returns (RackType);
-  rpc GetRackTypes(IDReq) returns (RackTypes);
+  rpc GetRackTypes(RackTypeQuery) returns (RackTypes);
+  rpc GetOneRackType(IDReq) returns (RackType);
 
   rpc AddCellType(CellType) returns (Response);
   rpc DeleteCellType(IDReq) returns (Response);
   rpc UpdateCellType(CellType) returns (Response);
-  rpc GetCellTypes(IDReq) returns (CellType);
-  rpc GetOneCellTypes(CellTypeQuery) returns (CellTypes);
+  rpc GetOneCellType(IDReq) returns (CellType);
+  rpc GetCellTypes(CellTypeQuery) returns (CellTypes);
 }
 
 message RackType {
@@ -101,3 +101,4 @@ message CellTypes {
   uint32 currpages = 3;
   uint32 totals = 4;
 }
+

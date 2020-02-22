@@ -50,13 +50,13 @@ type RackService interface {
 	// 禁用一组货架
 	DisableRacks(ctx context.Context, in *IDsReq, opts ...client.CallOption) (*Response, error)
 	// 启用某个货架
-	EnableRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
-	// 禁用某个货架
-	DisableRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	//   rpc EnableRack(IDReq) returns (Response);
+	//   // 禁用某个货架
+	//   rpc DisableRack(IDReq) returns (Response);
 	// 绑定货位
 	BindRacklot(ctx context.Context, in *RacklotReq, opts ...client.CallOption) (*Response, error)
 	// 解绑货位
-	UnbindRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	UnbindRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	// 添加储位
 	AddCells(ctx context.Context, in *CellsReq, opts ...client.CallOption) (*Response, error)
 	// 移除储位
@@ -73,6 +73,8 @@ type RackService interface {
 	ReleaseRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	OccupyCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	ReleaseCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	// 设置类型
+	SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
 }
 
 type rackService struct {
@@ -177,26 +179,6 @@ func (c *rackService) DisableRacks(ctx context.Context, in *IDsReq, opts ...clie
 	return out, nil
 }
 
-func (c *rackService) EnableRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.EnableRack", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rackService) DisableRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.DisableRacklot", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *rackService) BindRacklot(ctx context.Context, in *RacklotReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackService.BindRacklot", in)
 	out := new(Response)
@@ -207,8 +189,8 @@ func (c *rackService) BindRacklot(ctx context.Context, in *RacklotReq, opts ...c
 	return out, nil
 }
 
-func (c *rackService) UnbindRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.UnbindRack", in)
+func (c *rackService) UnbindRacklot(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.UnbindRacklot", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -317,6 +299,16 @@ func (c *rackService) ReleaseCell(ctx context.Context, in *IDReq, opts ...client
 	return out, nil
 }
 
+func (c *rackService) SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.SetRacklotType", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RackService service
 
 type RackServiceHandler interface {
@@ -335,13 +327,13 @@ type RackServiceHandler interface {
 	// 禁用一组货架
 	DisableRacks(context.Context, *IDsReq, *Response) error
 	// 启用某个货架
-	EnableRack(context.Context, *IDReq, *Response) error
-	// 禁用某个货架
-	DisableRacklot(context.Context, *IDReq, *Response) error
+	//   rpc EnableRack(IDReq) returns (Response);
+	//   // 禁用某个货架
+	//   rpc DisableRack(IDReq) returns (Response);
 	// 绑定货位
 	BindRacklot(context.Context, *RacklotReq, *Response) error
 	// 解绑货位
-	UnbindRack(context.Context, *IDReq, *Response) error
+	UnbindRacklot(context.Context, *IDReq, *Response) error
 	// 添加储位
 	AddCells(context.Context, *CellsReq, *Response) error
 	// 移除储位
@@ -358,6 +350,8 @@ type RackServiceHandler interface {
 	ReleaseRack(context.Context, *IDReq, *Response) error
 	OccupyCell(context.Context, *IDReq, *Response) error
 	ReleaseCell(context.Context, *IDReq, *Response) error
+	// 设置类型
+	SetRacklotType(context.Context, *TypeReq, *Response) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
@@ -371,10 +365,8 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		GetRacks(ctx context.Context, in *RackQuery, out *Racks) error
 		EnableRacks(ctx context.Context, in *IDsReq, out *Response) error
 		DisableRacks(ctx context.Context, in *IDsReq, out *Response) error
-		EnableRack(ctx context.Context, in *IDReq, out *Response) error
-		DisableRacklot(ctx context.Context, in *IDReq, out *Response) error
 		BindRacklot(ctx context.Context, in *RacklotReq, out *Response) error
-		UnbindRack(ctx context.Context, in *IDReq, out *Response) error
+		UnbindRacklot(ctx context.Context, in *IDReq, out *Response) error
 		AddCells(ctx context.Context, in *CellsReq, out *Response) error
 		RemoveCells(ctx context.Context, in *IDsReq, out *Response) error
 		EnableCells(ctx context.Context, in *IDsReq, out *Response) error
@@ -385,6 +377,7 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		ReleaseRack(ctx context.Context, in *IDReq, out *Response) error
 		OccupyCell(ctx context.Context, in *IDReq, out *Response) error
 		ReleaseCell(ctx context.Context, in *IDReq, out *Response) error
+		SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error
 	}
 	type RackService struct {
 		rackService
@@ -433,20 +426,12 @@ func (h *rackServiceHandler) DisableRacks(ctx context.Context, in *IDsReq, out *
 	return h.RackServiceHandler.DisableRacks(ctx, in, out)
 }
 
-func (h *rackServiceHandler) EnableRack(ctx context.Context, in *IDReq, out *Response) error {
-	return h.RackServiceHandler.EnableRack(ctx, in, out)
-}
-
-func (h *rackServiceHandler) DisableRacklot(ctx context.Context, in *IDReq, out *Response) error {
-	return h.RackServiceHandler.DisableRacklot(ctx, in, out)
-}
-
 func (h *rackServiceHandler) BindRacklot(ctx context.Context, in *RacklotReq, out *Response) error {
 	return h.RackServiceHandler.BindRacklot(ctx, in, out)
 }
 
-func (h *rackServiceHandler) UnbindRack(ctx context.Context, in *IDReq, out *Response) error {
-	return h.RackServiceHandler.UnbindRack(ctx, in, out)
+func (h *rackServiceHandler) UnbindRacklot(ctx context.Context, in *IDReq, out *Response) error {
+	return h.RackServiceHandler.UnbindRacklot(ctx, in, out)
 }
 
 func (h *rackServiceHandler) AddCells(ctx context.Context, in *CellsReq, out *Response) error {
@@ -487,4 +472,8 @@ func (h *rackServiceHandler) OccupyCell(ctx context.Context, in *IDReq, out *Res
 
 func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.ReleaseCell(ctx, in, out)
+}
+
+func (h *rackServiceHandler) SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error {
+	return h.RackServiceHandler.SetRacklotType(ctx, in, out)
 }

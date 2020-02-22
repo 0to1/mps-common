@@ -61,6 +61,9 @@ service RacklotService {
 
       //增加属性
   rpc SetProperties(PropertiesReq) returns(Response);
+      // 设置类型
+      rpc SetRacklotType(TypeReq) returns (Response);
+
 }
 
 message IDReq {
@@ -279,4 +282,10 @@ message FlagReq {
   message PropertiesReq {
     int32 id = 1;
     repeated Property properties = 2;
+  }
+
+  message TypeReq {
+    int32 id = 1;
+    int32 type = 2;
+    string name = 3;
   }
