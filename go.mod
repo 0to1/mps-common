@@ -22,6 +22,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/micro/go-micro v1.16.0
+	github.com/micro/go-micro/v2 v2.1.0
 	github.com/micro/protoc-gen-micro v1.0.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
 	github.com/moul/http2curl v1.0.0 // indirect

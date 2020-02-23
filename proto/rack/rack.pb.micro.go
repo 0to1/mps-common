@@ -73,8 +73,13 @@ type RackService interface {
 	ReleaseRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	OccupyCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	ReleaseCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	GetOneCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Cell, error)
+	// 根据查询条件获取满足条件的货架
+	GetCells(ctx context.Context, in *CellQuery, opts ...client.CallOption) (*Cells, error)
+	//增加属性
+	SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
 	// 设置类型
-	SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
+	SetRackType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
 }
 
 type rackService struct {
@@ -299,8 +304,38 @@ func (c *rackService) ReleaseCell(ctx context.Context, in *IDReq, opts ...client
 	return out, nil
 }
 
-func (c *rackService) SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RackService.SetRacklotType", in)
+func (c *rackService) GetOneCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Cell, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetOneCell", in)
+	out := new(Cell)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) GetCells(ctx context.Context, in *CellQuery, opts ...client.CallOption) (*Cells, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetCells", in)
+	out := new(Cells)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.SetProperties", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) SetRackType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.SetRackType", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -350,8 +385,13 @@ type RackServiceHandler interface {
 	ReleaseRack(context.Context, *IDReq, *Response) error
 	OccupyCell(context.Context, *IDReq, *Response) error
 	ReleaseCell(context.Context, *IDReq, *Response) error
+	GetOneCell(context.Context, *IDReq, *Cell) error
+	// 根据查询条件获取满足条件的货架
+	GetCells(context.Context, *CellQuery, *Cells) error
+	//增加属性
+	SetProperties(context.Context, *PropertiesReq, *Response) error
 	// 设置类型
-	SetRacklotType(context.Context, *TypeReq, *Response) error
+	SetRackType(context.Context, *TypeReq, *Response) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
@@ -377,7 +417,10 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		ReleaseRack(ctx context.Context, in *IDReq, out *Response) error
 		OccupyCell(ctx context.Context, in *IDReq, out *Response) error
 		ReleaseCell(ctx context.Context, in *IDReq, out *Response) error
-		SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error
+		GetOneCell(ctx context.Context, in *IDReq, out *Cell) error
+		GetCells(ctx context.Context, in *CellQuery, out *Cells) error
+		SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error
+		SetRackType(ctx context.Context, in *TypeReq, out *Response) error
 	}
 	type RackService struct {
 		rackService
@@ -474,6 +517,18 @@ func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *IDReq, out *Re
 	return h.RackServiceHandler.ReleaseCell(ctx, in, out)
 }
 
-func (h *rackServiceHandler) SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error {
-	return h.RackServiceHandler.SetRacklotType(ctx, in, out)
+func (h *rackServiceHandler) GetOneCell(ctx context.Context, in *IDReq, out *Cell) error {
+	return h.RackServiceHandler.GetOneCell(ctx, in, out)
+}
+
+func (h *rackServiceHandler) GetCells(ctx context.Context, in *CellQuery, out *Cells) error {
+	return h.RackServiceHandler.GetCells(ctx, in, out)
+}
+
+func (h *rackServiceHandler) SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
+	return h.RackServiceHandler.SetProperties(ctx, in, out)
+}
+
+func (h *rackServiceHandler) SetRackType(ctx context.Context, in *TypeReq, out *Response) error {
+	return h.RackServiceHandler.SetRackType(ctx, in, out)
 }

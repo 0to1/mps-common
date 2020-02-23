@@ -46,8 +46,14 @@ service RackService {
   rpc OccupyCell(IDReq) returns(Response);
   rpc ReleaseCell(IDReq) returns(Response);
 
-      // 设置类型
-     rpc SetRacklotType(TypeReq) returns (Response);
+  rpc GetOneCell(IDReq) returns (Cell);
+  // 根据查询条件获取满足条件的货架
+  rpc GetCells(CellQuery) returns (Cells);
+
+  //增加属性
+  rpc SetProperties(PropertiesReq) returns(Response);
+  // 设置类型
+  rpc SetRackType(TypeReq) returns (Response);
 
 }
 
@@ -146,6 +152,13 @@ message CellsReq {
   repeated Cell cells = 2;
 }
 
+message Cells {
+  repeated Cell cells = 1;
+  uint32 totals = 4;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
 message MaterialReq {
   uint32 rackID = 1;
   uint32 cellID = 2;  //或者使用Cell的tag字段
@@ -159,6 +172,14 @@ message RackQuery {
     uint32 page = 3;
     uint32 perPage = 4;
     RackFilter filter = 7;
+  }
+
+  message CellQuery {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    CellFilter filter = 7;
   }
   
   message RackTypeQuery {
@@ -196,7 +217,6 @@ message RackQuery {
     google.protobuf.StringValue name = 6;
     repeated int64 materialIDIn= 10;
     google.protobuf.Int64Value materialID= 13;
-    // repeated int64 materialIDIN = 14;
     
     google.protobuf.Int32Value cellCode = 11;
     repeated int32 cellCodeIn = 12;
@@ -216,10 +236,6 @@ message RackQuery {
     string value = 2; 
   }
 
-  message Property{
-    string key = 1;
-    string value = 2;
-}
 
 message FlagReq {
     int32 id = 1;
@@ -235,4 +251,14 @@ message FlagReq {
     int32 id = 1;
     int32 type = 2;
     string name = 3;
+  }
+
+  message Property{
+    string key = 1;
+    string value = 2;
+}
+
+  message PropertiesReq {
+    int32 id = 1;
+    repeated Property properties = 2;
   }

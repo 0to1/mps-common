@@ -4,11 +4,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/micro/go-micro/config"
-	"github.com/micro/go-micro/config/source"
-	"github.com/micro/go-micro/config/source/env"
-	"github.com/micro/go-micro/config/source/etcd"
-	"github.com/micro/go-micro/config/source/file"
+	"github.com/micro/go-micro/v2/config"
+	"github.com/micro/go-micro/v2/config/source"
+	"github.com/micro/go-micro/v2/config/source/env"
+	"github.com/micro/go-micro/v2/config/source/etcd"
+	"github.com/micro/go-micro/v2/config/source/file"
 )
 
 // var builtinConfig = []byte(`{
