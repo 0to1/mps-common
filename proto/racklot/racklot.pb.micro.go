@@ -89,6 +89,8 @@ type RacklotService interface {
 	Outbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	//增加属性
 	SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
+	// 设置类型
+	SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
 }
 
 type racklotService struct {
@@ -393,6 +395,16 @@ func (c *racklotService) SetProperties(ctx context.Context, in *PropertiesReq, o
 	return out, nil
 }
 
+func (c *racklotService) SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.SetRacklotType", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RacklotService service
 
 type RacklotServiceHandler interface {
@@ -450,6 +462,8 @@ type RacklotServiceHandler interface {
 	Outbound(context.Context, *FlagReq, *Response) error
 	//增加属性
 	SetProperties(context.Context, *PropertiesReq, *Response) error
+	// 设置类型
+	SetRacklotType(context.Context, *TypeReq, *Response) error
 }
 
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
@@ -483,6 +497,7 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		Inbound(ctx context.Context, in *FlagReq, out *Response) error
 		Outbound(ctx context.Context, in *FlagReq, out *Response) error
 		SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error
+		SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error
 	}
 	type RacklotService struct {
 		racklotService
@@ -609,4 +624,8 @@ func (h *racklotServiceHandler) Outbound(ctx context.Context, in *FlagReq, out *
 
 func (h *racklotServiceHandler) SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
 	return h.RacklotServiceHandler.SetProperties(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error {
+	return h.RacklotServiceHandler.SetRacklotType(ctx, in, out)
 }

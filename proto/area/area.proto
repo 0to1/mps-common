@@ -84,7 +84,7 @@ message Area {
   repeated Property props = 31;
 }
 
-message UpdateArea {warehouseIkey
+message UpdateArea {
   // 区域任务容量
   google.protobuf.Int32Value orderCapacity = 25;
   //是否有效

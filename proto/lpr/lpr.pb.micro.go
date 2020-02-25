@@ -11,8 +11,8 @@ import (
 
 import (
 	context "context"
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
+	client "github.com/micro/go-micro/v2/client"
+	server "github.com/micro/go-micro/v2/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -58,12 +58,6 @@ type lprService struct {
 }
 
 func NewLprService(name string, c client.Client) LprService {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(name) == 0 {
-		name = "go.micro.srv.lpr"
-	}
 	return &lprService{
 		c:    c,
 		name: name,
@@ -80,6 +74,7 @@ func (c *lprService) Stream(ctx context.Context, opts ...client.CallOption) (Lpr
 }
 
 type Lpr_StreamService interface {
+	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
@@ -93,6 +88,10 @@ type lprServiceStream struct {
 
 func (x *lprServiceStream) Close() error {
 	return x.stream.Close()
+}
+
+func (x *lprServiceStream) Context() context.Context {
+	return x.stream.Context()
 }
 
 func (x *lprServiceStream) SendMsg(m interface{}) error {
@@ -129,6 +128,7 @@ func (c *lprService) ServerStream(ctx context.Context, in *Request, opts ...clie
 }
 
 type Lpr_ServerStreamService interface {
+	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
@@ -141,6 +141,10 @@ type lprServiceServerStream struct {
 
 func (x *lprServiceServerStream) Close() error {
 	return x.stream.Close()
+}
+
+func (x *lprServiceServerStream) Context() context.Context {
+	return x.stream.Context()
 }
 
 func (x *lprServiceServerStream) SendMsg(m interface{}) error {
@@ -268,6 +272,7 @@ func (h *lprHandler) Stream(ctx context.Context, stream server.Stream) error {
 }
 
 type Lpr_StreamStream interface {
+	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
@@ -281,6 +286,10 @@ type lprStreamStream struct {
 
 func (x *lprStreamStream) Close() error {
 	return x.stream.Close()
+}
+
+func (x *lprStreamStream) Context() context.Context {
+	return x.stream.Context()
 }
 
 func (x *lprStreamStream) SendMsg(m interface{}) error {
@@ -312,6 +321,7 @@ func (h *lprHandler) ServerStream(ctx context.Context, stream server.Stream) err
 }
 
 type Lpr_ServerStreamStream interface {
+	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
@@ -324,6 +334,10 @@ type lprServerStreamStream struct {
 
 func (x *lprServerStreamStream) Close() error {
 	return x.stream.Close()
+}
+
+func (x *lprServerStreamStream) Context() context.Context {
+	return x.stream.Context()
 }
 
 func (x *lprServerStreamStream) SendMsg(m interface{}) error {
