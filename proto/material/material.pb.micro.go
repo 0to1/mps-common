@@ -6,6 +6,7 @@ package go_micro_srv_material
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -39,25 +40,23 @@ type MaterialService interface {
 	// 移除物料类型
 	DeleteMaterialType(ctx context.Context, in *MaterialTypeIDReq, opts ...client.CallOption) (*Response, error)
 	// 更新物料类型
-	UpdateMaterialType(ctx context.Context, in *MaterialType, opts ...client.CallOption) (*Response, error)
+	UpdateMaterialType(ctx context.Context, in *UpdateMaterialTypeReq, opts ...client.CallOption) (*Response, error)
 	// 根据查询条件获取物料类型列表
-	GetMaterialTypes(ctx context.Context, in *Query, opts ...client.CallOption) (*MaterialTypesResp, error)
+	GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, opts ...client.CallOption) (*MaterialTypesResp, error)
 	// 根据ID获取指定的物料类型
 	GetOneMaterialType(ctx context.Context, in *MaterialTypeIDReq, opts ...client.CallOption) (*MaterialType, error)
 	// 添加物料
 	AddMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error)
 	// 移除物料
-	DeleteMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error)
+	DeleteMaterial(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Response, error)
 	// 更新物料
-	UpdateMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error)
+	UpdateMaterial(ctx context.Context, in *UpdateMaterialReq, opts ...client.CallOption) (*Response, error)
 	// 根据查询条件获取物料信息
-	GetMaterials(ctx context.Context, in *Query, opts ...client.CallOption) (*MaterialsResp, error)
+	GetMaterials(ctx context.Context, in *MaterialQuery, opts ...client.CallOption) (*MaterialsResp, error)
 	// 根据ID获取指定的物料类型
-	GetOneMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Material, error)
-	//通过graphql条件查询
-	GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlMaterials, error)
-	//根据k,v获取对应的物料
-	GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, opts ...client.CallOption) (*Material, error)
+	GetOneMaterial(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Material, error)
+	BatchAddMaterials(ctx context.Context, in *Materials, opts ...client.CallOption) (*Response, error)
+	BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, opts ...client.CallOption) (*Response, error)
 }
 
 type materialService struct {
@@ -92,7 +91,7 @@ func (c *materialService) DeleteMaterialType(ctx context.Context, in *MaterialTy
 	return out, nil
 }
 
-func (c *materialService) UpdateMaterialType(ctx context.Context, in *MaterialType, opts ...client.CallOption) (*Response, error) {
+func (c *materialService) UpdateMaterialType(ctx context.Context, in *UpdateMaterialTypeReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.UpdateMaterialType", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -102,7 +101,7 @@ func (c *materialService) UpdateMaterialType(ctx context.Context, in *MaterialTy
 	return out, nil
 }
 
-func (c *materialService) GetMaterialTypes(ctx context.Context, in *Query, opts ...client.CallOption) (*MaterialTypesResp, error) {
+func (c *materialService) GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, opts ...client.CallOption) (*MaterialTypesResp, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.GetMaterialTypes", in)
 	out := new(MaterialTypesResp)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -132,7 +131,7 @@ func (c *materialService) AddMaterial(ctx context.Context, in *Material, opts ..
 	return out, nil
 }
 
-func (c *materialService) DeleteMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error) {
+func (c *materialService) DeleteMaterial(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.DeleteMaterial", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -142,7 +141,7 @@ func (c *materialService) DeleteMaterial(ctx context.Context, in *Material, opts
 	return out, nil
 }
 
-func (c *materialService) UpdateMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error) {
+func (c *materialService) UpdateMaterial(ctx context.Context, in *UpdateMaterialReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.UpdateMaterial", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -152,7 +151,7 @@ func (c *materialService) UpdateMaterial(ctx context.Context, in *Material, opts
 	return out, nil
 }
 
-func (c *materialService) GetMaterials(ctx context.Context, in *Query, opts ...client.CallOption) (*MaterialsResp, error) {
+func (c *materialService) GetMaterials(ctx context.Context, in *MaterialQuery, opts ...client.CallOption) (*MaterialsResp, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.GetMaterials", in)
 	out := new(MaterialsResp)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -162,7 +161,7 @@ func (c *materialService) GetMaterials(ctx context.Context, in *Query, opts ...c
 	return out, nil
 }
 
-func (c *materialService) GetOneMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Material, error) {
+func (c *materialService) GetOneMaterial(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Material, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.GetOneMaterial", in)
 	out := new(Material)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -172,9 +171,9 @@ func (c *materialService) GetOneMaterial(ctx context.Context, in *Material, opts
 	return out, nil
 }
 
-func (c *materialService) GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlMaterials, error) {
-	req := c.c.NewRequest(c.name, "MaterialService.GetMaterialsByGraphql", in)
-	out := new(GraphqlMaterials)
+func (c *materialService) BatchAddMaterials(ctx context.Context, in *Materials, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.BatchAddMaterials", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -182,9 +181,9 @@ func (c *materialService) GetMaterialsByGraphql(ctx context.Context, in *Graphql
 	return out, nil
 }
 
-func (c *materialService) GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, opts ...client.CallOption) (*Material, error) {
-	req := c.c.NewRequest(c.name, "MaterialService.GetOneMaterialByParameters", in)
-	out := new(Material)
+func (c *materialService) BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.BatchDeleteMaterials", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -200,41 +199,39 @@ type MaterialServiceHandler interface {
 	// 移除物料类型
 	DeleteMaterialType(context.Context, *MaterialTypeIDReq, *Response) error
 	// 更新物料类型
-	UpdateMaterialType(context.Context, *MaterialType, *Response) error
+	UpdateMaterialType(context.Context, *UpdateMaterialTypeReq, *Response) error
 	// 根据查询条件获取物料类型列表
-	GetMaterialTypes(context.Context, *Query, *MaterialTypesResp) error
+	GetMaterialTypes(context.Context, *MaterialTypeQuery, *MaterialTypesResp) error
 	// 根据ID获取指定的物料类型
 	GetOneMaterialType(context.Context, *MaterialTypeIDReq, *MaterialType) error
 	// 添加物料
 	AddMaterial(context.Context, *Material, *Response) error
 	// 移除物料
-	DeleteMaterial(context.Context, *Material, *Response) error
+	DeleteMaterial(context.Context, *MaterialIDReq, *Response) error
 	// 更新物料
-	UpdateMaterial(context.Context, *Material, *Response) error
+	UpdateMaterial(context.Context, *UpdateMaterialReq, *Response) error
 	// 根据查询条件获取物料信息
-	GetMaterials(context.Context, *Query, *MaterialsResp) error
+	GetMaterials(context.Context, *MaterialQuery, *MaterialsResp) error
 	// 根据ID获取指定的物料类型
-	GetOneMaterial(context.Context, *Material, *Material) error
-	//通过graphql条件查询
-	GetMaterialsByGraphql(context.Context, *GraphqlQuery, *GraphqlMaterials) error
-	//根据k,v获取对应的物料
-	GetOneMaterialByParameters(context.Context, *QueryParameter, *Material) error
+	GetOneMaterial(context.Context, *MaterialIDReq, *Material) error
+	BatchAddMaterials(context.Context, *Materials, *Response) error
+	BatchDeleteMaterials(context.Context, *MaterialIDsReq, *Response) error
 }
 
 func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler, opts ...server.HandlerOption) error {
 	type materialService interface {
 		AddMaterialType(ctx context.Context, in *MaterialType, out *Response) error
 		DeleteMaterialType(ctx context.Context, in *MaterialTypeIDReq, out *Response) error
-		UpdateMaterialType(ctx context.Context, in *MaterialType, out *Response) error
-		GetMaterialTypes(ctx context.Context, in *Query, out *MaterialTypesResp) error
+		UpdateMaterialType(ctx context.Context, in *UpdateMaterialTypeReq, out *Response) error
+		GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, out *MaterialTypesResp) error
 		GetOneMaterialType(ctx context.Context, in *MaterialTypeIDReq, out *MaterialType) error
 		AddMaterial(ctx context.Context, in *Material, out *Response) error
-		DeleteMaterial(ctx context.Context, in *Material, out *Response) error
-		UpdateMaterial(ctx context.Context, in *Material, out *Response) error
-		GetMaterials(ctx context.Context, in *Query, out *MaterialsResp) error
-		GetOneMaterial(ctx context.Context, in *Material, out *Material) error
-		GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlMaterials) error
-		GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, out *Material) error
+		DeleteMaterial(ctx context.Context, in *MaterialIDReq, out *Response) error
+		UpdateMaterial(ctx context.Context, in *UpdateMaterialReq, out *Response) error
+		GetMaterials(ctx context.Context, in *MaterialQuery, out *MaterialsResp) error
+		GetOneMaterial(ctx context.Context, in *MaterialIDReq, out *Material) error
+		BatchAddMaterials(ctx context.Context, in *Materials, out *Response) error
+		BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, out *Response) error
 	}
 	type MaterialService struct {
 		materialService
@@ -255,11 +252,11 @@ func (h *materialServiceHandler) DeleteMaterialType(ctx context.Context, in *Mat
 	return h.MaterialServiceHandler.DeleteMaterialType(ctx, in, out)
 }
 
-func (h *materialServiceHandler) UpdateMaterialType(ctx context.Context, in *MaterialType, out *Response) error {
+func (h *materialServiceHandler) UpdateMaterialType(ctx context.Context, in *UpdateMaterialTypeReq, out *Response) error {
 	return h.MaterialServiceHandler.UpdateMaterialType(ctx, in, out)
 }
 
-func (h *materialServiceHandler) GetMaterialTypes(ctx context.Context, in *Query, out *MaterialTypesResp) error {
+func (h *materialServiceHandler) GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, out *MaterialTypesResp) error {
 	return h.MaterialServiceHandler.GetMaterialTypes(ctx, in, out)
 }
 
@@ -271,26 +268,26 @@ func (h *materialServiceHandler) AddMaterial(ctx context.Context, in *Material, 
 	return h.MaterialServiceHandler.AddMaterial(ctx, in, out)
 }
 
-func (h *materialServiceHandler) DeleteMaterial(ctx context.Context, in *Material, out *Response) error {
+func (h *materialServiceHandler) DeleteMaterial(ctx context.Context, in *MaterialIDReq, out *Response) error {
 	return h.MaterialServiceHandler.DeleteMaterial(ctx, in, out)
 }
 
-func (h *materialServiceHandler) UpdateMaterial(ctx context.Context, in *Material, out *Response) error {
+func (h *materialServiceHandler) UpdateMaterial(ctx context.Context, in *UpdateMaterialReq, out *Response) error {
 	return h.MaterialServiceHandler.UpdateMaterial(ctx, in, out)
 }
 
-func (h *materialServiceHandler) GetMaterials(ctx context.Context, in *Query, out *MaterialsResp) error {
+func (h *materialServiceHandler) GetMaterials(ctx context.Context, in *MaterialQuery, out *MaterialsResp) error {
 	return h.MaterialServiceHandler.GetMaterials(ctx, in, out)
 }
 
-func (h *materialServiceHandler) GetOneMaterial(ctx context.Context, in *Material, out *Material) error {
+func (h *materialServiceHandler) GetOneMaterial(ctx context.Context, in *MaterialIDReq, out *Material) error {
 	return h.MaterialServiceHandler.GetOneMaterial(ctx, in, out)
 }
 
-func (h *materialServiceHandler) GetMaterialsByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlMaterials) error {
-	return h.MaterialServiceHandler.GetMaterialsByGraphql(ctx, in, out)
+func (h *materialServiceHandler) BatchAddMaterials(ctx context.Context, in *Materials, out *Response) error {
+	return h.MaterialServiceHandler.BatchAddMaterials(ctx, in, out)
 }
 
-func (h *materialServiceHandler) GetOneMaterialByParameters(ctx context.Context, in *QueryParameter, out *Material) error {
-	return h.MaterialServiceHandler.GetOneMaterialByParameters(ctx, in, out)
+func (h *materialServiceHandler) BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, out *Response) error {
+	return h.MaterialServiceHandler.BatchDeleteMaterials(ctx, in, out)
 }

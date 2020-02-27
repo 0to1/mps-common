@@ -2,33 +2,37 @@ syntax = "proto3";
 
 package go.micro.srv.material;
 
+import "google/protobuf/wrappers.proto";
+
 service MaterialService {
   // 添加物料类型
   rpc AddMaterialType(MaterialType) returns (Response);
   // 移除物料类型
   rpc DeleteMaterialType(MaterialTypeIDReq) returns (Response);
   // 更新物料类型
-  rpc UpdateMaterialType(MaterialType) returns (Response);
+  rpc UpdateMaterialType(UpdateMaterialTypeReq) returns (Response);
   // 根据查询条件获取物料类型列表
-  rpc GetMaterialTypes(Query) returns (MaterialTypesResp);
+  rpc GetMaterialTypes(MaterialTypeQuery) returns (MaterialTypesResp);
   // 根据ID获取指定的物料类型
   rpc GetOneMaterialType(MaterialTypeIDReq) returns (MaterialType);
+
+
   // 添加物料
   rpc AddMaterial(Material) returns (Response);
   // 移除物料
-  rpc DeleteMaterial(Material) returns (Response);
+  rpc DeleteMaterial(MaterialIDReq) returns (Response);
   // 更新物料
-  rpc UpdateMaterial(Material) returns (Response);
+  rpc UpdateMaterial(UpdateMaterialReq) returns (Response);
   // 根据查询条件获取物料信息
-  rpc GetMaterials(Query) returns (MaterialsResp);
+  rpc GetMaterials(MaterialQuery) returns (MaterialsResp);
   // 根据ID获取指定的物料类型
-  rpc GetOneMaterial(Material) returns (Material);
+  rpc GetOneMaterial(MaterialIDReq) returns (Material);
 
-    //通过graphql条件查询
-    rpc GetMaterialsByGraphql(GraphqlQuery)returns(GraphqlMaterials);
+  rpc BatchAddMaterials(Materials) returns (Response);
+  rpc BatchDeleteMaterials(MaterialIDsReq) returns (Response);
 
-  //根据k,v获取对应的物料
-  rpc GetOneMaterialByParameters(QueryParameter) returns (Material);
+  // rpc AddMaterialProperties(Material) returns(Response);
+  // rpc DeleteAddMaterialProperties()
 }
 
 message Response {
@@ -40,45 +44,102 @@ message MaterialType {
   int32 id = 1;
   string name = 2;
   string description = 3;
+  // repeated Property properties = 5;
   string properties = 4;
-  string fields = 5;
+}
+
+message UpdateMaterialType {
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+  string properties = 4;
+}
+
+message UpdateMaterialTypeReq {
+  int32 id = 1;
+  UpdateMaterialType materialType = 2;
 }
 
 message Material {
-  int32 id = 1;
+  //物料id
+  int64 id = 1;
   // 物料类型ID
   int32 typeID = 2;
   // 物料名称
   string typeName = 4;
 
-  string properties = 3;
+  string properties = 5;
 
-  //物料id 所有数据库唯一
-  int64 materialID = 5;
+  // repeated Property properties = 3;
 }
+
+message Materials {
+    int32 typeID = 2;
+    // 物料名称
+    string typeName = 4;
+
+    repeated Material materials = 1;
+}
+
+message MaterialIDsReq { 
+  //物料ID
+  repeated int64 ids = 1;
+  // 物料类型ID
+  int32 typeID = 2;
+  // 物料类型名称
+  string typeName = 4;
+ }
+
+
+message UpdateMaterial {
+  string properties = 1;
+}
+
+message UpdateMaterialReq {
+  int64 id = 1;
+  // 物料类型ID
+  int32 typeID = 2;
+  // 物料名称
+  string typeName = 4;
+  UpdateMaterial material = 5;
+}
+
 
 message MaterialTypeIDReq { int32 id = 1; }
 
-message MaterialTypeNameReq {
-  int32 id = 1;
-  string name = 2;
-}
+message MaterialIDReq { 
+  //物料ID
+  int64 id = 1;
+  // 物料类型ID
+  int32 typeID = 2;
+  // 物料类型名称
+  string typeName = 4;
+ }
 
-message MaterialIDReq { int32 id = 1; }
-
-message Query {
+message MaterialQuery {
   uint32 limit = 1;
   uint32 offset = 2;
   uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
+  uint32 perpage = 4;
   // 物料类型ID
   int32 typeID = 6;
     // 物料名称
   string typeName = 7;
+  MaterialFilter filter = 8;
 }
 
-message MaterialTypesResp { repeated MaterialType materialTypes = 1; }
+message MaterialTypeQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perpage = 4;
+  MaterialTypeFilter filter = 5;
+}
+
+message MaterialTypesResp { 
+  repeated MaterialType materialTypes = 1;
+  uint32 totalpages = 2;
+  uint32 totals = 3;
+ }
 
 message MaterialsResp { 
   repeated Material materials = 1; 
@@ -86,20 +147,30 @@ message MaterialsResp {
   uint32 totals = 3;
 }
 
-message GraphqlQuery {
-    string query = 1;
+
+message PropertiesFilter {
+  string key  = 1;
+  string value = 2; 
 }
 
-message GraphqlMaterials {
-    string response =1;
+message Property{
+  string key = 1;
+  string value = 2;
 }
 
-message QueryParameter {
-    string typeName = 1;
-    repeated Parameter parameters = 2;
+message MaterialTypeFilter {
+  repeated MaterialTypeFilter and = 1;
+  repeated MaterialTypeFilter or = 2;
+  repeated int32 idIn = 3;
+  repeated string nameIn = 4;
+  google.protobuf.Int32Value id = 5;  
+  google.protobuf.StringValue name = 6;  
+  PropertiesFilter propertiesFilter = 7;
 }
 
-message Parameter {
-    string key = 1;
-    string value = 2;
+message MaterialFilter {
+  repeated MaterialFilter and = 1;
+  repeated MaterialFilter or = 2;
+  repeated int64 idIn = 3;
+  PropertiesFilter propertiesFilter = 4;
 }

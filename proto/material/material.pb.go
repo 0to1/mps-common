@@ -6,6 +6,7 @@ package go_micro_srv_material
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	wrappers "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -61,11 +62,11 @@ func (m *Response) GetMaterialID() int64 {
 }
 
 type MaterialType struct {
-	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description          string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Id          int32  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name        string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	// repeated Property properties = 5;
 	Properties           string   `protobuf:"bytes,4,opt,name=properties,proto3" json:"properties,omitempty"`
-	Fields               string   `protobuf:"bytes,5,opt,name=fields,proto3" json:"fields,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -124,22 +125,116 @@ func (m *MaterialType) GetProperties() string {
 	return ""
 }
 
-func (m *MaterialType) GetFields() string {
+type UpdateMaterialType struct {
+	Name                 *wrappers.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          *wrappers.StringValue `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Properties           string                `protobuf:"bytes,4,opt,name=properties,proto3" json:"properties,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpdateMaterialType) Reset()         { *m = UpdateMaterialType{} }
+func (m *UpdateMaterialType) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterialType) ProtoMessage()    {}
+func (*UpdateMaterialType) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{2}
+}
+
+func (m *UpdateMaterialType) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterialType.Unmarshal(m, b)
+}
+func (m *UpdateMaterialType) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterialType.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterialType) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterialType.Merge(m, src)
+}
+func (m *UpdateMaterialType) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterialType.Size(m)
+}
+func (m *UpdateMaterialType) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterialType.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterialType proto.InternalMessageInfo
+
+func (m *UpdateMaterialType) GetName() *wrappers.StringValue {
 	if m != nil {
-		return m.Fields
+		return m.Name
+	}
+	return nil
+}
+
+func (m *UpdateMaterialType) GetDescription() *wrappers.StringValue {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
+func (m *UpdateMaterialType) GetProperties() string {
+	if m != nil {
+		return m.Properties
 	}
 	return ""
 }
 
+type UpdateMaterialTypeReq struct {
+	Id                   int32               `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	MaterialType         *UpdateMaterialType `protobuf:"bytes,2,opt,name=materialType,proto3" json:"materialType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *UpdateMaterialTypeReq) Reset()         { *m = UpdateMaterialTypeReq{} }
+func (m *UpdateMaterialTypeReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterialTypeReq) ProtoMessage()    {}
+func (*UpdateMaterialTypeReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{3}
+}
+
+func (m *UpdateMaterialTypeReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Unmarshal(m, b)
+}
+func (m *UpdateMaterialTypeReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterialTypeReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterialTypeReq.Merge(m, src)
+}
+func (m *UpdateMaterialTypeReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Size(m)
+}
+func (m *UpdateMaterialTypeReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterialTypeReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterialTypeReq proto.InternalMessageInfo
+
+func (m *UpdateMaterialTypeReq) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateMaterialTypeReq) GetMaterialType() *UpdateMaterialType {
+	if m != nil {
+		return m.MaterialType
+	}
+	return nil
+}
+
 type Material struct {
-	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	//物料id
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 物料类型ID
 	TypeID int32 `protobuf:"varint,2,opt,name=typeID,proto3" json:"typeID,omitempty"`
 	// 物料名称
-	TypeName   string `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
-	Properties string `protobuf:"bytes,3,opt,name=properties,proto3" json:"properties,omitempty"`
-	//物料id 所有数据库唯一
-	MaterialID           int64    `protobuf:"varint,5,opt,name=materialID,proto3" json:"materialID,omitempty"`
+	TypeName             string   `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	Properties           string   `protobuf:"bytes,5,opt,name=properties,proto3" json:"properties,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -149,7 +244,7 @@ func (m *Material) Reset()         { *m = Material{} }
 func (m *Material) String() string { return proto.CompactTextString(m) }
 func (*Material) ProtoMessage()    {}
 func (*Material) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{2}
+	return fileDescriptor_6fb8ad58d37091a3, []int{4}
 }
 
 func (m *Material) XXX_Unmarshal(b []byte) error {
@@ -170,7 +265,7 @@ func (m *Material) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Material proto.InternalMessageInfo
 
-func (m *Material) GetId() int32 {
+func (m *Material) GetId() int64 {
 	if m != nil {
 		return m.Id
 	}
@@ -198,11 +293,222 @@ func (m *Material) GetProperties() string {
 	return ""
 }
 
-func (m *Material) GetMaterialID() int64 {
+type Materials struct {
+	TypeID int32 `protobuf:"varint,2,opt,name=typeID,proto3" json:"typeID,omitempty"`
+	// 物料名称
+	TypeName             string      `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	Materials            []*Material `protobuf:"bytes,1,rep,name=materials,proto3" json:"materials,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *Materials) Reset()         { *m = Materials{} }
+func (m *Materials) String() string { return proto.CompactTextString(m) }
+func (*Materials) ProtoMessage()    {}
+func (*Materials) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{5}
+}
+
+func (m *Materials) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Materials.Unmarshal(m, b)
+}
+func (m *Materials) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Materials.Marshal(b, m, deterministic)
+}
+func (m *Materials) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Materials.Merge(m, src)
+}
+func (m *Materials) XXX_Size() int {
+	return xxx_messageInfo_Materials.Size(m)
+}
+func (m *Materials) XXX_DiscardUnknown() {
+	xxx_messageInfo_Materials.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Materials proto.InternalMessageInfo
+
+func (m *Materials) GetTypeID() int32 {
 	if m != nil {
-		return m.MaterialID
+		return m.TypeID
 	}
 	return 0
+}
+
+func (m *Materials) GetTypeName() string {
+	if m != nil {
+		return m.TypeName
+	}
+	return ""
+}
+
+func (m *Materials) GetMaterials() []*Material {
+	if m != nil {
+		return m.Materials
+	}
+	return nil
+}
+
+type MaterialIDsReq struct {
+	//物料ID
+	Ids []int64 `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
+	// 物料类型ID
+	TypeID int32 `protobuf:"varint,2,opt,name=typeID,proto3" json:"typeID,omitempty"`
+	// 物料类型名称
+	TypeName             string   `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MaterialIDsReq) Reset()         { *m = MaterialIDsReq{} }
+func (m *MaterialIDsReq) String() string { return proto.CompactTextString(m) }
+func (*MaterialIDsReq) ProtoMessage()    {}
+func (*MaterialIDsReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{6}
+}
+
+func (m *MaterialIDsReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialIDsReq.Unmarshal(m, b)
+}
+func (m *MaterialIDsReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialIDsReq.Marshal(b, m, deterministic)
+}
+func (m *MaterialIDsReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialIDsReq.Merge(m, src)
+}
+func (m *MaterialIDsReq) XXX_Size() int {
+	return xxx_messageInfo_MaterialIDsReq.Size(m)
+}
+func (m *MaterialIDsReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialIDsReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialIDsReq proto.InternalMessageInfo
+
+func (m *MaterialIDsReq) GetIds() []int64 {
+	if m != nil {
+		return m.Ids
+	}
+	return nil
+}
+
+func (m *MaterialIDsReq) GetTypeID() int32 {
+	if m != nil {
+		return m.TypeID
+	}
+	return 0
+}
+
+func (m *MaterialIDsReq) GetTypeName() string {
+	if m != nil {
+		return m.TypeName
+	}
+	return ""
+}
+
+type UpdateMaterial struct {
+	Properties           string   `protobuf:"bytes,1,opt,name=properties,proto3" json:"properties,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateMaterial) Reset()         { *m = UpdateMaterial{} }
+func (m *UpdateMaterial) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterial) ProtoMessage()    {}
+func (*UpdateMaterial) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{7}
+}
+
+func (m *UpdateMaterial) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterial.Unmarshal(m, b)
+}
+func (m *UpdateMaterial) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterial.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterial) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterial.Merge(m, src)
+}
+func (m *UpdateMaterial) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterial.Size(m)
+}
+func (m *UpdateMaterial) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterial.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterial proto.InternalMessageInfo
+
+func (m *UpdateMaterial) GetProperties() string {
+	if m != nil {
+		return m.Properties
+	}
+	return ""
+}
+
+type UpdateMaterialReq struct {
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 物料类型ID
+	TypeID int32 `protobuf:"varint,2,opt,name=typeID,proto3" json:"typeID,omitempty"`
+	// 物料名称
+	TypeName             string          `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	Material             *UpdateMaterial `protobuf:"bytes,5,opt,name=material,proto3" json:"material,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *UpdateMaterialReq) Reset()         { *m = UpdateMaterialReq{} }
+func (m *UpdateMaterialReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterialReq) ProtoMessage()    {}
+func (*UpdateMaterialReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{8}
+}
+
+func (m *UpdateMaterialReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterialReq.Unmarshal(m, b)
+}
+func (m *UpdateMaterialReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterialReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterialReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterialReq.Merge(m, src)
+}
+func (m *UpdateMaterialReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterialReq.Size(m)
+}
+func (m *UpdateMaterialReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterialReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterialReq proto.InternalMessageInfo
+
+func (m *UpdateMaterialReq) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateMaterialReq) GetTypeID() int32 {
+	if m != nil {
+		return m.TypeID
+	}
+	return 0
+}
+
+func (m *UpdateMaterialReq) GetTypeName() string {
+	if m != nil {
+		return m.TypeName
+	}
+	return ""
+}
+
+func (m *UpdateMaterialReq) GetMaterial() *UpdateMaterial {
+	if m != nil {
+		return m.Material
+	}
+	return nil
 }
 
 type MaterialTypeIDReq struct {
@@ -216,7 +522,7 @@ func (m *MaterialTypeIDReq) Reset()         { *m = MaterialTypeIDReq{} }
 func (m *MaterialTypeIDReq) String() string { return proto.CompactTextString(m) }
 func (*MaterialTypeIDReq) ProtoMessage()    {}
 func (*MaterialTypeIDReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{3}
+	return fileDescriptor_6fb8ad58d37091a3, []int{9}
 }
 
 func (m *MaterialTypeIDReq) XXX_Unmarshal(b []byte) error {
@@ -244,55 +550,13 @@ func (m *MaterialTypeIDReq) GetId() int32 {
 	return 0
 }
 
-type MaterialTypeNameReq struct {
-	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *MaterialTypeNameReq) Reset()         { *m = MaterialTypeNameReq{} }
-func (m *MaterialTypeNameReq) String() string { return proto.CompactTextString(m) }
-func (*MaterialTypeNameReq) ProtoMessage()    {}
-func (*MaterialTypeNameReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{4}
-}
-
-func (m *MaterialTypeNameReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_MaterialTypeNameReq.Unmarshal(m, b)
-}
-func (m *MaterialTypeNameReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_MaterialTypeNameReq.Marshal(b, m, deterministic)
-}
-func (m *MaterialTypeNameReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MaterialTypeNameReq.Merge(m, src)
-}
-func (m *MaterialTypeNameReq) XXX_Size() int {
-	return xxx_messageInfo_MaterialTypeNameReq.Size(m)
-}
-func (m *MaterialTypeNameReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_MaterialTypeNameReq.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MaterialTypeNameReq proto.InternalMessageInfo
-
-func (m *MaterialTypeNameReq) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-func (m *MaterialTypeNameReq) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
 type MaterialIDReq struct {
-	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	//物料ID
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 物料类型ID
+	TypeID int32 `protobuf:"varint,2,opt,name=typeID,proto3" json:"typeID,omitempty"`
+	// 物料类型名称
+	TypeName             string   `protobuf:"bytes,4,opt,name=typeName,proto3" json:"typeName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -302,7 +566,7 @@ func (m *MaterialIDReq) Reset()         { *m = MaterialIDReq{} }
 func (m *MaterialIDReq) String() string { return proto.CompactTextString(m) }
 func (*MaterialIDReq) ProtoMessage()    {}
 func (*MaterialIDReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{5}
+	return fileDescriptor_6fb8ad58d37091a3, []int{10}
 }
 
 func (m *MaterialIDReq) XXX_Unmarshal(b []byte) error {
@@ -323,104 +587,191 @@ func (m *MaterialIDReq) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MaterialIDReq proto.InternalMessageInfo
 
-func (m *MaterialIDReq) GetId() int32 {
+func (m *MaterialIDReq) GetId() int64 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-type Query struct {
-	Limit       uint32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
-	Offset      uint32 `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
-	Page        uint32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PerPage     uint32 `protobuf:"varint,4,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
-	QueryString string `protobuf:"bytes,5,opt,name=queryString,proto3" json:"queryString,omitempty"`
-	// 物料类型ID
-	TypeID int32 `protobuf:"varint,6,opt,name=typeID,proto3" json:"typeID,omitempty"`
-	// 物料名称
-	TypeName             string   `protobuf:"bytes,7,opt,name=typeName,proto3" json:"typeName,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Query) Reset()         { *m = Query{} }
-func (m *Query) String() string { return proto.CompactTextString(m) }
-func (*Query) ProtoMessage()    {}
-func (*Query) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{6}
-}
-
-func (m *Query) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Query.Unmarshal(m, b)
-}
-func (m *Query) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Query.Marshal(b, m, deterministic)
-}
-func (m *Query) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Query.Merge(m, src)
-}
-func (m *Query) XXX_Size() int {
-	return xxx_messageInfo_Query.Size(m)
-}
-func (m *Query) XXX_DiscardUnknown() {
-	xxx_messageInfo_Query.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Query proto.InternalMessageInfo
-
-func (m *Query) GetLimit() uint32 {
-	if m != nil {
-		return m.Limit
-	}
-	return 0
-}
-
-func (m *Query) GetOffset() uint32 {
-	if m != nil {
-		return m.Offset
-	}
-	return 0
-}
-
-func (m *Query) GetPage() uint32 {
-	if m != nil {
-		return m.Page
-	}
-	return 0
-}
-
-func (m *Query) GetPerPage() uint32 {
-	if m != nil {
-		return m.PerPage
-	}
-	return 0
-}
-
-func (m *Query) GetQueryString() string {
-	if m != nil {
-		return m.QueryString
-	}
-	return ""
-}
-
-func (m *Query) GetTypeID() int32 {
+func (m *MaterialIDReq) GetTypeID() int32 {
 	if m != nil {
 		return m.TypeID
 	}
 	return 0
 }
 
-func (m *Query) GetTypeName() string {
+func (m *MaterialIDReq) GetTypeName() string {
 	if m != nil {
 		return m.TypeName
 	}
 	return ""
 }
 
+type MaterialQuery struct {
+	Limit   uint32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset  uint32 `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
+	Page    uint32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	Perpage uint32 `protobuf:"varint,4,opt,name=perpage,proto3" json:"perpage,omitempty"`
+	// 物料类型ID
+	TypeID int32 `protobuf:"varint,6,opt,name=typeID,proto3" json:"typeID,omitempty"`
+	// 物料名称
+	TypeName             string          `protobuf:"bytes,7,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	Filter               *MaterialFilter `protobuf:"bytes,8,opt,name=filter,proto3" json:"filter,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *MaterialQuery) Reset()         { *m = MaterialQuery{} }
+func (m *MaterialQuery) String() string { return proto.CompactTextString(m) }
+func (*MaterialQuery) ProtoMessage()    {}
+func (*MaterialQuery) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{11}
+}
+
+func (m *MaterialQuery) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialQuery.Unmarshal(m, b)
+}
+func (m *MaterialQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialQuery.Marshal(b, m, deterministic)
+}
+func (m *MaterialQuery) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialQuery.Merge(m, src)
+}
+func (m *MaterialQuery) XXX_Size() int {
+	return xxx_messageInfo_MaterialQuery.Size(m)
+}
+func (m *MaterialQuery) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialQuery.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialQuery proto.InternalMessageInfo
+
+func (m *MaterialQuery) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *MaterialQuery) GetOffset() uint32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+func (m *MaterialQuery) GetPage() uint32 {
+	if m != nil {
+		return m.Page
+	}
+	return 0
+}
+
+func (m *MaterialQuery) GetPerpage() uint32 {
+	if m != nil {
+		return m.Perpage
+	}
+	return 0
+}
+
+func (m *MaterialQuery) GetTypeID() int32 {
+	if m != nil {
+		return m.TypeID
+	}
+	return 0
+}
+
+func (m *MaterialQuery) GetTypeName() string {
+	if m != nil {
+		return m.TypeName
+	}
+	return ""
+}
+
+func (m *MaterialQuery) GetFilter() *MaterialFilter {
+	if m != nil {
+		return m.Filter
+	}
+	return nil
+}
+
+type MaterialTypeQuery struct {
+	Limit                uint32              `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset               uint32              `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
+	Page                 uint32              `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	Perpage              uint32              `protobuf:"varint,4,opt,name=perpage,proto3" json:"perpage,omitempty"`
+	Filter               *MaterialTypeFilter `protobuf:"bytes,5,opt,name=filter,proto3" json:"filter,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *MaterialTypeQuery) Reset()         { *m = MaterialTypeQuery{} }
+func (m *MaterialTypeQuery) String() string { return proto.CompactTextString(m) }
+func (*MaterialTypeQuery) ProtoMessage()    {}
+func (*MaterialTypeQuery) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{12}
+}
+
+func (m *MaterialTypeQuery) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialTypeQuery.Unmarshal(m, b)
+}
+func (m *MaterialTypeQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialTypeQuery.Marshal(b, m, deterministic)
+}
+func (m *MaterialTypeQuery) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialTypeQuery.Merge(m, src)
+}
+func (m *MaterialTypeQuery) XXX_Size() int {
+	return xxx_messageInfo_MaterialTypeQuery.Size(m)
+}
+func (m *MaterialTypeQuery) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialTypeQuery.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialTypeQuery proto.InternalMessageInfo
+
+func (m *MaterialTypeQuery) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *MaterialTypeQuery) GetOffset() uint32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+func (m *MaterialTypeQuery) GetPage() uint32 {
+	if m != nil {
+		return m.Page
+	}
+	return 0
+}
+
+func (m *MaterialTypeQuery) GetPerpage() uint32 {
+	if m != nil {
+		return m.Perpage
+	}
+	return 0
+}
+
+func (m *MaterialTypeQuery) GetFilter() *MaterialTypeFilter {
+	if m != nil {
+		return m.Filter
+	}
+	return nil
+}
+
 type MaterialTypesResp struct {
 	MaterialTypes        []*MaterialType `protobuf:"bytes,1,rep,name=materialTypes,proto3" json:"materialTypes,omitempty"`
+	Totalpages           uint32          `protobuf:"varint,2,opt,name=totalpages,proto3" json:"totalpages,omitempty"`
+	Totals               uint32          `protobuf:"varint,3,opt,name=totals,proto3" json:"totals,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
 	XXX_unrecognized     []byte          `json:"-"`
 	XXX_sizecache        int32           `json:"-"`
@@ -430,7 +781,7 @@ func (m *MaterialTypesResp) Reset()         { *m = MaterialTypesResp{} }
 func (m *MaterialTypesResp) String() string { return proto.CompactTextString(m) }
 func (*MaterialTypesResp) ProtoMessage()    {}
 func (*MaterialTypesResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{7}
+	return fileDescriptor_6fb8ad58d37091a3, []int{13}
 }
 
 func (m *MaterialTypesResp) XXX_Unmarshal(b []byte) error {
@@ -458,6 +809,20 @@ func (m *MaterialTypesResp) GetMaterialTypes() []*MaterialType {
 	return nil
 }
 
+func (m *MaterialTypesResp) GetTotalpages() uint32 {
+	if m != nil {
+		return m.Totalpages
+	}
+	return 0
+}
+
+func (m *MaterialTypesResp) GetTotals() uint32 {
+	if m != nil {
+		return m.Totals
+	}
+	return 0
+}
+
 type MaterialsResp struct {
 	Materials            []*Material `protobuf:"bytes,1,rep,name=materials,proto3" json:"materials,omitempty"`
 	Totalpages           uint32      `protobuf:"varint,2,opt,name=totalpages,proto3" json:"totalpages,omitempty"`
@@ -471,7 +836,7 @@ func (m *MaterialsResp) Reset()         { *m = MaterialsResp{} }
 func (m *MaterialsResp) String() string { return proto.CompactTextString(m) }
 func (*MaterialsResp) ProtoMessage()    {}
 func (*MaterialsResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{8}
+	return fileDescriptor_6fb8ad58d37091a3, []int{14}
 }
 
 func (m *MaterialsResp) XXX_Unmarshal(b []byte) error {
@@ -513,132 +878,7 @@ func (m *MaterialsResp) GetTotals() uint32 {
 	return 0
 }
 
-type GraphqlQuery struct {
-	Query                string   `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GraphqlQuery) Reset()         { *m = GraphqlQuery{} }
-func (m *GraphqlQuery) String() string { return proto.CompactTextString(m) }
-func (*GraphqlQuery) ProtoMessage()    {}
-func (*GraphqlQuery) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{9}
-}
-
-func (m *GraphqlQuery) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GraphqlQuery.Unmarshal(m, b)
-}
-func (m *GraphqlQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GraphqlQuery.Marshal(b, m, deterministic)
-}
-func (m *GraphqlQuery) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GraphqlQuery.Merge(m, src)
-}
-func (m *GraphqlQuery) XXX_Size() int {
-	return xxx_messageInfo_GraphqlQuery.Size(m)
-}
-func (m *GraphqlQuery) XXX_DiscardUnknown() {
-	xxx_messageInfo_GraphqlQuery.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GraphqlQuery proto.InternalMessageInfo
-
-func (m *GraphqlQuery) GetQuery() string {
-	if m != nil {
-		return m.Query
-	}
-	return ""
-}
-
-type GraphqlMaterials struct {
-	Response             string   `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GraphqlMaterials) Reset()         { *m = GraphqlMaterials{} }
-func (m *GraphqlMaterials) String() string { return proto.CompactTextString(m) }
-func (*GraphqlMaterials) ProtoMessage()    {}
-func (*GraphqlMaterials) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{10}
-}
-
-func (m *GraphqlMaterials) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GraphqlMaterials.Unmarshal(m, b)
-}
-func (m *GraphqlMaterials) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GraphqlMaterials.Marshal(b, m, deterministic)
-}
-func (m *GraphqlMaterials) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GraphqlMaterials.Merge(m, src)
-}
-func (m *GraphqlMaterials) XXX_Size() int {
-	return xxx_messageInfo_GraphqlMaterials.Size(m)
-}
-func (m *GraphqlMaterials) XXX_DiscardUnknown() {
-	xxx_messageInfo_GraphqlMaterials.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GraphqlMaterials proto.InternalMessageInfo
-
-func (m *GraphqlMaterials) GetResponse() string {
-	if m != nil {
-		return m.Response
-	}
-	return ""
-}
-
-type QueryParameter struct {
-	TypeName             string       `protobuf:"bytes,1,opt,name=typeName,proto3" json:"typeName,omitempty"`
-	Parameters           []*Parameter `protobuf:"bytes,2,rep,name=parameters,proto3" json:"parameters,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
-}
-
-func (m *QueryParameter) Reset()         { *m = QueryParameter{} }
-func (m *QueryParameter) String() string { return proto.CompactTextString(m) }
-func (*QueryParameter) ProtoMessage()    {}
-func (*QueryParameter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{11}
-}
-
-func (m *QueryParameter) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_QueryParameter.Unmarshal(m, b)
-}
-func (m *QueryParameter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_QueryParameter.Marshal(b, m, deterministic)
-}
-func (m *QueryParameter) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParameter.Merge(m, src)
-}
-func (m *QueryParameter) XXX_Size() int {
-	return xxx_messageInfo_QueryParameter.Size(m)
-}
-func (m *QueryParameter) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParameter.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryParameter proto.InternalMessageInfo
-
-func (m *QueryParameter) GetTypeName() string {
-	if m != nil {
-		return m.TypeName
-	}
-	return ""
-}
-
-func (m *QueryParameter) GetParameters() []*Parameter {
-	if m != nil {
-		return m.Parameters
-	}
-	return nil
-}
-
-type Parameter struct {
+type PropertiesFilter struct {
 	Key                  string   `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
 	Value                string   `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -646,107 +886,324 @@ type Parameter struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Parameter) Reset()         { *m = Parameter{} }
-func (m *Parameter) String() string { return proto.CompactTextString(m) }
-func (*Parameter) ProtoMessage()    {}
-func (*Parameter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6fb8ad58d37091a3, []int{12}
+func (m *PropertiesFilter) Reset()         { *m = PropertiesFilter{} }
+func (m *PropertiesFilter) String() string { return proto.CompactTextString(m) }
+func (*PropertiesFilter) ProtoMessage()    {}
+func (*PropertiesFilter) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{15}
 }
 
-func (m *Parameter) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Parameter.Unmarshal(m, b)
+func (m *PropertiesFilter) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PropertiesFilter.Unmarshal(m, b)
 }
-func (m *Parameter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Parameter.Marshal(b, m, deterministic)
+func (m *PropertiesFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PropertiesFilter.Marshal(b, m, deterministic)
 }
-func (m *Parameter) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Parameter.Merge(m, src)
+func (m *PropertiesFilter) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PropertiesFilter.Merge(m, src)
 }
-func (m *Parameter) XXX_Size() int {
-	return xxx_messageInfo_Parameter.Size(m)
+func (m *PropertiesFilter) XXX_Size() int {
+	return xxx_messageInfo_PropertiesFilter.Size(m)
 }
-func (m *Parameter) XXX_DiscardUnknown() {
-	xxx_messageInfo_Parameter.DiscardUnknown(m)
+func (m *PropertiesFilter) XXX_DiscardUnknown() {
+	xxx_messageInfo_PropertiesFilter.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Parameter proto.InternalMessageInfo
+var xxx_messageInfo_PropertiesFilter proto.InternalMessageInfo
 
-func (m *Parameter) GetKey() string {
+func (m *PropertiesFilter) GetKey() string {
 	if m != nil {
 		return m.Key
 	}
 	return ""
 }
 
-func (m *Parameter) GetValue() string {
+func (m *PropertiesFilter) GetValue() string {
 	if m != nil {
 		return m.Value
 	}
 	return ""
 }
 
+type Property struct {
+	Key                  string   `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Value                string   `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Property) Reset()         { *m = Property{} }
+func (m *Property) String() string { return proto.CompactTextString(m) }
+func (*Property) ProtoMessage()    {}
+func (*Property) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{16}
+}
+
+func (m *Property) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Property.Unmarshal(m, b)
+}
+func (m *Property) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Property.Marshal(b, m, deterministic)
+}
+func (m *Property) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Property.Merge(m, src)
+}
+func (m *Property) XXX_Size() int {
+	return xxx_messageInfo_Property.Size(m)
+}
+func (m *Property) XXX_DiscardUnknown() {
+	xxx_messageInfo_Property.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Property proto.InternalMessageInfo
+
+func (m *Property) GetKey() string {
+	if m != nil {
+		return m.Key
+	}
+	return ""
+}
+
+func (m *Property) GetValue() string {
+	if m != nil {
+		return m.Value
+	}
+	return ""
+}
+
+type MaterialTypeFilter struct {
+	And                  []*MaterialTypeFilter `protobuf:"bytes,1,rep,name=and,proto3" json:"and,omitempty"`
+	Or                   []*MaterialTypeFilter `protobuf:"bytes,2,rep,name=or,proto3" json:"or,omitempty"`
+	IdIn                 []int32               `protobuf:"varint,3,rep,packed,name=idIn,proto3" json:"idIn,omitempty"`
+	NameIn               []string              `protobuf:"bytes,4,rep,name=nameIn,proto3" json:"nameIn,omitempty"`
+	Id                   *wrappers.Int32Value  `protobuf:"bytes,5,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 *wrappers.StringValue `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	PropertiesFilter     *PropertiesFilter     `protobuf:"bytes,7,opt,name=propertiesFilter,proto3" json:"propertiesFilter,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *MaterialTypeFilter) Reset()         { *m = MaterialTypeFilter{} }
+func (m *MaterialTypeFilter) String() string { return proto.CompactTextString(m) }
+func (*MaterialTypeFilter) ProtoMessage()    {}
+func (*MaterialTypeFilter) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{17}
+}
+
+func (m *MaterialTypeFilter) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialTypeFilter.Unmarshal(m, b)
+}
+func (m *MaterialTypeFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialTypeFilter.Marshal(b, m, deterministic)
+}
+func (m *MaterialTypeFilter) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialTypeFilter.Merge(m, src)
+}
+func (m *MaterialTypeFilter) XXX_Size() int {
+	return xxx_messageInfo_MaterialTypeFilter.Size(m)
+}
+func (m *MaterialTypeFilter) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialTypeFilter.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialTypeFilter proto.InternalMessageInfo
+
+func (m *MaterialTypeFilter) GetAnd() []*MaterialTypeFilter {
+	if m != nil {
+		return m.And
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetOr() []*MaterialTypeFilter {
+	if m != nil {
+		return m.Or
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetIdIn() []int32 {
+	if m != nil {
+		return m.IdIn
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetNameIn() []string {
+	if m != nil {
+		return m.NameIn
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetId() *wrappers.Int32Value {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetName() *wrappers.StringValue {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *MaterialTypeFilter) GetPropertiesFilter() *PropertiesFilter {
+	if m != nil {
+		return m.PropertiesFilter
+	}
+	return nil
+}
+
+type MaterialFilter struct {
+	And                  []*MaterialFilter `protobuf:"bytes,1,rep,name=and,proto3" json:"and,omitempty"`
+	Or                   []*MaterialFilter `protobuf:"bytes,2,rep,name=or,proto3" json:"or,omitempty"`
+	IdIn                 []int64           `protobuf:"varint,3,rep,packed,name=idIn,proto3" json:"idIn,omitempty"`
+	PropertiesFilter     *PropertiesFilter `protobuf:"bytes,4,opt,name=propertiesFilter,proto3" json:"propertiesFilter,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
+}
+
+func (m *MaterialFilter) Reset()         { *m = MaterialFilter{} }
+func (m *MaterialFilter) String() string { return proto.CompactTextString(m) }
+func (*MaterialFilter) ProtoMessage()    {}
+func (*MaterialFilter) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{18}
+}
+
+func (m *MaterialFilter) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialFilter.Unmarshal(m, b)
+}
+func (m *MaterialFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialFilter.Marshal(b, m, deterministic)
+}
+func (m *MaterialFilter) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialFilter.Merge(m, src)
+}
+func (m *MaterialFilter) XXX_Size() int {
+	return xxx_messageInfo_MaterialFilter.Size(m)
+}
+func (m *MaterialFilter) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialFilter.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialFilter proto.InternalMessageInfo
+
+func (m *MaterialFilter) GetAnd() []*MaterialFilter {
+	if m != nil {
+		return m.And
+	}
+	return nil
+}
+
+func (m *MaterialFilter) GetOr() []*MaterialFilter {
+	if m != nil {
+		return m.Or
+	}
+	return nil
+}
+
+func (m *MaterialFilter) GetIdIn() []int64 {
+	if m != nil {
+		return m.IdIn
+	}
+	return nil
+}
+
+func (m *MaterialFilter) GetPropertiesFilter() *PropertiesFilter {
+	if m != nil {
+		return m.PropertiesFilter
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Response)(nil), "go.micro.srv.material.Response")
 	proto.RegisterType((*MaterialType)(nil), "go.micro.srv.material.MaterialType")
+	proto.RegisterType((*UpdateMaterialType)(nil), "go.micro.srv.material.UpdateMaterialType")
+	proto.RegisterType((*UpdateMaterialTypeReq)(nil), "go.micro.srv.material.UpdateMaterialTypeReq")
 	proto.RegisterType((*Material)(nil), "go.micro.srv.material.Material")
+	proto.RegisterType((*Materials)(nil), "go.micro.srv.material.Materials")
+	proto.RegisterType((*MaterialIDsReq)(nil), "go.micro.srv.material.MaterialIDsReq")
+	proto.RegisterType((*UpdateMaterial)(nil), "go.micro.srv.material.UpdateMaterial")
+	proto.RegisterType((*UpdateMaterialReq)(nil), "go.micro.srv.material.UpdateMaterialReq")
 	proto.RegisterType((*MaterialTypeIDReq)(nil), "go.micro.srv.material.MaterialTypeIDReq")
-	proto.RegisterType((*MaterialTypeNameReq)(nil), "go.micro.srv.material.MaterialTypeNameReq")
 	proto.RegisterType((*MaterialIDReq)(nil), "go.micro.srv.material.MaterialIDReq")
-	proto.RegisterType((*Query)(nil), "go.micro.srv.material.Query")
+	proto.RegisterType((*MaterialQuery)(nil), "go.micro.srv.material.MaterialQuery")
+	proto.RegisterType((*MaterialTypeQuery)(nil), "go.micro.srv.material.MaterialTypeQuery")
 	proto.RegisterType((*MaterialTypesResp)(nil), "go.micro.srv.material.MaterialTypesResp")
 	proto.RegisterType((*MaterialsResp)(nil), "go.micro.srv.material.MaterialsResp")
-	proto.RegisterType((*GraphqlQuery)(nil), "go.micro.srv.material.GraphqlQuery")
-	proto.RegisterType((*GraphqlMaterials)(nil), "go.micro.srv.material.GraphqlMaterials")
-	proto.RegisterType((*QueryParameter)(nil), "go.micro.srv.material.QueryParameter")
-	proto.RegisterType((*Parameter)(nil), "go.micro.srv.material.Parameter")
+	proto.RegisterType((*PropertiesFilter)(nil), "go.micro.srv.material.PropertiesFilter")
+	proto.RegisterType((*Property)(nil), "go.micro.srv.material.Property")
+	proto.RegisterType((*MaterialTypeFilter)(nil), "go.micro.srv.material.MaterialTypeFilter")
+	proto.RegisterType((*MaterialFilter)(nil), "go.micro.srv.material.MaterialFilter")
 }
 
 func init() { proto.RegisterFile("proto/material/material.proto", fileDescriptor_6fb8ad58d37091a3) }
 
 var fileDescriptor_6fb8ad58d37091a3 = []byte{
-	// 689 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xd1, 0x6e, 0xd3, 0x30,
-	0x14, 0x55, 0xd6, 0xb5, 0x6b, 0x6f, 0xd7, 0x6e, 0x18, 0x36, 0x95, 0x0a, 0x58, 0x95, 0x0d, 0x51,
-	0xf1, 0x10, 0xa4, 0xed, 0x89, 0x07, 0x24, 0x98, 0x2a, 0x4d, 0x7d, 0x18, 0x1b, 0x1e, 0x08, 0x69,
-	0x0f, 0x4c, 0xa1, 0xb9, 0x1b, 0x11, 0x69, 0xe3, 0x39, 0xde, 0xa4, 0xfe, 0x00, 0x4f, 0x88, 0x0f,
-	0xe2, 0x43, 0xf8, 0x1e, 0x64, 0xc7, 0x49, 0xed, 0xae, 0x5d, 0xaa, 0xa9, 0x6f, 0xbe, 0xd7, 0x37,
-	0xe7, 0x9e, 0x7b, 0x8e, 0x6d, 0x05, 0x9e, 0x33, 0x1e, 0x8b, 0xf8, 0xcd, 0xd0, 0x17, 0xc8, 0x43,
-	0x3f, 0xca, 0x17, 0x9e, 0xca, 0x93, 0xad, 0xab, 0xd8, 0x1b, 0x86, 0x03, 0x1e, 0x7b, 0x09, 0xbf,
-	0xf5, 0xb2, 0x4d, 0xf7, 0x35, 0x54, 0x29, 0x26, 0x2c, 0x1e, 0x25, 0x48, 0x5e, 0x00, 0x64, 0xf9,
-	0x7e, 0xaf, 0xe5, 0x74, 0x9c, 0x6e, 0x89, 0x1a, 0x19, 0xf7, 0xb7, 0x03, 0xeb, 0xc7, 0x3a, 0xfc,
-	0x3c, 0x66, 0x48, 0x9a, 0xb0, 0x12, 0x06, 0xaa, 0xb0, 0x4c, 0x57, 0xc2, 0x80, 0x10, 0x58, 0x1d,
-	0xf9, 0x43, 0x6c, 0xad, 0x74, 0x9c, 0x6e, 0x8d, 0xaa, 0x35, 0xe9, 0x40, 0x3d, 0xc0, 0x64, 0xc0,
-	0x43, 0x26, 0xc2, 0x78, 0xd4, 0x2a, 0xa9, 0x2d, 0x33, 0x25, 0xdb, 0x32, 0x1e, 0x33, 0xe4, 0x22,
-	0xc4, 0xa4, 0xb5, 0xaa, 0x0a, 0x8c, 0x0c, 0xd9, 0x86, 0xca, 0x65, 0x88, 0x51, 0x90, 0xb4, 0xca,
-	0x6a, 0x4f, 0x47, 0xee, 0x1f, 0x07, 0xaa, 0x19, 0x9d, 0x3b, 0x54, 0xb6, 0xa1, 0x22, 0xc6, 0x0c,
-	0xfb, 0x3d, 0x45, 0xa6, 0x4c, 0x75, 0x44, 0xda, 0x50, 0x95, 0xab, 0x8f, 0x92, 0x66, 0xda, 0x2a,
-	0x8f, 0xa7, 0x88, 0x94, 0xee, 0x10, 0xb1, 0xf5, 0x29, 0xdf, 0xd1, 0x67, 0x17, 0x1e, 0x99, 0xf2,
-	0xf4, 0x7b, 0x14, 0xaf, 0xa7, 0x89, 0xb9, 0x6f, 0xe1, 0xb1, 0x59, 0x24, 0x1b, 0xcf, 0x28, 0x9b,
-	0x25, 0xa5, 0xbb, 0x03, 0x8d, 0xe3, 0xbc, 0xdb, 0x2c, 0xec, 0xbf, 0x0e, 0x94, 0x3f, 0xdd, 0x20,
-	0x1f, 0x93, 0x27, 0x50, 0x8e, 0xc2, 0x61, 0x28, 0xd4, 0x66, 0x83, 0xa6, 0x81, 0x14, 0x25, 0xbe,
-	0xbc, 0x4c, 0x50, 0x28, 0xd8, 0x06, 0xd5, 0x91, 0x6c, 0xc6, 0xfc, 0x2b, 0x54, 0x23, 0x37, 0xa8,
-	0x5a, 0x93, 0xa7, 0x50, 0x65, 0xc8, 0x2f, 0x54, 0x7e, 0x55, 0xe5, 0xd7, 0x18, 0xf2, 0x53, 0xb9,
-	0xd5, 0x81, 0xfa, 0xb5, 0xec, 0x72, 0x26, 0x78, 0x38, 0xba, 0xd2, 0xae, 0x98, 0x29, 0x43, 0xfd,
-	0xca, 0x5c, 0xf5, 0xd7, 0x6c, 0xf5, 0xdd, 0x6f, 0xb6, 0x7a, 0x89, 0x3c, 0x96, 0xa4, 0x0f, 0x8d,
-	0xa1, 0x99, 0x6c, 0x39, 0x9d, 0x52, 0xb7, 0xbe, 0xbf, 0xeb, 0xcd, 0x3c, 0xcd, 0x9e, 0x09, 0x40,
-	0xed, 0x2f, 0xdd, 0x5f, 0xce, 0x44, 0xbe, 0x14, 0xfc, 0x1d, 0xd4, 0xb2, 0x92, 0x0c, 0x78, 0xa7,
-	0x00, 0x98, 0x4e, 0xbe, 0x90, 0xc7, 0x41, 0xc4, 0xc2, 0x8f, 0xa4, 0x44, 0x89, 0x56, 0xd4, 0xc8,
-	0x28, 0x11, 0x64, 0x94, 0x68, 0x5d, 0x75, 0xe4, 0xee, 0xc1, 0xfa, 0x11, 0xf7, 0xd9, 0x8f, 0xeb,
-	0x28, 0xf7, 0x4a, 0x69, 0xa7, 0xbc, 0xaa, 0xd1, 0x34, 0x70, 0x3d, 0xd8, 0xd4, 0x55, 0x39, 0x69,
-	0x29, 0x1f, 0xd7, 0x97, 0x55, 0x17, 0xe7, 0xb1, 0x3b, 0x82, 0xa6, 0x82, 0x3b, 0xf5, 0xb9, 0x3f,
-	0x44, 0x81, 0xdc, 0x12, 0xdb, 0x99, 0x3a, 0xea, 0xef, 0x01, 0x58, 0x56, 0x28, 0xb9, 0xcb, 0xd9,
-	0x3b, 0x73, 0x66, 0xcf, 0x11, 0xa9, 0xf1, 0x8d, 0x7b, 0x00, 0xb5, 0x49, 0xab, 0x4d, 0x28, 0xfd,
-	0xc4, 0x6c, 0x00, 0xb9, 0x94, 0x43, 0xdd, 0xfa, 0xd1, 0x4d, 0x76, 0x80, 0xd3, 0x60, 0xff, 0x5f,
-	0x15, 0x36, 0xb2, 0x71, 0xce, 0x90, 0xdf, 0x86, 0x03, 0x24, 0x5f, 0x61, 0xe3, 0x43, 0x10, 0x58,
-	0xef, 0xca, 0x22, 0xf6, 0xb6, 0xe7, 0x59, 0x95, 0x3f, 0x67, 0x17, 0x40, 0x7a, 0x18, 0xa1, 0x40,
-	0x0b, 0xbb, 0xbb, 0x00, 0xb6, 0xba, 0x5d, 0xc5, 0x0d, 0xce, 0x81, 0x7c, 0x61, 0x81, 0x3f, 0xd5,
-	0x60, 0x39, 0xe4, 0xcf, 0x61, 0xf3, 0x08, 0x85, 0x75, 0x21, 0xc8, 0xb3, 0x39, 0x1f, 0x29, 0xdf,
-	0xdb, 0x8b, 0x0c, 0x96, 0x9e, 0xfb, 0x01, 0x90, 0x23, 0x14, 0x27, 0xa3, 0x87, 0x0a, 0xb3, 0xc8,
-	0x84, 0xe4, 0x04, 0xea, 0x86, 0xad, 0xa4, 0xe8, 0x62, 0x15, 0x2b, 0x42, 0xa1, 0x69, 0xdb, 0xb9,
-	0x1c, 0x4c, 0xdb, 0xc1, 0xa5, 0x60, 0xae, 0x1b, 0xce, 0x15, 0xb9, 0xb6, 0x57, 0xd0, 0x2f, 0x75,
-	0x8c, 0x42, 0xd3, 0x76, 0xec, 0xe1, 0x3c, 0x73, 0x04, 0x84, 0x2d, 0x93, 0xe7, 0xe1, 0x58, 0x3f,
-	0x37, 0x73, 0x0f, 0xb0, 0xf9, 0x68, 0xb5, 0x5f, 0xdd, 0x5f, 0x34, 0x19, 0x3f, 0x80, 0xb6, 0x4d,
-	0xfd, 0x70, 0xf2, 0x44, 0x25, 0xe4, 0xe5, 0x7d, 0xe2, 0xe4, 0x75, 0x85, 0xc3, 0x7c, 0xaf, 0xa8,
-	0x9f, 0x9c, 0x83, 0xff, 0x01, 0x00, 0x00, 0xff, 0xff, 0xfb, 0x8c, 0x29, 0x7e, 0x05, 0x09, 0x00,
-	0x00,
+	// 927 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0xdd, 0x8e, 0xe3, 0x34,
+	0x14, 0x56, 0x9a, 0xb6, 0xdb, 0x39, 0x9d, 0x76, 0x67, 0xac, 0x5d, 0x14, 0x0d, 0xb0, 0x54, 0x59,
+	0x56, 0x94, 0x1f, 0x65, 0x56, 0x5d, 0x21, 0x04, 0x08, 0xa4, 0x41, 0x23, 0x56, 0xbd, 0x18, 0x16,
+	0x5c, 0x98, 0x91, 0x40, 0x02, 0x65, 0x1b, 0xb7, 0x44, 0xb4, 0x49, 0xb0, 0x3d, 0x45, 0xbd, 0xe1,
+	0x92, 0x47, 0xe0, 0x82, 0x07, 0xe0, 0x01, 0x78, 0x20, 0xee, 0x91, 0xb8, 0xe1, 0x0d, 0x90, 0x1d,
+	0x27, 0x75, 0x92, 0x76, 0xe3, 0xe9, 0xc0, 0x5d, 0x8e, 0xe3, 0xf3, 0xf3, 0x7d, 0x9f, 0x7d, 0x8e,
+	0xe1, 0xd5, 0x84, 0xc6, 0x3c, 0x3e, 0x5d, 0xfa, 0x9c, 0xd0, 0xd0, 0x5f, 0xe4, 0x1f, 0x9e, 0x5c,
+	0x47, 0xf7, 0xe7, 0xb1, 0xb7, 0x0c, 0xa7, 0x34, 0xf6, 0x18, 0x5d, 0x79, 0xd9, 0xcf, 0x93, 0x07,
+	0xf3, 0x38, 0x9e, 0x2f, 0xc8, 0xa9, 0xdc, 0xf4, 0xfc, 0x7a, 0x76, 0xfa, 0x13, 0xf5, 0x93, 0x84,
+	0x50, 0x96, 0xba, 0xb9, 0x6f, 0x41, 0x07, 0x13, 0x96, 0xc4, 0x11, 0x23, 0xe8, 0x01, 0x40, 0xe6,
+	0x37, 0x3e, 0x77, 0xac, 0x81, 0x35, 0xb4, 0xb1, 0xb6, 0xe2, 0x72, 0x38, 0xbc, 0x50, 0xd6, 0x97,
+	0xeb, 0x84, 0xa0, 0x3e, 0x34, 0xc2, 0x40, 0xee, 0x6b, 0xe1, 0x46, 0x18, 0x20, 0x04, 0xcd, 0xc8,
+	0x5f, 0x12, 0xa7, 0x31, 0xb0, 0x86, 0x07, 0x58, 0x7e, 0xa3, 0x01, 0x74, 0x03, 0xc2, 0xa6, 0x34,
+	0x4c, 0x78, 0x18, 0x47, 0x8e, 0x2d, 0x7f, 0xe9, 0x4b, 0x22, 0x6b, 0x42, 0xe3, 0x84, 0x50, 0x1e,
+	0x12, 0xe6, 0x34, 0xe5, 0x06, 0x6d, 0xc5, 0xfd, 0xdd, 0x02, 0xf4, 0x55, 0x12, 0xf8, 0x9c, 0x14,
+	0x92, 0x3f, 0xd6, 0x92, 0x75, 0x47, 0xaf, 0x78, 0x29, 0x4e, 0x2f, 0xc3, 0xe9, 0x4d, 0x38, 0x0d,
+	0xa3, 0xf9, 0xa5, 0xbf, 0xb8, 0x26, 0xaa, 0x94, 0x8f, 0xab, 0xa5, 0xd4, 0x39, 0xde, 0xa8, 0xd0,
+	0x15, 0xdc, 0xaf, 0xd6, 0x89, 0xc9, 0x8f, 0x15, 0x9e, 0x2e, 0xe0, 0x70, 0xa9, 0x6d, 0x51, 0x10,
+	0xde, 0xf4, 0xb6, 0x2a, 0xe8, 0x6d, 0x89, 0x59, 0x70, 0x77, 0x23, 0xe8, 0x64, 0x7f, 0xb5, 0x54,
+	0xb6, 0x4c, 0xf5, 0x12, 0xb4, 0xf9, 0x3a, 0x21, 0xe3, 0x73, 0x99, 0xa4, 0x85, 0x95, 0x85, 0x4e,
+	0xa0, 0x23, 0xbe, 0x3e, 0x13, 0x0c, 0xa6, 0x48, 0x72, 0xbb, 0x84, 0xb3, 0x55, 0xc1, 0xf9, 0x33,
+	0x1c, 0x64, 0xf9, 0xd8, 0x5e, 0x09, 0x3e, 0x82, 0x83, 0x0c, 0x00, 0x73, 0xac, 0x81, 0x3d, 0xec,
+	0x8e, 0x5e, 0xdb, 0x01, 0x3e, 0x4b, 0x84, 0x37, 0x1e, 0xee, 0x25, 0xf4, 0x2f, 0xf2, 0x43, 0xc9,
+	0x04, 0xc1, 0x47, 0x60, 0x87, 0x41, 0x1a, 0xca, 0xc6, 0xe2, 0x73, 0x9f, 0xb2, 0xdc, 0xc7, 0xd0,
+	0x2f, 0x72, 0x5d, 0x62, 0xc2, 0xaa, 0x30, 0xf1, 0x9b, 0x05, 0xc7, 0x45, 0x97, 0xa2, 0xdc, 0xfb,
+	0x6b, 0x70, 0x06, 0x9d, 0x0c, 0xb0, 0x54, 0xa0, 0x3b, 0x7a, 0x64, 0x74, 0x3c, 0x70, 0xee, 0xe6,
+	0x3e, 0x84, 0x63, 0xfd, 0xd0, 0x8c, 0xcf, 0xb7, 0x1c, 0x45, 0x77, 0x02, 0xbd, 0x0d, 0x97, 0xff,
+	0x51, 0xf1, 0xee, 0x9f, 0xd6, 0x26, 0xea, 0x17, 0xd7, 0x84, 0xae, 0xd1, 0x3d, 0x68, 0x2d, 0xc2,
+	0x65, 0xc8, 0x65, 0xe0, 0x1e, 0x4e, 0x0d, 0x11, 0x3b, 0x9e, 0xcd, 0x18, 0xe1, 0x32, 0x76, 0x0f,
+	0x2b, 0x4b, 0xf4, 0x91, 0xc4, 0x9f, 0x13, 0x79, 0x43, 0x7b, 0x58, 0x7e, 0x23, 0x07, 0xee, 0x24,
+	0x84, 0xca, 0xe5, 0xa6, 0x5c, 0xce, 0x4c, 0xad, 0xc2, 0xf6, 0xce, 0x0a, 0xef, 0x54, 0x4e, 0x60,
+	0x7b, 0x16, 0x2e, 0x38, 0xa1, 0x4e, 0xe7, 0x85, 0xe4, 0x66, 0x28, 0x3e, 0x95, 0x9b, 0xb1, 0x72,
+	0x72, 0xff, 0xb0, 0x8a, 0xdc, 0xfe, 0xff, 0x20, 0xcf, 0xf2, 0x82, 0x5b, 0x2f, 0x6c, 0x16, 0x7a,
+	0x55, 0xa5, 0xa2, 0x7f, 0x2d, 0x15, 0xcd, 0x44, 0xdf, 0x47, 0x63, 0xe8, 0xe9, 0xcd, 0x24, 0xbb,
+	0x8f, 0x0f, 0x0d, 0xe2, 0xe3, 0xa2, 0xa7, 0xb8, 0x2d, 0x3c, 0xe6, 0xfe, 0x42, 0x14, 0xcc, 0x14,
+	0x5a, 0x6d, 0x45, 0x0a, 0x25, 0x2c, 0xa6, 0x30, 0x2b, 0xcb, 0xfd, 0x45, 0x3b, 0x2e, 0x69, 0x51,
+	0xb7, 0x6b, 0x10, 0x7b, 0x17, 0xf2, 0x01, 0x1c, 0x7d, 0x9e, 0x5f, 0xee, 0x94, 0x3d, 0xd1, 0x5a,
+	0x7e, 0x20, 0x6b, 0x75, 0xf7, 0xc5, 0xa7, 0x90, 0x79, 0x25, 0x86, 0x83, 0x1a, 0x73, 0xa9, 0xe1,
+	0x8e, 0xa0, 0xa3, 0x7c, 0xd7, 0xc6, 0x3e, 0x7f, 0x37, 0x00, 0x55, 0x05, 0x43, 0x1f, 0x82, 0xed,
+	0x47, 0x81, 0xc2, 0x7d, 0x03, 0xa1, 0x85, 0x17, 0x7a, 0x1f, 0x1a, 0x31, 0x75, 0x1a, 0x37, 0xf5,
+	0x6d, 0xc4, 0x54, 0x9c, 0xc8, 0x30, 0x18, 0x8b, 0xc1, 0x68, 0x0f, 0x5b, 0x58, 0x7e, 0x0b, 0xaa,
+	0xc4, 0xec, 0x1c, 0x47, 0x4e, 0x73, 0x60, 0x0f, 0x0f, 0xb0, 0xb2, 0xd0, 0xdb, 0xb2, 0x4d, 0xa4,
+	0x67, 0xf1, 0xe5, 0xca, 0x08, 0x1d, 0x47, 0xfc, 0xc9, 0x28, 0x9d, 0xa0, 0xa2, 0x87, 0x64, 0xa3,
+	0xba, 0x6d, 0x3c, 0xaa, 0x27, 0x70, 0x94, 0x94, 0x94, 0x90, 0x77, 0xb8, 0x3b, 0x7a, 0x63, 0x07,
+	0xa6, 0xb2, 0x70, 0xb8, 0x12, 0xc0, 0xfd, 0xcb, 0xda, 0x0c, 0x0e, 0x45, 0xf5, 0x7b, 0x3a, 0xd5,
+	0x86, 0x4d, 0x40, 0xd2, 0xfc, 0xae, 0x46, 0xb3, 0xa1, 0x5f, 0x99, 0x62, 0x5b, 0x51, 0xbc, 0x0d,
+	0x6b, 0xf3, 0x96, 0x58, 0x47, 0xff, 0x74, 0xe0, 0x6e, 0x96, 0x7f, 0x42, 0xe8, 0x2a, 0x9c, 0x12,
+	0x74, 0x05, 0x77, 0xcf, 0x82, 0xa0, 0xf0, 0x88, 0x32, 0xb9, 0xe6, 0x27, 0xbb, 0xae, 0x5e, 0xfe,
+	0x6e, 0xfc, 0x0e, 0xd0, 0x39, 0x59, 0x90, 0xd2, 0x03, 0x6d, 0x68, 0x10, 0x5b, 0xce, 0x9c, 0xfa,
+	0x04, 0xd3, 0xad, 0x2f, 0xc0, 0x77, 0xcc, 0x1f, 0x4c, 0x26, 0x49, 0x66, 0x70, 0xf4, 0x94, 0xf0,
+	0x42, 0x87, 0x34, 0xc2, 0x20, 0x9b, 0xff, 0x89, 0xc9, 0xce, 0xb4, 0xb9, 0x4d, 0x01, 0x3d, 0x25,
+	0xfc, 0x59, 0xb4, 0x2f, 0x5b, 0x26, 0x9a, 0xa1, 0x67, 0xd0, 0xd5, 0xb4, 0x46, 0x75, 0xdd, 0xb3,
+	0x9e, 0x9d, 0x2b, 0xe8, 0x17, 0x35, 0x46, 0xaf, 0xd7, 0xc4, 0x34, 0xd4, 0xf6, 0x9b, 0xca, 0xab,
+	0x6b, 0x68, 0xf6, 0xd2, 0x31, 0x09, 0xfe, 0x35, 0x1c, 0x6a, 0x9a, 0xb2, 0xda, 0x9a, 0x53, 0x2d,
+	0xeb, 0x76, 0xa5, 0x3a, 0x5e, 0x41, 0xbf, 0xa8, 0xe3, 0x2d, 0x19, 0xc9, 0xc3, 0x5c, 0xc2, 0xf1,
+	0x27, 0x3e, 0x9f, 0x7e, 0xaf, 0x09, 0xc8, 0xd0, 0xa0, 0xae, 0xa6, 0x7a, 0x32, 0xbe, 0x85, 0x7b,
+	0x32, 0x6e, 0x51, 0x47, 0x86, 0x1e, 0xd5, 0x96, 0xcd, 0x4c, 0xc8, 0x7e, 0xde, 0x96, 0x0d, 0xfd,
+	0xc9, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xdf, 0xcc, 0x57, 0x31, 0xa9, 0x0e, 0x00, 0x00,
 }

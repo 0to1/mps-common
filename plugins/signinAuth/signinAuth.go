@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/kataras/iris/v12"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/util/log"
+	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/util/log"
 
 	userPb "github.com/0to1/mps-common/proto/user"
 	"github.com/0to1/mps-common/utils"
