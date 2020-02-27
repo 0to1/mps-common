@@ -5,9 +5,10 @@ package go_micro_srv_material
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -118,12 +119,46 @@ func (m *MaterialType) GetDescription() string {
 	return ""
 }
 
-func (m *MaterialType) GetProperties() string {
+func (m *MaterialType) GetProperties() []*Property {
 	if m != nil {
 		return m.Properties
 	}
-	return ""
+	return nil
 }
+
+type UpdateMaterialType struct {
+	Name                 *wrappers.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          *wrappers.StringValue `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Properties           []*Property           `protobuf:"bytes,5,rep,name=properties,proto3" json:"properties,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpdateMaterialType) Reset()         { *m = UpdateMaterialType{} }
+func (m *UpdateMaterialType) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterialType) ProtoMessage()    {}
+func (*UpdateMaterialType) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{2}
+}
+
+func (m *UpdateMaterialType) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterialType.Unmarshal(m, b)
+}
+func (m *UpdateMaterialType) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterialType.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterialType) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterialType.Merge(m, src)
+}
+func (m *UpdateMaterialType) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterialType.Size(m)
+}
+func (m *UpdateMaterialType) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterialType.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterialType proto.InternalMessageInfo
 
 type UpdateMaterialType struct {
 	Name                 *wrappers.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -177,7 +212,68 @@ func (m *UpdateMaterialType) GetProperties() string {
 	if m != nil {
 		return m.Properties
 	}
-	return ""
+	return nil
+}
+
+func (m *UpdateMaterialType) GetDescription() *wrappers.StringValue {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
+func (m *UpdateMaterialType) GetProperties() []*Property {
+	if m != nil {
+		return m.Properties
+	}
+	return nil
+}
+
+type UpdateMaterialTypeReq struct {
+	Id                   int32               `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	MaterialType         *UpdateMaterialType `protobuf:"bytes,2,opt,name=materialType,proto3" json:"materialType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *UpdateMaterialTypeReq) Reset()         { *m = UpdateMaterialTypeReq{} }
+func (m *UpdateMaterialTypeReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateMaterialTypeReq) ProtoMessage()    {}
+func (*UpdateMaterialTypeReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6fb8ad58d37091a3, []int{3}
+}
+
+func (m *UpdateMaterialTypeReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Unmarshal(m, b)
+}
+func (m *UpdateMaterialTypeReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateMaterialTypeReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateMaterialTypeReq.Merge(m, src)
+}
+func (m *UpdateMaterialTypeReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateMaterialTypeReq.Size(m)
+}
+func (m *UpdateMaterialTypeReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateMaterialTypeReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateMaterialTypeReq proto.InternalMessageInfo
+
+func (m *UpdateMaterialTypeReq) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateMaterialTypeReq) GetMaterialType() *UpdateMaterialType {
+	if m != nil {
+		return m.MaterialType
+	}
+	return nil
 }
 
 type UpdateMaterialTypeReq struct {
@@ -286,11 +382,11 @@ func (m *Material) GetTypeName() string {
 	return ""
 }
 
-func (m *Material) GetProperties() string {
+func (m *Material) GetProperties() []*Property {
 	if m != nil {
 		return m.Properties
 	}
-	return ""
+	return nil
 }
 
 type Materials struct {
@@ -389,6 +485,13 @@ var xxx_messageInfo_MaterialIDsReq proto.InternalMessageInfo
 func (m *MaterialIDsReq) GetIds() []int64 {
 	if m != nil {
 		return m.Ids
+	}
+	return nil
+}
+
+func (m *MaterialIDsReq) GetTypeID() int32 {
+	if m != nil {
+		return m.TypeID
 	}
 	return nil
 }
