@@ -14,12 +14,13 @@ service Agv {
 }
 
 message Query{
-  uint32 page = 1;
-  uint32 perPage = 2;
+  uint32 garageID = 1;
+  uint32 page = 2;
+  uint32 perPage = 3;
 }
 
 message Request{
-
+  uint32 garageID = 1;
 }
 
 message Response{
@@ -40,7 +41,8 @@ message AgvMessage {
 }
 
 message AgvReq {
-  uint32 agvID = 1;
+  uint32 garageID = 1;
+  uint32 agvID = 2;
 }
 
 message AgvsResponse{

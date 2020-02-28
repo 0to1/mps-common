@@ -6,13 +6,21 @@ service System {
   //更新参数，调度系统的IP地址和端口//
   rpc UpdateParam(Params) returns (Response);
 
+  //获取系统参数
+  rpc GetParam(ParamReq) returns (Params);
+
   //系统操作//
   rpc SystemOperation(Request) returns (Response);
 }
 
+message ParamReq {
+  uint32 garageID = 1;
+}
+
 message Params {
-  string serverIp = 1;
-  uint32 serverPort = 2;
+  uint32 garageID = 1;
+  string serverIp = 2;
+  uint32 serverPort = 3;
 }
 
 message Response {
@@ -21,10 +29,11 @@ message Response {
 }
 
 message Request {
+  uint32 garageID = 1;
   enum OperationCode {
 		Stop = 0;//停止系统连接//
 		Start = 1;//开启系统连接//
 		Restart = 2;//重启系统连接//
   }
-  OperationCode code = 1;
+  OperationCode code = 2;
 }

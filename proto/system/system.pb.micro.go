@@ -36,6 +36,8 @@ var _ server.Option
 type SystemService interface {
 	//更新参数，调度系统的IP地址和端口//
 	UpdateParam(ctx context.Context, in *Params, opts ...client.CallOption) (*Response, error)
+	//获取系统参数
+	GetParam(ctx context.Context, in *ParamReq, opts ...client.CallOption) (*Params, error)
 	//系统操作//
 	SystemOperation(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 }
@@ -68,6 +70,16 @@ func (c *systemService) UpdateParam(ctx context.Context, in *Params, opts ...cli
 	return out, nil
 }
 
+func (c *systemService) GetParam(ctx context.Context, in *ParamReq, opts ...client.CallOption) (*Params, error) {
+	req := c.c.NewRequest(c.name, "System.GetParam", in)
+	out := new(Params)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *systemService) SystemOperation(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "System.SystemOperation", in)
 	out := new(Response)
@@ -83,6 +95,8 @@ func (c *systemService) SystemOperation(ctx context.Context, in *Request, opts .
 type SystemHandler interface {
 	//更新参数，调度系统的IP地址和端口//
 	UpdateParam(context.Context, *Params, *Response) error
+	//获取系统参数
+	GetParam(context.Context, *ParamReq, *Params) error
 	//系统操作//
 	SystemOperation(context.Context, *Request, *Response) error
 }
@@ -90,6 +104,7 @@ type SystemHandler interface {
 func RegisterSystemHandler(s server.Server, hdlr SystemHandler, opts ...server.HandlerOption) error {
 	type system interface {
 		UpdateParam(ctx context.Context, in *Params, out *Response) error
+		GetParam(ctx context.Context, in *ParamReq, out *Params) error
 		SystemOperation(ctx context.Context, in *Request, out *Response) error
 	}
 	type System struct {
@@ -105,6 +120,10 @@ type systemHandler struct {
 
 func (h *systemHandler) UpdateParam(ctx context.Context, in *Params, out *Response) error {
 	return h.SystemHandler.UpdateParam(ctx, in, out)
+}
+
+func (h *systemHandler) GetParam(ctx context.Context, in *ParamReq, out *Params) error {
+	return h.SystemHandler.GetParam(ctx, in, out)
 }
 
 func (h *systemHandler) SystemOperation(ctx context.Context, in *Request, out *Response) error {
