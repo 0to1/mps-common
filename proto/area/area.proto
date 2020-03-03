@@ -10,7 +10,7 @@ service AreaService {
    // 添加货位类型
    rpc AddAreaType(AreaType) returns (Response);
    // 修改货位类型
-   rpc UpdateAreaType(AreaType) returns (Response);
+   rpc UpdateAreaType(UpdateAreaTypeReq) returns (Response);
    // 删除货位类型
    rpc DeleteAreaType(AreaType) returns (Response);
    // 获取货位类型
@@ -54,6 +54,12 @@ message AreaType {
   string description = 3;
 }
 
+message UpdateAreaType {
+  google.protobuf.Int32Value id = 1;
+  google.protobuf.StringValue name = 2;  
+  google.protobuf.StringValue description= 3;  
+}
+
 message AreaTypes {
   repeated AreaType areaTypes = 1;
   uint32 totalpages = 2;
@@ -85,6 +91,8 @@ message Area {
 }
 
 message UpdateArea {
+     // 区域任务容量
+  google.protobuf.Int32Value id = 1;
   // 区域任务容量
   google.protobuf.Int32Value orderCapacity = 25;
   //是否有效
@@ -104,6 +112,11 @@ message UpdateArea {
 message UpdateAreaReq {
     int32 id = 1;
     UpdateArea area = 2;
+}
+
+message UpdateAreaTypeReq {
+    int32 id = 1;
+    UpdateAreaType area = 2;
 }
 
 

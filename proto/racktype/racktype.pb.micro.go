@@ -37,12 +37,12 @@ var _ server.Option
 type RackTypeService interface {
 	AddRackType(ctx context.Context, in *RackType, opts ...client.CallOption) (*Response, error)
 	DeleteRackType(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
-	UpdateRackType(ctx context.Context, in *RackType, opts ...client.CallOption) (*Response, error)
+	UpdateRackType(ctx context.Context, in *UpdateRackTypeReq, opts ...client.CallOption) (*Response, error)
 	GetRackTypes(ctx context.Context, in *RackTypeQuery, opts ...client.CallOption) (*RackTypes, error)
 	GetOneRackType(ctx context.Context, in *IDReq, opts ...client.CallOption) (*RackType, error)
 	AddCellType(ctx context.Context, in *CellType, opts ...client.CallOption) (*Response, error)
 	DeleteCellType(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
-	UpdateCellType(ctx context.Context, in *CellType, opts ...client.CallOption) (*Response, error)
+	UpdateCellType(ctx context.Context, in *UpdateCellTypeReq, opts ...client.CallOption) (*Response, error)
 	GetOneCellType(ctx context.Context, in *IDReq, opts ...client.CallOption) (*CellType, error)
 	GetCellTypes(ctx context.Context, in *CellTypeQuery, opts ...client.CallOption) (*CellTypes, error)
 }
@@ -79,7 +79,7 @@ func (c *rackTypeService) DeleteRackType(ctx context.Context, in *IDReq, opts ..
 	return out, nil
 }
 
-func (c *rackTypeService) UpdateRackType(ctx context.Context, in *RackType, opts ...client.CallOption) (*Response, error) {
+func (c *rackTypeService) UpdateRackType(ctx context.Context, in *UpdateRackTypeReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackTypeService.UpdateRackType", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -129,7 +129,7 @@ func (c *rackTypeService) DeleteCellType(ctx context.Context, in *IDReq, opts ..
 	return out, nil
 }
 
-func (c *rackTypeService) UpdateCellType(ctx context.Context, in *CellType, opts ...client.CallOption) (*Response, error) {
+func (c *rackTypeService) UpdateCellType(ctx context.Context, in *UpdateCellTypeReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RackTypeService.UpdateCellType", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -164,12 +164,12 @@ func (c *rackTypeService) GetCellTypes(ctx context.Context, in *CellTypeQuery, o
 type RackTypeServiceHandler interface {
 	AddRackType(context.Context, *RackType, *Response) error
 	DeleteRackType(context.Context, *IDReq, *Response) error
-	UpdateRackType(context.Context, *RackType, *Response) error
+	UpdateRackType(context.Context, *UpdateRackTypeReq, *Response) error
 	GetRackTypes(context.Context, *RackTypeQuery, *RackTypes) error
 	GetOneRackType(context.Context, *IDReq, *RackType) error
 	AddCellType(context.Context, *CellType, *Response) error
 	DeleteCellType(context.Context, *IDReq, *Response) error
-	UpdateCellType(context.Context, *CellType, *Response) error
+	UpdateCellType(context.Context, *UpdateCellTypeReq, *Response) error
 	GetOneCellType(context.Context, *IDReq, *CellType) error
 	GetCellTypes(context.Context, *CellTypeQuery, *CellTypes) error
 }
@@ -178,12 +178,12 @@ func RegisterRackTypeServiceHandler(s server.Server, hdlr RackTypeServiceHandler
 	type rackTypeService interface {
 		AddRackType(ctx context.Context, in *RackType, out *Response) error
 		DeleteRackType(ctx context.Context, in *IDReq, out *Response) error
-		UpdateRackType(ctx context.Context, in *RackType, out *Response) error
+		UpdateRackType(ctx context.Context, in *UpdateRackTypeReq, out *Response) error
 		GetRackTypes(ctx context.Context, in *RackTypeQuery, out *RackTypes) error
 		GetOneRackType(ctx context.Context, in *IDReq, out *RackType) error
 		AddCellType(ctx context.Context, in *CellType, out *Response) error
 		DeleteCellType(ctx context.Context, in *IDReq, out *Response) error
-		UpdateCellType(ctx context.Context, in *CellType, out *Response) error
+		UpdateCellType(ctx context.Context, in *UpdateCellTypeReq, out *Response) error
 		GetOneCellType(ctx context.Context, in *IDReq, out *CellType) error
 		GetCellTypes(ctx context.Context, in *CellTypeQuery, out *CellTypes) error
 	}
@@ -206,7 +206,7 @@ func (h *rackTypeServiceHandler) DeleteRackType(ctx context.Context, in *IDReq, 
 	return h.RackTypeServiceHandler.DeleteRackType(ctx, in, out)
 }
 
-func (h *rackTypeServiceHandler) UpdateRackType(ctx context.Context, in *RackType, out *Response) error {
+func (h *rackTypeServiceHandler) UpdateRackType(ctx context.Context, in *UpdateRackTypeReq, out *Response) error {
 	return h.RackTypeServiceHandler.UpdateRackType(ctx, in, out)
 }
 
@@ -226,7 +226,7 @@ func (h *rackTypeServiceHandler) DeleteCellType(ctx context.Context, in *IDReq, 
 	return h.RackTypeServiceHandler.DeleteCellType(ctx, in, out)
 }
 
-func (h *rackTypeServiceHandler) UpdateCellType(ctx context.Context, in *CellType, out *Response) error {
+func (h *rackTypeServiceHandler) UpdateCellType(ctx context.Context, in *UpdateCellTypeReq, out *Response) error {
 	return h.RackTypeServiceHandler.UpdateCellType(ctx, in, out)
 }
 

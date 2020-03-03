@@ -38,7 +38,7 @@ type AreaService interface {
 	// 添加货位类型
 	AddAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*Response, error)
 	// 修改货位类型
-	UpdateAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*Response, error)
+	UpdateAreaType(ctx context.Context, in *UpdateAreaTypeReq, opts ...client.CallOption) (*Response, error)
 	// 删除货位类型
 	DeleteAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*Response, error)
 	// 获取货位类型
@@ -97,7 +97,7 @@ func (c *areaService) AddAreaType(ctx context.Context, in *AreaType, opts ...cli
 	return out, nil
 }
 
-func (c *areaService) UpdateAreaType(ctx context.Context, in *AreaType, opts ...client.CallOption) (*Response, error) {
+func (c *areaService) UpdateAreaType(ctx context.Context, in *UpdateAreaTypeReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "AreaService.UpdateAreaType", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -283,7 +283,7 @@ type AreaServiceHandler interface {
 	// 添加货位类型
 	AddAreaType(context.Context, *AreaType, *Response) error
 	// 修改货位类型
-	UpdateAreaType(context.Context, *AreaType, *Response) error
+	UpdateAreaType(context.Context, *UpdateAreaTypeReq, *Response) error
 	// 删除货位类型
 	DeleteAreaType(context.Context, *AreaType, *Response) error
 	// 获取货位类型
@@ -323,7 +323,7 @@ type AreaServiceHandler interface {
 func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts ...server.HandlerOption) error {
 	type areaService interface {
 		AddAreaType(ctx context.Context, in *AreaType, out *Response) error
-		UpdateAreaType(ctx context.Context, in *AreaType, out *Response) error
+		UpdateAreaType(ctx context.Context, in *UpdateAreaTypeReq, out *Response) error
 		DeleteAreaType(ctx context.Context, in *AreaType, out *Response) error
 		GetAreaType(ctx context.Context, in *AreaTypeQuery, out *AreaTypes) error
 		GetOneAreaType(ctx context.Context, in *AreaType, out *AreaType) error
@@ -357,7 +357,7 @@ func (h *areaServiceHandler) AddAreaType(ctx context.Context, in *AreaType, out 
 	return h.AreaServiceHandler.AddAreaType(ctx, in, out)
 }
 
-func (h *areaServiceHandler) UpdateAreaType(ctx context.Context, in *AreaType, out *Response) error {
+func (h *areaServiceHandler) UpdateAreaType(ctx context.Context, in *UpdateAreaTypeReq, out *Response) error {
 	return h.AreaServiceHandler.UpdateAreaType(ctx, in, out)
 }
 

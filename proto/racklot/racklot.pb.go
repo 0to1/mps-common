@@ -5,9 +5,10 @@ package go_micro_srv_racklot
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -132,6 +133,124 @@ func (m *RacklotType) GetWidth() int32 {
 	return 0
 }
 
+type UpdateRacklotType struct {
+	Id                   *wrappers.Int32Value  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 *wrappers.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          *wrappers.StringValue `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Length               *wrappers.Int32Value  `protobuf:"bytes,4,opt,name=Length,proto3" json:"Length,omitempty"`
+	Width                *wrappers.Int32Value  `protobuf:"bytes,5,opt,name=Width,proto3" json:"Width,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpdateRacklotType) Reset()         { *m = UpdateRacklotType{} }
+func (m *UpdateRacklotType) String() string { return proto.CompactTextString(m) }
+func (*UpdateRacklotType) ProtoMessage()    {}
+func (*UpdateRacklotType) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed2705d6df90f82d, []int{2}
+}
+
+func (m *UpdateRacklotType) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateRacklotType.Unmarshal(m, b)
+}
+func (m *UpdateRacklotType) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateRacklotType.Marshal(b, m, deterministic)
+}
+func (m *UpdateRacklotType) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateRacklotType.Merge(m, src)
+}
+func (m *UpdateRacklotType) XXX_Size() int {
+	return xxx_messageInfo_UpdateRacklotType.Size(m)
+}
+func (m *UpdateRacklotType) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateRacklotType.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateRacklotType proto.InternalMessageInfo
+
+func (m *UpdateRacklotType) GetId() *wrappers.Int32Value {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UpdateRacklotType) GetName() *wrappers.StringValue {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *UpdateRacklotType) GetDescription() *wrappers.StringValue {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
+func (m *UpdateRacklotType) GetLength() *wrappers.Int32Value {
+	if m != nil {
+		return m.Length
+	}
+	return nil
+}
+
+func (m *UpdateRacklotType) GetWidth() *wrappers.Int32Value {
+	if m != nil {
+		return m.Width
+	}
+	return nil
+}
+
+type UpdateRacklotTypeReq struct {
+	Id                   int32              `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Update               *UpdateRacklotType `protobuf:"bytes,2,opt,name=update,proto3" json:"update,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *UpdateRacklotTypeReq) Reset()         { *m = UpdateRacklotTypeReq{} }
+func (m *UpdateRacklotTypeReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateRacklotTypeReq) ProtoMessage()    {}
+func (*UpdateRacklotTypeReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed2705d6df90f82d, []int{3}
+}
+
+func (m *UpdateRacklotTypeReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateRacklotTypeReq.Unmarshal(m, b)
+}
+func (m *UpdateRacklotTypeReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateRacklotTypeReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateRacklotTypeReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateRacklotTypeReq.Merge(m, src)
+}
+func (m *UpdateRacklotTypeReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateRacklotTypeReq.Size(m)
+}
+func (m *UpdateRacklotTypeReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateRacklotTypeReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateRacklotTypeReq proto.InternalMessageInfo
+
+func (m *UpdateRacklotTypeReq) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateRacklotTypeReq) GetUpdate() *UpdateRacklotType {
+	if m != nil {
+		return m.Update
+	}
+	return nil
+}
+
 type RacklotTypes struct {
 	RacklotTypes         []*RacklotType `protobuf:"bytes,1,rep,name=racklotTypes,proto3" json:"racklotTypes,omitempty"`
 	Totals               uint32         `protobuf:"varint,4,opt,name=totals,proto3" json:"totals,omitempty"`
@@ -146,7 +265,7 @@ func (m *RacklotTypes) Reset()         { *m = RacklotTypes{} }
 func (m *RacklotTypes) String() string { return proto.CompactTextString(m) }
 func (*RacklotTypes) ProtoMessage()    {}
 func (*RacklotTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{2}
+	return fileDescriptor_ed2705d6df90f82d, []int{4}
 }
 
 func (m *RacklotTypes) XXX_Unmarshal(b []byte) error {
@@ -209,7 +328,7 @@ func (m *MultipleGroup) Reset()         { *m = MultipleGroup{} }
 func (m *MultipleGroup) String() string { return proto.CompactTextString(m) }
 func (*MultipleGroup) ProtoMessage()    {}
 func (*MultipleGroup) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{3}
+	return fileDescriptor_ed2705d6df90f82d, []int{5}
 }
 
 func (m *MultipleGroup) XXX_Unmarshal(b []byte) error {
@@ -264,7 +383,7 @@ func (m *RacklotGroup) Reset()         { *m = RacklotGroup{} }
 func (m *RacklotGroup) String() string { return proto.CompactTextString(m) }
 func (*RacklotGroup) ProtoMessage()    {}
 func (*RacklotGroup) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{4}
+	return fileDescriptor_ed2705d6df90f82d, []int{6}
 }
 
 func (m *RacklotGroup) XXX_Unmarshal(b []byte) error {
@@ -312,7 +431,7 @@ func (m *RacklotsGroup) Reset()         { *m = RacklotsGroup{} }
 func (m *RacklotsGroup) String() string { return proto.CompactTextString(m) }
 func (*RacklotsGroup) ProtoMessage()    {}
 func (*RacklotsGroup) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{5}
+	return fileDescriptor_ed2705d6df90f82d, []int{7}
 }
 
 func (m *RacklotsGroup) XXX_Unmarshal(b []byte) error {
@@ -378,7 +497,7 @@ func (m *Racklot) Reset()         { *m = Racklot{} }
 func (m *Racklot) String() string { return proto.CompactTextString(m) }
 func (*Racklot) ProtoMessage()    {}
 func (*Racklot) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{6}
+	return fileDescriptor_ed2705d6df90f82d, []int{8}
 }
 
 func (m *Racklot) XXX_Unmarshal(b []byte) error {
@@ -516,7 +635,7 @@ func (m *UpdateRacklotReq) Reset()         { *m = UpdateRacklotReq{} }
 func (m *UpdateRacklotReq) String() string { return proto.CompactTextString(m) }
 func (*UpdateRacklotReq) ProtoMessage()    {}
 func (*UpdateRacklotReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{7}
+	return fileDescriptor_ed2705d6df90f82d, []int{9}
 }
 
 func (m *UpdateRacklotReq) XXX_Unmarshal(b []byte) error {
@@ -576,7 +695,7 @@ func (m *UpdateRacklot) Reset()         { *m = UpdateRacklot{} }
 func (m *UpdateRacklot) String() string { return proto.CompactTextString(m) }
 func (*UpdateRacklot) ProtoMessage()    {}
 func (*UpdateRacklot) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{8}
+	return fileDescriptor_ed2705d6df90f82d, []int{10}
 }
 
 func (m *UpdateRacklot) XXX_Unmarshal(b []byte) error {
@@ -686,7 +805,7 @@ func (m *UpdateRacklotsReq) Reset()         { *m = UpdateRacklotsReq{} }
 func (m *UpdateRacklotsReq) String() string { return proto.CompactTextString(m) }
 func (*UpdateRacklotsReq) ProtoMessage()    {}
 func (*UpdateRacklotsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{9}
+	return fileDescriptor_ed2705d6df90f82d, []int{11}
 }
 
 func (m *UpdateRacklotsReq) XXX_Unmarshal(b []byte) error {
@@ -733,7 +852,7 @@ func (m *DeleteRacklotsReq) Reset()         { *m = DeleteRacklotsReq{} }
 func (m *DeleteRacklotsReq) String() string { return proto.CompactTextString(m) }
 func (*DeleteRacklotsReq) ProtoMessage()    {}
 func (*DeleteRacklotsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{10}
+	return fileDescriptor_ed2705d6df90f82d, []int{12}
 }
 
 func (m *DeleteRacklotsReq) XXX_Unmarshal(b []byte) error {
@@ -778,7 +897,7 @@ func (m *Response) Reset()         { *m = Response{} }
 func (m *Response) String() string { return proto.CompactTextString(m) }
 func (*Response) ProtoMessage()    {}
 func (*Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{11}
+	return fileDescriptor_ed2705d6df90f82d, []int{13}
 }
 
 func (m *Response) XXX_Unmarshal(b []byte) error {
@@ -809,7 +928,7 @@ func (m *AddResp) Reset()         { *m = AddResp{} }
 func (m *AddResp) String() string { return proto.CompactTextString(m) }
 func (*AddResp) ProtoMessage()    {}
 func (*AddResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{12}
+	return fileDescriptor_ed2705d6df90f82d, []int{14}
 }
 
 func (m *AddResp) XXX_Unmarshal(b []byte) error {
@@ -841,7 +960,7 @@ func (m *RacklotIDReq) Reset()         { *m = RacklotIDReq{} }
 func (m *RacklotIDReq) String() string { return proto.CompactTextString(m) }
 func (*RacklotIDReq) ProtoMessage()    {}
 func (*RacklotIDReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{13}
+	return fileDescriptor_ed2705d6df90f82d, []int{15}
 }
 
 func (m *RacklotIDReq) XXX_Unmarshal(b []byte) error {
@@ -879,7 +998,7 @@ func (m *DeleteResp) Reset()         { *m = DeleteResp{} }
 func (m *DeleteResp) String() string { return proto.CompactTextString(m) }
 func (*DeleteResp) ProtoMessage()    {}
 func (*DeleteResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{14}
+	return fileDescriptor_ed2705d6df90f82d, []int{16}
 }
 
 func (m *DeleteResp) XXX_Unmarshal(b []byte) error {
@@ -910,7 +1029,7 @@ func (m *UpdateResp) Reset()         { *m = UpdateResp{} }
 func (m *UpdateResp) String() string { return proto.CompactTextString(m) }
 func (*UpdateResp) ProtoMessage()    {}
 func (*UpdateResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{15}
+	return fileDescriptor_ed2705d6df90f82d, []int{17}
 }
 
 func (m *UpdateResp) XXX_Unmarshal(b []byte) error {
@@ -945,7 +1064,7 @@ func (m *Racklots) Reset()         { *m = Racklots{} }
 func (m *Racklots) String() string { return proto.CompactTextString(m) }
 func (*Racklots) ProtoMessage()    {}
 func (*Racklots) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{16}
+	return fileDescriptor_ed2705d6df90f82d, []int{18}
 }
 
 func (m *Racklots) XXX_Unmarshal(b []byte) error {
@@ -1006,7 +1125,7 @@ func (m *RackIDReq) Reset()         { *m = RackIDReq{} }
 func (m *RackIDReq) String() string { return proto.CompactTextString(m) }
 func (*RackIDReq) ProtoMessage()    {}
 func (*RackIDReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{17}
+	return fileDescriptor_ed2705d6df90f82d, []int{19}
 }
 
 func (m *RackIDReq) XXX_Unmarshal(b []byte) error {
@@ -1052,7 +1171,7 @@ func (m *RackIDsReq) Reset()         { *m = RackIDsReq{} }
 func (m *RackIDsReq) String() string { return proto.CompactTextString(m) }
 func (*RackIDsReq) ProtoMessage()    {}
 func (*RackIDsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{18}
+	return fileDescriptor_ed2705d6df90f82d, []int{20}
 }
 
 func (m *RackIDsReq) XXX_Unmarshal(b []byte) error {
@@ -1091,7 +1210,7 @@ func (m *RacklotIDsReq) Reset()         { *m = RacklotIDsReq{} }
 func (m *RacklotIDsReq) String() string { return proto.CompactTextString(m) }
 func (*RacklotIDsReq) ProtoMessage()    {}
 func (*RacklotIDsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{19}
+	return fileDescriptor_ed2705d6df90f82d, []int{21}
 }
 
 func (m *RacklotIDsReq) XXX_Unmarshal(b []byte) error {
@@ -1131,7 +1250,7 @@ func (m *RacklotGroupsReq) Reset()         { *m = RacklotGroupsReq{} }
 func (m *RacklotGroupsReq) String() string { return proto.CompactTextString(m) }
 func (*RacklotGroupsReq) ProtoMessage()    {}
 func (*RacklotGroupsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{20}
+	return fileDescriptor_ed2705d6df90f82d, []int{22}
 }
 
 func (m *RacklotGroupsReq) XXX_Unmarshal(b []byte) error {
@@ -1178,7 +1297,7 @@ func (m *Parameter) Reset()         { *m = Parameter{} }
 func (m *Parameter) String() string { return proto.CompactTextString(m) }
 func (*Parameter) ProtoMessage()    {}
 func (*Parameter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{21}
+	return fileDescriptor_ed2705d6df90f82d, []int{23}
 }
 
 func (m *Parameter) XXX_Unmarshal(b []byte) error {
@@ -1228,7 +1347,7 @@ func (m *RacklotQuery) Reset()         { *m = RacklotQuery{} }
 func (m *RacklotQuery) String() string { return proto.CompactTextString(m) }
 func (*RacklotQuery) ProtoMessage()    {}
 func (*RacklotQuery) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{22}
+	return fileDescriptor_ed2705d6df90f82d, []int{24}
 }
 
 func (m *RacklotQuery) XXX_Unmarshal(b []byte) error {
@@ -1299,7 +1418,7 @@ func (m *RacklotTypeQuery) Reset()         { *m = RacklotTypeQuery{} }
 func (m *RacklotTypeQuery) String() string { return proto.CompactTextString(m) }
 func (*RacklotTypeQuery) ProtoMessage()    {}
 func (*RacklotTypeQuery) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{23}
+	return fileDescriptor_ed2705d6df90f82d, []int{25}
 }
 
 func (m *RacklotTypeQuery) XXX_Unmarshal(b []byte) error {
@@ -1377,7 +1496,7 @@ func (m *MultipleGroupFilter) Reset()         { *m = MultipleGroupFilter{} }
 func (m *MultipleGroupFilter) String() string { return proto.CompactTextString(m) }
 func (*MultipleGroupFilter) ProtoMessage()    {}
 func (*MultipleGroupFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{24}
+	return fileDescriptor_ed2705d6df90f82d, []int{26}
 }
 
 func (m *MultipleGroupFilter) XXX_Unmarshal(b []byte) error {
@@ -1434,7 +1553,7 @@ func (m *RacklotFilter) Reset()         { *m = RacklotFilter{} }
 func (m *RacklotFilter) String() string { return proto.CompactTextString(m) }
 func (*RacklotFilter) ProtoMessage()    {}
 func (*RacklotFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{25}
+	return fileDescriptor_ed2705d6df90f82d, []int{27}
 }
 
 func (m *RacklotFilter) XXX_Unmarshal(b []byte) error {
@@ -1555,7 +1674,7 @@ func (m *RacklotTypeFilter) Reset()         { *m = RacklotTypeFilter{} }
 func (m *RacklotTypeFilter) String() string { return proto.CompactTextString(m) }
 func (*RacklotTypeFilter) ProtoMessage()    {}
 func (*RacklotTypeFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{26}
+	return fileDescriptor_ed2705d6df90f82d, []int{28}
 }
 
 func (m *RacklotTypeFilter) XXX_Unmarshal(b []byte) error {
@@ -1630,7 +1749,7 @@ func (m *PropertiesFilter) Reset()         { *m = PropertiesFilter{} }
 func (m *PropertiesFilter) String() string { return proto.CompactTextString(m) }
 func (*PropertiesFilter) ProtoMessage()    {}
 func (*PropertiesFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{27}
+	return fileDescriptor_ed2705d6df90f82d, []int{29}
 }
 
 func (m *PropertiesFilter) XXX_Unmarshal(b []byte) error {
@@ -1677,7 +1796,7 @@ func (m *Property) Reset()         { *m = Property{} }
 func (m *Property) String() string { return proto.CompactTextString(m) }
 func (*Property) ProtoMessage()    {}
 func (*Property) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{28}
+	return fileDescriptor_ed2705d6df90f82d, []int{30}
 }
 
 func (m *Property) XXX_Unmarshal(b []byte) error {
@@ -1724,7 +1843,7 @@ func (m *FlagReq) Reset()         { *m = FlagReq{} }
 func (m *FlagReq) String() string { return proto.CompactTextString(m) }
 func (*FlagReq) ProtoMessage()    {}
 func (*FlagReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{29}
+	return fileDescriptor_ed2705d6df90f82d, []int{31}
 }
 
 func (m *FlagReq) XXX_Unmarshal(b []byte) error {
@@ -1771,7 +1890,7 @@ func (m *PropertiesReq) Reset()         { *m = PropertiesReq{} }
 func (m *PropertiesReq) String() string { return proto.CompactTextString(m) }
 func (*PropertiesReq) ProtoMessage()    {}
 func (*PropertiesReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed2705d6df90f82d, []int{30}
+	return fileDescriptor_ed2705d6df90f82d, []int{32}
 }
 
 func (m *PropertiesReq) XXX_Unmarshal(b []byte) error {
@@ -1864,6 +1983,8 @@ func (m *TypeReq) GetName() string {
 func init() {
 	proto.RegisterType((*IDReq)(nil), "go.micro.srv.racklot.IDReq")
 	proto.RegisterType((*RacklotType)(nil), "go.micro.srv.racklot.RacklotType")
+	proto.RegisterType((*UpdateRacklotType)(nil), "go.micro.srv.racklot.UpdateRacklotType")
+	proto.RegisterType((*UpdateRacklotTypeReq)(nil), "go.micro.srv.racklot.UpdateRacklotTypeReq")
 	proto.RegisterType((*RacklotTypes)(nil), "go.micro.srv.racklot.RacklotTypes")
 	proto.RegisterType((*MultipleGroup)(nil), "go.micro.srv.racklot.MultipleGroup")
 	proto.RegisterType((*RacklotGroup)(nil), "go.micro.srv.racklot.RacklotGroup")

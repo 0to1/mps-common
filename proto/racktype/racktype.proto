@@ -7,13 +7,13 @@ import "google/protobuf/wrappers.proto";
 service RackTypeService {
   rpc AddRackType(RackType) returns (Response);
   rpc DeleteRackType(IDReq) returns (Response);
-  rpc UpdateRackType(RackType) returns (Response);
+  rpc UpdateRackType(UpdateRackTypeReq) returns (Response);
   rpc GetRackTypes(RackTypeQuery) returns (RackTypes);
   rpc GetOneRackType(IDReq) returns (RackType);
 
   rpc AddCellType(CellType) returns (Response);
   rpc DeleteCellType(IDReq) returns (Response);
-  rpc UpdateCellType(CellType) returns (Response);
+  rpc UpdateCellType(UpdateCellTypeReq) returns (Response);
   rpc GetOneCellType(IDReq) returns (CellType);
   rpc GetCellTypes(CellTypeQuery) returns (CellTypes);
 }
@@ -32,11 +32,13 @@ message RackType {
   //储位数量
   uint32 cellNums = 11;
   repeated Cell cells = 12;
+  string cellOption = 13;
 }
 
 message Cell {
-  uint32 type = 1;
-  string tag = 2;
+  uint32 cellType = 1;
+  int32 layer = 2;
+  int32 cellCode = 3;
 }
 
 message CellType {
@@ -49,6 +51,42 @@ message CellType {
   string description = 8;
   bool isValid = 9;
 }
+
+message UpdateRackTypeReq {
+    uint32 id = 1;
+    UpdateRackType update = 2;
+}
+
+message UpdateRackType {
+    google.protobuf.Int32Value id = 1;                                 
+    google.protobuf.StringValue name = 2;       
+    google.protobuf.Int32Value length = 4;   
+    google.protobuf.Int32Value width = 5;   
+    google.protobuf.Int32Value height = 6;   
+    google.protobuf.Int32Value layers = 7;   
+    google.protobuf.Int32Value pickingSurface = 8;   
+    google.protobuf.StringValue description = 9;   
+    google.protobuf.Int32Value cellNumsers = 10;   
+    repeated Cell cells = 12;
+    google.protobuf.StringValue cellOption = 13;
+}
+
+message UpdateCellTypeReq {
+    uint32 id = 1;
+    UpdateCellType update = 2;
+}
+
+message UpdateCellType {
+    google.protobuf.Int32Value id = 1;                                 
+    google.protobuf.StringValue name = 2;       
+    google.protobuf.Int32Value length = 4;   
+    google.protobuf.Int32Value width = 5;   
+    google.protobuf.Int32Value height = 6;   
+    google.protobuf.Int32Value maxLoad = 7;      
+    google.protobuf.StringValue description = 9;   
+    google.protobuf.BoolValue isValid = 10;
+}
+
 
 message IDReq { uint32 id = 1; }
 

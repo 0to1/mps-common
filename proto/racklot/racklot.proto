@@ -53,17 +53,14 @@ service RacklotService {
   rpc IsAvailable(RacklotIDReq) returns (Response);
   // 获取货位关联的货架
   rpc GetBindedRack(RacklotIDReq) returns (IDReq);
-
     // 设置是否允许存车
     rpc Inbound(FlagReq) returns (Response);
     // 设置是否允许取车
     rpc Outbound(FlagReq) returns (Response);
-
       //增加属性
   rpc SetProperties(PropertiesReq) returns(Response);
       // 设置类型
-      rpc SetRacklotType(TypeReq) returns (Response);
-
+  rpc SetRacklotType(TypeReq) returns (Response);
 }
 
 message IDReq {
@@ -77,6 +74,19 @@ message RacklotType {
   string description = 3;
   int32 Length  = 4 ;
 	int32 Width  = 5;
+}
+
+message UpdateRacklotType {
+    google.protobuf.Int32Value id = 1;
+    google.protobuf.StringValue name = 2;
+    google.protobuf.StringValue description = 3;
+    google.protobuf.Int32Value Length  = 4 ;
+    google.protobuf.Int32Value Width  = 5;
+  }
+
+message UpdateRacklotTypeReq {
+    int32 id = 1;
+    UpdateRacklotType update = 2;
 }
 
 message RacklotTypes {

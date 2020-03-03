@@ -5,9 +5,10 @@ package go_micro_srv_area
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -76,6 +77,61 @@ func (m *AreaType) GetDescription() string {
 	return ""
 }
 
+type UpdateAreaType struct {
+	Id                   *wrappers.Int32Value  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 *wrappers.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          *wrappers.StringValue `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpdateAreaType) Reset()         { *m = UpdateAreaType{} }
+func (m *UpdateAreaType) String() string { return proto.CompactTextString(m) }
+func (*UpdateAreaType) ProtoMessage()    {}
+func (*UpdateAreaType) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce7e3eb842cc36cb, []int{1}
+}
+
+func (m *UpdateAreaType) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateAreaType.Unmarshal(m, b)
+}
+func (m *UpdateAreaType) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateAreaType.Marshal(b, m, deterministic)
+}
+func (m *UpdateAreaType) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateAreaType.Merge(m, src)
+}
+func (m *UpdateAreaType) XXX_Size() int {
+	return xxx_messageInfo_UpdateAreaType.Size(m)
+}
+func (m *UpdateAreaType) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateAreaType.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateAreaType proto.InternalMessageInfo
+
+func (m *UpdateAreaType) GetId() *wrappers.Int32Value {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UpdateAreaType) GetName() *wrappers.StringValue {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *UpdateAreaType) GetDescription() *wrappers.StringValue {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
 type AreaTypes struct {
 	AreaTypes            []*AreaType `protobuf:"bytes,1,rep,name=areaTypes,proto3" json:"areaTypes,omitempty"`
 	Totalpages           uint32      `protobuf:"varint,2,opt,name=totalpages,proto3" json:"totalpages,omitempty"`
@@ -90,7 +146,7 @@ func (m *AreaTypes) Reset()         { *m = AreaTypes{} }
 func (m *AreaTypes) String() string { return proto.CompactTextString(m) }
 func (*AreaTypes) ProtoMessage()    {}
 func (*AreaTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{1}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{2}
 }
 
 func (m *AreaTypes) XXX_Unmarshal(b []byte) error {
@@ -169,7 +225,7 @@ func (m *Area) Reset()         { *m = Area{} }
 func (m *Area) String() string { return proto.CompactTextString(m) }
 func (*Area) ProtoMessage()    {}
 func (*Area) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{2}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{3}
 }
 
 func (m *Area) XXX_Unmarshal(b []byte) error {
@@ -290,7 +346,7 @@ func (m *UpdateArea) Reset()         { *m = UpdateArea{} }
 func (m *UpdateArea) String() string { return proto.CompactTextString(m) }
 func (*UpdateArea) ProtoMessage()    {}
 func (*UpdateArea) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{3}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{4}
 }
 
 func (m *UpdateArea) XXX_Unmarshal(b []byte) error {
@@ -372,7 +428,7 @@ func (m *UpdateAreaReq) Reset()         { *m = UpdateAreaReq{} }
 func (m *UpdateAreaReq) String() string { return proto.CompactTextString(m) }
 func (*UpdateAreaReq) ProtoMessage()    {}
 func (*UpdateAreaReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{4}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{5}
 }
 
 func (m *UpdateAreaReq) XXX_Unmarshal(b []byte) error {
@@ -407,6 +463,53 @@ func (m *UpdateAreaReq) GetArea() *UpdateArea {
 	return nil
 }
 
+type UpdateAreaTypeReq struct {
+	Id                   int32           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Area                 *UpdateAreaType `protobuf:"bytes,2,opt,name=area,proto3" json:"area,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *UpdateAreaTypeReq) Reset()         { *m = UpdateAreaTypeReq{} }
+func (m *UpdateAreaTypeReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateAreaTypeReq) ProtoMessage()    {}
+func (*UpdateAreaTypeReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce7e3eb842cc36cb, []int{6}
+}
+
+func (m *UpdateAreaTypeReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateAreaTypeReq.Unmarshal(m, b)
+}
+func (m *UpdateAreaTypeReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateAreaTypeReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateAreaTypeReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateAreaTypeReq.Merge(m, src)
+}
+func (m *UpdateAreaTypeReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateAreaTypeReq.Size(m)
+}
+func (m *UpdateAreaTypeReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateAreaTypeReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateAreaTypeReq proto.InternalMessageInfo
+
+func (m *UpdateAreaTypeReq) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateAreaTypeReq) GetArea() *UpdateAreaType {
+	if m != nil {
+		return m.Area
+	}
+	return nil
+}
+
 type Response struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -417,7 +520,7 @@ func (m *Response) Reset()         { *m = Response{} }
 func (m *Response) String() string { return proto.CompactTextString(m) }
 func (*Response) ProtoMessage()    {}
 func (*Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{5}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{7}
 }
 
 func (m *Response) XXX_Unmarshal(b []byte) error {
@@ -449,7 +552,7 @@ func (m *AreaIDReq) Reset()         { *m = AreaIDReq{} }
 func (m *AreaIDReq) String() string { return proto.CompactTextString(m) }
 func (*AreaIDReq) ProtoMessage()    {}
 func (*AreaIDReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{6}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{8}
 }
 
 func (m *AreaIDReq) XXX_Unmarshal(b []byte) error {
@@ -499,7 +602,7 @@ func (m *AreaFilter) Reset()         { *m = AreaFilter{} }
 func (m *AreaFilter) String() string { return proto.CompactTextString(m) }
 func (*AreaFilter) ProtoMessage()    {}
 func (*AreaFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{7}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{9}
 }
 
 func (m *AreaFilter) XXX_Unmarshal(b []byte) error {
@@ -620,7 +723,7 @@ func (m *AreaTypeFilter) Reset()         { *m = AreaTypeFilter{} }
 func (m *AreaTypeFilter) String() string { return proto.CompactTextString(m) }
 func (*AreaTypeFilter) ProtoMessage()    {}
 func (*AreaTypeFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{8}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{10}
 }
 
 func (m *AreaTypeFilter) XXX_Unmarshal(b []byte) error {
@@ -695,7 +798,7 @@ func (m *AreaPropertiesFilter) Reset()         { *m = AreaPropertiesFilter{} }
 func (m *AreaPropertiesFilter) String() string { return proto.CompactTextString(m) }
 func (*AreaPropertiesFilter) ProtoMessage()    {}
 func (*AreaPropertiesFilter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{9}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{11}
 }
 
 func (m *AreaPropertiesFilter) XXX_Unmarshal(b []byte) error {
@@ -745,7 +848,7 @@ func (m *AreaQuery) Reset()         { *m = AreaQuery{} }
 func (m *AreaQuery) String() string { return proto.CompactTextString(m) }
 func (*AreaQuery) ProtoMessage()    {}
 func (*AreaQuery) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{10}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{12}
 }
 
 func (m *AreaQuery) XXX_Unmarshal(b []byte) error {
@@ -816,7 +919,7 @@ func (m *AreaTypeQuery) Reset()         { *m = AreaTypeQuery{} }
 func (m *AreaTypeQuery) String() string { return proto.CompactTextString(m) }
 func (*AreaTypeQuery) ProtoMessage()    {}
 func (*AreaTypeQuery) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{11}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{13}
 }
 
 func (m *AreaTypeQuery) XXX_Unmarshal(b []byte) error {
@@ -886,7 +989,7 @@ func (m *Areas) Reset()         { *m = Areas{} }
 func (m *Areas) String() string { return proto.CompactTextString(m) }
 func (*Areas) ProtoMessage()    {}
 func (*Areas) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{12}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{14}
 }
 
 func (m *Areas) XXX_Unmarshal(b []byte) error {
@@ -948,7 +1051,7 @@ func (m *TypeReq) Reset()         { *m = TypeReq{} }
 func (m *TypeReq) String() string { return proto.CompactTextString(m) }
 func (*TypeReq) ProtoMessage()    {}
 func (*TypeReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{13}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{15}
 }
 
 func (m *TypeReq) XXX_Unmarshal(b []byte) error {
@@ -1002,7 +1105,7 @@ func (m *FlagReq) Reset()         { *m = FlagReq{} }
 func (m *FlagReq) String() string { return proto.CompactTextString(m) }
 func (*FlagReq) ProtoMessage()    {}
 func (*FlagReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{14}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{16}
 }
 
 func (m *FlagReq) XXX_Unmarshal(b []byte) error {
@@ -1049,7 +1152,7 @@ func (m *CapReq) Reset()         { *m = CapReq{} }
 func (m *CapReq) String() string { return proto.CompactTextString(m) }
 func (*CapReq) ProtoMessage()    {}
 func (*CapReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{15}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{17}
 }
 
 func (m *CapReq) XXX_Unmarshal(b []byte) error {
@@ -1096,7 +1199,7 @@ func (m *RacklotsReq) Reset()         { *m = RacklotsReq{} }
 func (m *RacklotsReq) String() string { return proto.CompactTextString(m) }
 func (*RacklotsReq) ProtoMessage()    {}
 func (*RacklotsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{16}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{18}
 }
 
 func (m *RacklotsReq) XXX_Unmarshal(b []byte) error {
@@ -1143,7 +1246,7 @@ func (m *TaskReq) Reset()         { *m = TaskReq{} }
 func (m *TaskReq) String() string { return proto.CompactTextString(m) }
 func (*TaskReq) ProtoMessage()    {}
 func (*TaskReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{17}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{19}
 }
 
 func (m *TaskReq) XXX_Unmarshal(b []byte) error {
@@ -1190,7 +1293,7 @@ func (m *PropertiesReq) Reset()         { *m = PropertiesReq{} }
 func (m *PropertiesReq) String() string { return proto.CompactTextString(m) }
 func (*PropertiesReq) ProtoMessage()    {}
 func (*PropertiesReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{18}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{20}
 }
 
 func (m *PropertiesReq) XXX_Unmarshal(b []byte) error {
@@ -1237,7 +1340,7 @@ func (m *Property) Reset()         { *m = Property{} }
 func (m *Property) String() string { return proto.CompactTextString(m) }
 func (*Property) ProtoMessage()    {}
 func (*Property) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{19}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{21}
 }
 
 func (m *Property) XXX_Unmarshal(b []byte) error {
@@ -1284,7 +1387,7 @@ func (m *ParentReq) Reset()         { *m = ParentReq{} }
 func (m *ParentReq) String() string { return proto.CompactTextString(m) }
 func (*ParentReq) ProtoMessage()    {}
 func (*ParentReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{20}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{22}
 }
 
 func (m *ParentReq) XXX_Unmarshal(b []byte) error {
@@ -1331,7 +1434,7 @@ func (m *ChildsReq) Reset()         { *m = ChildsReq{} }
 func (m *ChildsReq) String() string { return proto.CompactTextString(m) }
 func (*ChildsReq) ProtoMessage()    {}
 func (*ChildsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ce7e3eb842cc36cb, []int{21}
+	return fileDescriptor_ce7e3eb842cc36cb, []int{23}
 }
 
 func (m *ChildsReq) XXX_Unmarshal(b []byte) error {
@@ -1368,10 +1471,12 @@ func (m *ChildsReq) GetChildIDs() []int32 {
 
 func init() {
 	proto.RegisterType((*AreaType)(nil), "go.micro.srv.area.AreaType")
+	proto.RegisterType((*UpdateAreaType)(nil), "go.micro.srv.area.UpdateAreaType")
 	proto.RegisterType((*AreaTypes)(nil), "go.micro.srv.area.AreaTypes")
 	proto.RegisterType((*Area)(nil), "go.micro.srv.area.Area")
 	proto.RegisterType((*UpdateArea)(nil), "go.micro.srv.area.UpdateArea")
 	proto.RegisterType((*UpdateAreaReq)(nil), "go.micro.srv.area.UpdateAreaReq")
+	proto.RegisterType((*UpdateAreaTypeReq)(nil), "go.micro.srv.area.UpdateAreaTypeReq")
 	proto.RegisterType((*Response)(nil), "go.micro.srv.area.Response")
 	proto.RegisterType((*AreaIDReq)(nil), "go.micro.srv.area.AreaIDReq")
 	proto.RegisterType((*AreaFilter)(nil), "go.micro.srv.area.AreaFilter")

@@ -40,7 +40,6 @@ service RackService {
   // 解绑物料
   rpc UnbindMaterial(IDReq) returns (Response);
 
-
   rpc  OccupyRack(IDReq) returns (Response);
   rpc ReleaseRack(IDReq) returns (Response);
   rpc OccupyCell(IDReq) returns(Response);
@@ -128,16 +127,20 @@ message Rack {
 message Response {}
 
 message UpdateRackReq {
-  uint32 id = 20;
-  string name = 21;
-  RackType type = 22;
-  bool isValid = 23;
-  int32 length = 24;
-  int32 width = 25;
-  int32 height = 26;
-  int32 layers = 27;
-  int32 pickingSurface = 28;
-  string description = 29;
+    int32 id = 1;
+    UpdateRack rack = 2;
+}
+
+message UpdateRack {
+    google.protobuf.Int32Value id = 1;                                 
+    google.protobuf.StringValue name = 2;       
+    google.protobuf.Int32Value rackType = 3;   
+    google.protobuf.Int32Value length = 4;   
+    google.protobuf.Int32Value width = 5;   
+    google.protobuf.Int32Value height = 6;   
+    google.protobuf.Int32Value layers = 7;   
+    google.protobuf.Int32Value pickingSurface = 8;   
+    google.protobuf.StringValue description = 9;   
 }
 
 message Racks {
