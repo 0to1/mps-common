@@ -48,14 +48,10 @@ type TaskService interface {
 	DeleteParameters(ctx context.Context, in *ParameterKeys, opts ...client.CallOption) (*Parameters, error)
 	// 获取任务详情
 	GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
-	//通过graphql条件查询
-	GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlTasks, error)
 	// 根据查询条件获取任务
 	GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
 	// 根据查询条件获取历史任务
 	GetHistories(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
-	// 根据特定条件获取任务
-	GetTasksByParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*TaskInfos, error)
 	// 调用python脚本的函数
 	Call(ctx context.Context, in *CallOptions, opts ...client.CallOption) (*CallResponse, error)
 	// 执行python脚本
@@ -144,16 +140,6 @@ func (c *taskService) GetTask(ctx context.Context, in *TaskID, opts ...client.Ca
 	return out, nil
 }
 
-func (c *taskService) GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, opts ...client.CallOption) (*GraphqlTasks, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetTasksByGraphql", in)
-	out := new(GraphqlTasks)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *taskService) GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error) {
 	req := c.c.NewRequest(c.name, "TaskService.GetTasks", in)
 	out := new(TaskInfos)
@@ -166,16 +152,6 @@ func (c *taskService) GetTasks(ctx context.Context, in *Query, opts ...client.Ca
 
 func (c *taskService) GetHistories(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error) {
 	req := c.c.NewRequest(c.name, "TaskService.GetHistories", in)
-	out := new(TaskInfos)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *taskService) GetTasksByParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*TaskInfos, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetTasksByParameters", in)
 	out := new(TaskInfos)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -221,14 +197,10 @@ type TaskServiceHandler interface {
 	DeleteParameters(context.Context, *ParameterKeys, *Parameters) error
 	// 获取任务详情
 	GetTask(context.Context, *TaskID, *TaskInfo) error
-	//通过graphql条件查询
-	GetTasksByGraphql(context.Context, *GraphqlQuery, *GraphqlTasks) error
 	// 根据查询条件获取任务
 	GetTasks(context.Context, *Query, *TaskInfos) error
 	// 根据查询条件获取历史任务
 	GetHistories(context.Context, *Query, *TaskInfos) error
-	// 根据特定条件获取任务
-	GetTasksByParameters(context.Context, *Parameters, *TaskInfos) error
 	// 调用python脚本的函数
 	Call(context.Context, *CallOptions, *CallResponse) error
 	// 执行python脚本
@@ -244,10 +216,8 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		ModifyParameters(ctx context.Context, in *Parameters, out *Parameters) error
 		DeleteParameters(ctx context.Context, in *ParameterKeys, out *Parameters) error
 		GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error
-		GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlTasks) error
 		GetTasks(ctx context.Context, in *Query, out *TaskInfos) error
 		GetHistories(ctx context.Context, in *Query, out *TaskInfos) error
-		GetTasksByParameters(ctx context.Context, in *Parameters, out *TaskInfos) error
 		Call(ctx context.Context, in *CallOptions, out *CallResponse) error
 		Execute(ctx context.Context, in *ExecuteOptions, out *ExecuteResponse) error
 	}
@@ -290,20 +260,12 @@ func (h *taskServiceHandler) GetTask(ctx context.Context, in *TaskID, out *TaskI
 	return h.TaskServiceHandler.GetTask(ctx, in, out)
 }
 
-func (h *taskServiceHandler) GetTasksByGraphql(ctx context.Context, in *GraphqlQuery, out *GraphqlTasks) error {
-	return h.TaskServiceHandler.GetTasksByGraphql(ctx, in, out)
-}
-
 func (h *taskServiceHandler) GetTasks(ctx context.Context, in *Query, out *TaskInfos) error {
 	return h.TaskServiceHandler.GetTasks(ctx, in, out)
 }
 
 func (h *taskServiceHandler) GetHistories(ctx context.Context, in *Query, out *TaskInfos) error {
 	return h.TaskServiceHandler.GetHistories(ctx, in, out)
-}
-
-func (h *taskServiceHandler) GetTasksByParameters(ctx context.Context, in *Parameters, out *TaskInfos) error {
-	return h.TaskServiceHandler.GetTasksByParameters(ctx, in, out)
 }
 
 func (h *taskServiceHandler) Call(ctx context.Context, in *CallOptions, out *CallResponse) error {

@@ -30,10 +30,16 @@ message Scripts {
 
 message Response {}
 
+message ScriptFilter {
+  repeated ScriptFilter and = 1;
+  repeated ScriptFilter or = 2;
+  repeated int32 idIn = 3;                                   
+}
+
 message Query {
   uint32 limit = 1;
   uint32 offset = 2;
   uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
+  uint32 perPage = 4;
+  ScriptFilter filter = 5;
 }

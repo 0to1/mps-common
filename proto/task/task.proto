@@ -26,15 +26,10 @@ service TaskService {
   // 获取任务详情
   rpc GetTask(TaskID) returns (TaskInfo);
 
-      //通过graphql条件查询
-      rpc GetTasksByGraphql(GraphqlQuery)returns(GraphqlTasks);
-
   // 根据查询条件获取任务
   rpc GetTasks(Query) returns (TaskInfos);
   // 根据查询条件获取历史任务
   rpc GetHistories(Query) returns (TaskInfos);
-  // 根据特定条件获取任务
-  rpc GetTasksByParameters(Parameters) returns (TaskInfos);
 
   // 调用python脚本的函数
   rpc Call(CallOptions) returns (CallResponse);
@@ -56,20 +51,24 @@ message Path { string path = 1; }
 
 message TaskID { uint32 id = 1; }
 
-message GraphqlQuery {
-    string query = 1;
+message TaskPropertiesFilter {
+  string key  = 1;
+  string value = 2; 
 }
 
-message GraphqlTasks {
-    string response =1;
+message TaskFilter {
+  repeated TaskFilter and = 1;
+  repeated TaskFilter or = 2;
+  repeated int32 idIn = 3;                                 
+  TaskPropertiesFilter  propertiesFilter = 12;     
 }
 
 message Query {
   uint32 limit = 1;
   uint32 offset = 2;
   uint32 page = 3;
-  uint32 per_page = 4;
-  string queryString = 5;
+  uint32 perPage = 4;
+  TaskFilter filter = 5;
 }
 
 message Parameter {
