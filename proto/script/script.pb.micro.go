@@ -6,6 +6,7 @@ package go_micro_srv_task_script
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -36,7 +37,7 @@ var _ server.Option
 type ScriptService interface {
 	AddScript(ctx context.Context, in *Script, opts ...client.CallOption) (*Response, error)
 	DeleteScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Response, error)
-	UpdateScript(ctx context.Context, in *Script, opts ...client.CallOption) (*Response, error)
+	UpdateScript(ctx context.Context, in *UpdateScriptReq, opts ...client.CallOption) (*Response, error)
 	GetOneScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Script, error)
 	GetScripts(ctx context.Context, in *Query, opts ...client.CallOption) (*Scripts, error)
 }
@@ -73,7 +74,7 @@ func (c *scriptService) DeleteScript(ctx context.Context, in *ScriptIndex, opts 
 	return out, nil
 }
 
-func (c *scriptService) UpdateScript(ctx context.Context, in *Script, opts ...client.CallOption) (*Response, error) {
+func (c *scriptService) UpdateScript(ctx context.Context, in *UpdateScriptReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "ScriptService.UpdateScript", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -108,7 +109,7 @@ func (c *scriptService) GetScripts(ctx context.Context, in *Query, opts ...clien
 type ScriptServiceHandler interface {
 	AddScript(context.Context, *Script, *Response) error
 	DeleteScript(context.Context, *ScriptIndex, *Response) error
-	UpdateScript(context.Context, *Script, *Response) error
+	UpdateScript(context.Context, *UpdateScriptReq, *Response) error
 	GetOneScript(context.Context, *ScriptIndex, *Script) error
 	GetScripts(context.Context, *Query, *Scripts) error
 }
@@ -117,7 +118,7 @@ func RegisterScriptServiceHandler(s server.Server, hdlr ScriptServiceHandler, op
 	type scriptService interface {
 		AddScript(ctx context.Context, in *Script, out *Response) error
 		DeleteScript(ctx context.Context, in *ScriptIndex, out *Response) error
-		UpdateScript(ctx context.Context, in *Script, out *Response) error
+		UpdateScript(ctx context.Context, in *UpdateScriptReq, out *Response) error
 		GetOneScript(ctx context.Context, in *ScriptIndex, out *Script) error
 		GetScripts(ctx context.Context, in *Query, out *Scripts) error
 	}
@@ -140,7 +141,7 @@ func (h *scriptServiceHandler) DeleteScript(ctx context.Context, in *ScriptIndex
 	return h.ScriptServiceHandler.DeleteScript(ctx, in, out)
 }
 
-func (h *scriptServiceHandler) UpdateScript(ctx context.Context, in *Script, out *Response) error {
+func (h *scriptServiceHandler) UpdateScript(ctx context.Context, in *UpdateScriptReq, out *Response) error {
 	return h.ScriptServiceHandler.UpdateScript(ctx, in, out)
 }
 

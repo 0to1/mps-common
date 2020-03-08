@@ -1,13 +1,15 @@
 syntax = "proto3";
 
-// import "google/protobuf/timestamp.proto";
+// import "google/protobuf/timestamp.proto"
 
 package go.micro.srv.task.script;
+
+import "google/protobuf/wrappers.proto";
 
 service ScriptService {
   rpc AddScript(Script) returns (Response);
   rpc DeleteScript(ScriptIndex) returns (Response);
-  rpc UpdateScript(Script) returns (Response);
+  rpc UpdateScript(UpdateScriptReq) returns (Response);
   rpc GetOneScript(ScriptIndex) returns (Script);
   rpc GetScripts(Query) returns (Scripts);
 }
@@ -17,7 +19,20 @@ message Script {
   string name = 2;
   string description = 3;
   string cancelFunc = 4;
-  bytes content = 5;
+  string content = 5;
+}
+
+message UpdateScript {
+  google.protobuf.Int32Value id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.StringValue cancelFunc = 4;
+  google.protobuf.StringValue content = 5;
+}
+
+message UpdateScriptReq {
+  uint32 id = 1;
+  UpdateScript update = 2;
 }
 
 message ScriptIndex { uint32 id = 1; }
@@ -26,6 +41,7 @@ message Scripts {
   repeated Script scripts = 1;
   uint32 totalpages = 2;
   uint32 currpages = 3;
+  uint32 totals = 4;
 }
 
 message Response {}
@@ -33,7 +49,10 @@ message Response {}
 message ScriptFilter {
   repeated ScriptFilter and = 1;
   repeated ScriptFilter or = 2;
-  repeated int32 idIn = 3;                                   
+  google.protobuf.Int32Value id = 3;
+  repeated int32 idIn = 4;  
+  google.protobuf.StringValue nameIn = 5;
+  repeated string name = 6;                                  
 }
 
 message Query {

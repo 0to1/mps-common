@@ -6,6 +6,7 @@ package go_micro_srv_task
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -40,14 +41,18 @@ type TaskService interface {
 	Pause(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
 	// 取消任务
 	Cancel(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
+	BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error)
+	BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error)
 	// 增加任务参数
 	AddParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error)
 	// 修改任务参数
 	ModifyParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error)
 	// 删除任务参数
 	DeleteParameters(ctx context.Context, in *ParameterKeys, opts ...client.CallOption) (*Parameters, error)
-	// 获取任务详情
-	GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
+	// 根据查询条件获取任务
+	GetOneTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
+	// 根据查询条件获取历史任务
+	GetOneHistory(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
 	// 根据查询条件获取任务
 	GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
 	// 根据查询条件获取历史任务
@@ -100,6 +105,26 @@ func (c *taskService) Cancel(ctx context.Context, in *TaskID, opts ...client.Cal
 	return out, nil
 }
 
+func (c *taskService) BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.BatchNew", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.BatchCancel", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskService) AddParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error) {
 	req := c.c.NewRequest(c.name, "TaskService.AddParameters", in)
 	out := new(Parameters)
@@ -130,8 +155,18 @@ func (c *taskService) DeleteParameters(ctx context.Context, in *ParameterKeys, o
 	return out, nil
 }
 
-func (c *taskService) GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetTask", in)
+func (c *taskService) GetOneTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetOneTask", in)
+	out := new(TaskInfo)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) GetOneHistory(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetOneHistory", in)
 	out := new(TaskInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -189,14 +224,18 @@ type TaskServiceHandler interface {
 	Pause(context.Context, *TaskID, *Response) error
 	// 取消任务
 	Cancel(context.Context, *TaskID, *Response) error
+	BatchNew(context.Context, *NewTasksReq, *Response) error
+	BatchCancel(context.Context, *TaskIDs, *Response) error
 	// 增加任务参数
 	AddParameters(context.Context, *Parameters, *Parameters) error
 	// 修改任务参数
 	ModifyParameters(context.Context, *Parameters, *Parameters) error
 	// 删除任务参数
 	DeleteParameters(context.Context, *ParameterKeys, *Parameters) error
-	// 获取任务详情
-	GetTask(context.Context, *TaskID, *TaskInfo) error
+	// 根据查询条件获取任务
+	GetOneTask(context.Context, *TaskID, *TaskInfo) error
+	// 根据查询条件获取历史任务
+	GetOneHistory(context.Context, *TaskID, *TaskInfo) error
 	// 根据查询条件获取任务
 	GetTasks(context.Context, *Query, *TaskInfos) error
 	// 根据查询条件获取历史任务
@@ -212,10 +251,13 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		New(ctx context.Context, in *NewTaskReq, out *Response) error
 		Pause(ctx context.Context, in *TaskID, out *Response) error
 		Cancel(ctx context.Context, in *TaskID, out *Response) error
+		BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error
+		BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error
 		AddParameters(ctx context.Context, in *Parameters, out *Parameters) error
 		ModifyParameters(ctx context.Context, in *Parameters, out *Parameters) error
 		DeleteParameters(ctx context.Context, in *ParameterKeys, out *Parameters) error
-		GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error
+		GetOneTask(ctx context.Context, in *TaskID, out *TaskInfo) error
+		GetOneHistory(ctx context.Context, in *TaskID, out *TaskInfo) error
 		GetTasks(ctx context.Context, in *Query, out *TaskInfos) error
 		GetHistories(ctx context.Context, in *Query, out *TaskInfos) error
 		Call(ctx context.Context, in *CallOptions, out *CallResponse) error
@@ -244,6 +286,14 @@ func (h *taskServiceHandler) Cancel(ctx context.Context, in *TaskID, out *Respon
 	return h.TaskServiceHandler.Cancel(ctx, in, out)
 }
 
+func (h *taskServiceHandler) BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error {
+	return h.TaskServiceHandler.BatchNew(ctx, in, out)
+}
+
+func (h *taskServiceHandler) BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error {
+	return h.TaskServiceHandler.BatchCancel(ctx, in, out)
+}
+
 func (h *taskServiceHandler) AddParameters(ctx context.Context, in *Parameters, out *Parameters) error {
 	return h.TaskServiceHandler.AddParameters(ctx, in, out)
 }
@@ -256,8 +306,12 @@ func (h *taskServiceHandler) DeleteParameters(ctx context.Context, in *Parameter
 	return h.TaskServiceHandler.DeleteParameters(ctx, in, out)
 }
 
-func (h *taskServiceHandler) GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
-	return h.TaskServiceHandler.GetTask(ctx, in, out)
+func (h *taskServiceHandler) GetOneTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
+	return h.TaskServiceHandler.GetOneTask(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetOneHistory(ctx context.Context, in *TaskID, out *TaskInfo) error {
+	return h.TaskServiceHandler.GetOneHistory(ctx, in, out)
 }
 
 func (h *taskServiceHandler) GetTasks(ctx context.Context, in *Query, out *TaskInfos) error {
