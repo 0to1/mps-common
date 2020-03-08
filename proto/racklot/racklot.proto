@@ -8,7 +8,7 @@ service RacklotService {
   // 添加货位类型
   rpc AddRacklotType(RacklotType) returns (AddResp);
   // 修改货位类型
-  rpc UpdateRacklotType(RacklotType) returns (UpdateResp);
+  rpc UpdateRacklotType(UpdateRacklotTypeReq) returns (UpdateResp);
   // 删除货GetBindedRack位类型
   rpc DeleteRacklotType(RacklotType) returns (DeleteResp);
   // 获取货位类型

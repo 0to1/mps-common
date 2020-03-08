@@ -38,7 +38,7 @@ type RacklotService interface {
 	// 添加货位类型
 	AddRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*AddResp, error)
 	// 修改货位类型
-	UpdateRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*UpdateResp, error)
+	UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error)
 	// 删除货GetBindedRack位类型
 	DeleteRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*DeleteResp, error)
 	// 获取货位类型
@@ -115,7 +115,7 @@ func (c *racklotService) AddRacklotType(ctx context.Context, in *RacklotType, op
 	return out, nil
 }
 
-func (c *racklotService) UpdateRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*UpdateResp, error) {
+func (c *racklotService) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error) {
 	req := c.c.NewRequest(c.name, "RacklotService.UpdateRacklotType", in)
 	out := new(UpdateResp)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -411,7 +411,7 @@ type RacklotServiceHandler interface {
 	// 添加货位类型
 	AddRacklotType(context.Context, *RacklotType, *AddResp) error
 	// 修改货位类型
-	UpdateRacklotType(context.Context, *RacklotType, *UpdateResp) error
+	UpdateRacklotType(context.Context, *UpdateRacklotTypeReq, *UpdateResp) error
 	// 删除货GetBindedRack位类型
 	DeleteRacklotType(context.Context, *RacklotType, *DeleteResp) error
 	// 获取货位类型
@@ -469,7 +469,7 @@ type RacklotServiceHandler interface {
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
 	type racklotService interface {
 		AddRacklotType(ctx context.Context, in *RacklotType, out *AddResp) error
-		UpdateRacklotType(ctx context.Context, in *RacklotType, out *UpdateResp) error
+		UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error
 		DeleteRacklotType(ctx context.Context, in *RacklotType, out *DeleteResp) error
 		GetRacklotTypes(ctx context.Context, in *RacklotTypeQuery, out *RacklotTypes) error
 		GetOneRacklotType(ctx context.Context, in *RacklotIDReq, out *RacklotType) error
@@ -514,7 +514,7 @@ func (h *racklotServiceHandler) AddRacklotType(ctx context.Context, in *RacklotT
 	return h.RacklotServiceHandler.AddRacklotType(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) UpdateRacklotType(ctx context.Context, in *RacklotType, out *UpdateResp) error {
+func (h *racklotServiceHandler) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error {
 	return h.RacklotServiceHandler.UpdateRacklotType(ctx, in, out)
 }
 
