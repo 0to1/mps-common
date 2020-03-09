@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 	"os"
 
-	"github.com/micro/go-micro/util/log"
+	"github.com/micro/go-micro/v2/util/log"
 )
 
 //GetFileMsg ...

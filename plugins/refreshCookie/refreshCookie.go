@@ -3,7 +3,7 @@ package refreshcookie
 import (
 	"net/http"
 
-	"github.com/micro/go-micro/util/log"
+	"github.com/micro/go-micro/v2/util/log"
 
 	"github.com/kataras/iris/v12"
 )
