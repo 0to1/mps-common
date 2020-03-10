@@ -139,6 +139,10 @@ message Racklot {
   int32 areaID = 14;
 
   int32 stationID = 15;
+
+  bool inbound = 16;
+
+  bool outbound = 17;
 }
 
 message UpdateRacklotReq {

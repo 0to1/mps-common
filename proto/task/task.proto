@@ -147,7 +147,7 @@ message TaskInfo {
   uint32 targetStation = 11;
   uint32 agvID = 12;
   uint32 agvInitPoint = 13;
-  repeated uint32 materials = 14;
+  int64 materialID = 14;
   string sMsgScript = 15;
   int32 errorCode = 16;
   string error = 17;

@@ -51,8 +51,8 @@ message ScriptFilter {
   repeated ScriptFilter or = 2;
   google.protobuf.Int32Value id = 3;
   repeated int32 idIn = 4;  
-  google.protobuf.StringValue nameIn = 5;
-  repeated string name = 6;                                  
+  google.protobuf.StringValue name = 5;
+  repeated string nameIn = 6;                                  
 }
 
 message Query {
