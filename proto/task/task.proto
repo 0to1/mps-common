@@ -17,6 +17,8 @@ service TaskService {
   // 取消任务
   rpc Cancel(TaskID) returns (Response);
 
+  rpc UpdateTask(UpdateTaskReq)returns (Response);
+
   rpc BatchNew(NewTasksReq) returns (Response);
 
   rpc BatchCancel(TaskIDs) returns(Response);
@@ -86,6 +88,28 @@ message TaskPropertiesFilter {
 // errorCode:Int
 // error:String
 
+message UpdateTaskReq {
+    uint32 id =1 ;
+    UpdateTask task = 2;
+}
+
+message UpdateTask {
+    google.protobuf.Int32Value orderIndex = 1;
+    google.protobuf.Int32Value priority  = 2;
+    google.protobuf.Int32Value scriptIndex = 3;
+    google.protobuf.StringValue description = 4; 
+    google.protobuf.Int32Value originStation  = 5;
+    google.protobuf.Int32Value targetStation = 6;
+    google.protobuf.Int32Value agvID  = 7;
+    google.protobuf.Int32Value agvInitPoint = 8;
+    google.protobuf.Int64Value materialID = 9;
+    google.protobuf.Int32Value errorCode = 10;
+    google.protobuf.StringValue error = 11;
+    google.protobuf.Int32Value phase = 12;
+    google.protobuf.Int32Value schedulerStatus = 13;
+  }
+  
+
 message TaskFilter {
   repeated TaskFilter and = 1;
   repeated TaskFilter or = 2;                              
@@ -106,6 +130,8 @@ message TaskFilter {
   google.protobuf.Int32Value agvInitPoint = 17;
   google.protobuf.Int64Value materialID = 18;
   google.protobuf.Int32Value errorCode = 19;
+  google.protobuf.Int32Value phase = 21;
+  google.protobuf.Int32Value schedulerStatus = 22;
   TaskPropertiesFilter  propertiesFilter = 20;    
 }
 
@@ -152,6 +178,7 @@ message TaskInfo {
   int32 errorCode = 16;
   string error = 17;
   string description = 18;
+  int32 phase = 19;
 }
 
 message TaskInfos {

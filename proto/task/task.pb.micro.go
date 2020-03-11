@@ -41,6 +41,7 @@ type TaskService interface {
 	Pause(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
 	// 取消任务
 	Cancel(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
+	UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...client.CallOption) (*Response, error)
 	BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error)
 	BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error)
 	// 增加任务参数
@@ -97,6 +98,16 @@ func (c *taskService) Pause(ctx context.Context, in *TaskID, opts ...client.Call
 
 func (c *taskService) Cancel(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Cancel", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.UpdateTask", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -224,6 +235,7 @@ type TaskServiceHandler interface {
 	Pause(context.Context, *TaskID, *Response) error
 	// 取消任务
 	Cancel(context.Context, *TaskID, *Response) error
+	UpdateTask(context.Context, *UpdateTaskReq, *Response) error
 	BatchNew(context.Context, *NewTasksReq, *Response) error
 	BatchCancel(context.Context, *TaskIDs, *Response) error
 	// 增加任务参数
@@ -251,6 +263,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		New(ctx context.Context, in *NewTaskReq, out *Response) error
 		Pause(ctx context.Context, in *TaskID, out *Response) error
 		Cancel(ctx context.Context, in *TaskID, out *Response) error
+		UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error
 		BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error
 		BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error
 		AddParameters(ctx context.Context, in *Parameters, out *Parameters) error
@@ -284,6 +297,10 @@ func (h *taskServiceHandler) Pause(ctx context.Context, in *TaskID, out *Respons
 
 func (h *taskServiceHandler) Cancel(ctx context.Context, in *TaskID, out *Response) error {
 	return h.TaskServiceHandler.Cancel(ctx, in, out)
+}
+
+func (h *taskServiceHandler) UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error {
+	return h.TaskServiceHandler.UpdateTask(ctx, in, out)
 }
 
 func (h *taskServiceHandler) BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error {
