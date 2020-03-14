@@ -3,6 +3,7 @@ package logcfg
 import (
 	"encoding/json"
 	"log"
+	"runtime"
 	"time"
 
 	"github.com/0to1/mps-common/models"
@@ -89,10 +90,23 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.LogModel, error) {
 		return models.LogModel{}, err
 	}
 
+	pc, file, line, ok := runtime.Caller(9)
+	if ok {
+		funcName := runtime.FuncForPC(pc).Name()
+		log.Println("file: ", file, " ,line: ", line, " ,funcName: ", funcName)
+
+		if len(content.File) < 4 {
+			content.File = file
+			content.Func = funcName
+			content.Line = line
+		}
+	}
+
 	logModel.Time = t
 	logModel.Level = content.Level
 	logModel.FuncName = content.Func
 	logModel.FileName = content.File
+	logModel.Line = content.Line
 	logModel.Msg = content.Msg
 	logModel.Service = hook.Service
 	logModel.IP = hook.IP

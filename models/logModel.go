@@ -13,13 +13,14 @@ type LogModel struct {
 	Level    string
 	FuncName string
 	FileName string
+	Line     int
 	Service  string
 	IP       string
 	Msg      string //日志详情
 }
 
 // AddLog ..
-func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string,
+func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string, line int,
 	fileName string, srvName string, ip string, msg string) error {
 
 	var logDB LogModel
@@ -30,6 +31,7 @@ func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string,
 	logDB.Service = srvName
 	logDB.IP = ip
 	logDB.Msg = msg
+	logDB.Line = line
 
 	err := db.Save(&logDB).Error
 
