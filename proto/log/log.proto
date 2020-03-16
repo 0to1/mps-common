@@ -20,9 +20,10 @@ message LogContent {
   string level = 2;
   string funcName = 3;
   string fileName = 4;
-  string service = 5;
-  string ipAddr = 6;
-  string msg = 7;
+  uint32 line = 5;
+  string service = 6;
+  string ipAddr = 7;
+  string msg = 8;
 }
 
 message Request {}
@@ -40,11 +41,13 @@ message LogFilter {
   repeated LogFilter or = 2;
   string fromTime = 3;
   string toTime = 4;
-  repeated int32 levelIn = 5;  
-  string fileName = 6;
-  string funcName = 7;
-  string ipAddr = 8;
-  string likeMsg = 9;   
+  repeated string levelIn = 5;
+  repeated string funcIn = 6;
+  repeated string fileIn = 7;
+  repeated uint32 lineIn = 8;
+  repeated string serviceIn = 9;
+  repeated string ipIn = 10;
+  repeated string msgIn = 11; 
 }
 
 message LogContents { 
