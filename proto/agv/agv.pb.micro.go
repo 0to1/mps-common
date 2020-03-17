@@ -42,6 +42,12 @@ type AgvService interface {
 	StopAgvByID(ctx context.Context, in *AgvReq, opts ...client.CallOption) (*Response, error)
 	//急停所有AGV//
 	StopAgvs(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	//更新状态配置//
+	UpdateStatusConfig(ctx context.Context, in *StatusMsg, opts ...client.CallOption) (*Response, error)
+	//获取状态配置//
+	GetStatusConfigs(ctx context.Context, in *Request, opts ...client.CallOption) (*StatusMsgs, error)
+	//获取一个状态配置信息//
+	GetStatusConfig(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*StatusMsg, error)
 }
 
 type agvService struct {
@@ -96,6 +102,36 @@ func (c *agvService) StopAgvs(ctx context.Context, in *Request, opts ...client.C
 	return out, nil
 }
 
+func (c *agvService) UpdateStatusConfig(ctx context.Context, in *StatusMsg, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Agv.UpdateStatusConfig", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agvService) GetStatusConfigs(ctx context.Context, in *Request, opts ...client.CallOption) (*StatusMsgs, error) {
+	req := c.c.NewRequest(c.name, "Agv.GetStatusConfigs", in)
+	out := new(StatusMsgs)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agvService) GetStatusConfig(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*StatusMsg, error) {
+	req := c.c.NewRequest(c.name, "Agv.GetStatusConfig", in)
+	out := new(StatusMsg)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Agv service
 
 type AgvHandler interface {
@@ -107,6 +143,12 @@ type AgvHandler interface {
 	StopAgvByID(context.Context, *AgvReq, *Response) error
 	//急停所有AGV//
 	StopAgvs(context.Context, *Request, *Response) error
+	//更新状态配置//
+	UpdateStatusConfig(context.Context, *StatusMsg, *Response) error
+	//获取状态配置//
+	GetStatusConfigs(context.Context, *Request, *StatusMsgs) error
+	//获取一个状态配置信息//
+	GetStatusConfig(context.Context, *IDRequest, *StatusMsg) error
 }
 
 func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.HandlerOption) error {
@@ -115,6 +157,9 @@ func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.Handler
 		GetAgvs(ctx context.Context, in *Query, out *AgvsResponse) error
 		StopAgvByID(ctx context.Context, in *AgvReq, out *Response) error
 		StopAgvs(ctx context.Context, in *Request, out *Response) error
+		UpdateStatusConfig(ctx context.Context, in *StatusMsg, out *Response) error
+		GetStatusConfigs(ctx context.Context, in *Request, out *StatusMsgs) error
+		GetStatusConfig(ctx context.Context, in *IDRequest, out *StatusMsg) error
 	}
 	type Agv struct {
 		agv
@@ -141,4 +186,16 @@ func (h *agvHandler) StopAgvByID(ctx context.Context, in *AgvReq, out *Response)
 
 func (h *agvHandler) StopAgvs(ctx context.Context, in *Request, out *Response) error {
 	return h.AgvHandler.StopAgvs(ctx, in, out)
+}
+
+func (h *agvHandler) UpdateStatusConfig(ctx context.Context, in *StatusMsg, out *Response) error {
+	return h.AgvHandler.UpdateStatusConfig(ctx, in, out)
+}
+
+func (h *agvHandler) GetStatusConfigs(ctx context.Context, in *Request, out *StatusMsgs) error {
+	return h.AgvHandler.GetStatusConfigs(ctx, in, out)
+}
+
+func (h *agvHandler) GetStatusConfig(ctx context.Context, in *IDRequest, out *StatusMsg) error {
+	return h.AgvHandler.GetStatusConfig(ctx, in, out)
 }

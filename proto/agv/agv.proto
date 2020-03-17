@@ -11,6 +11,26 @@ service Agv {
   rpc StopAgvByID(AgvReq) returns (Response);
   //急停所有AGV//
   rpc StopAgvs(Request) returns (Response);
+  //更新状态配置//
+  rpc UpdateStatusConfig(StatusMsg) returns (Response);
+  //获取状态配置//
+  rpc GetStatusConfigs(Request) returns (StatusMsgs);
+  //获取一个状态配置信息//
+  rpc GetStatusConfig(IDRequest) returns (StatusMsg);
+}
+
+message StatusMsg{
+  uint32 statusID = 1;
+  string statusText = 2;
+  string statusColor = 3;
+}
+
+message StatusMsgs{
+  repeated StatusMsg msgs = 1;
+}
+
+message IDRequest{
+  uint32 statusID = 1;
 }
 
 message Query{
