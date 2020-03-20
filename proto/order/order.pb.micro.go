@@ -34,8 +34,6 @@ var _ server.Option
 // Client API for Order service
 
 type OrderService interface {
-	//生成搬运任务
-	NewTask(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error)
 	//取消任务
 	CancelTask(ctx context.Context, in *CancelReq, opts ...client.CallOption) (*Response, error)
 	//修改参数
@@ -55,16 +53,6 @@ func NewOrderService(name string, c client.Client) OrderService {
 		c:    c,
 		name: name,
 	}
-}
-
-func (c *orderService) NewTask(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Order.NewTask", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *orderService) CancelTask(ctx context.Context, in *CancelReq, opts ...client.CallOption) (*Response, error) {
@@ -120,8 +108,6 @@ func (c *orderService) HostIsConnected(ctx context.Context, in *Request, opts ..
 // Server API for Order service
 
 type OrderHandler interface {
-	//生成搬运任务
-	NewTask(context.Context, *Task, *Response) error
 	//取消任务
 	CancelTask(context.Context, *CancelReq, *Response) error
 	//修改参数
@@ -133,7 +119,6 @@ type OrderHandler interface {
 
 func RegisterOrderHandler(s server.Server, hdlr OrderHandler, opts ...server.HandlerOption) error {
 	type order interface {
-		NewTask(ctx context.Context, in *Task, out *Response) error
 		CancelTask(ctx context.Context, in *CancelReq, out *Response) error
 		UpdateTask(ctx context.Context, in *UpdateReq, out *Response) error
 		SendQBMessage(ctx context.Context, in *QBMessage, out *Response) error
@@ -149,10 +134,6 @@ func RegisterOrderHandler(s server.Server, hdlr OrderHandler, opts ...server.Han
 
 type orderHandler struct {
 	OrderHandler
-}
-
-func (h *orderHandler) NewTask(ctx context.Context, in *Task, out *Response) error {
-	return h.OrderHandler.NewTask(ctx, in, out)
 }
 
 func (h *orderHandler) CancelTask(ctx context.Context, in *CancelReq, out *Response) error {
