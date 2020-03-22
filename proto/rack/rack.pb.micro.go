@@ -73,6 +73,10 @@ type RackService interface {
 	ReleaseRack(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	OccupyCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	ReleaseCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	// 更新Cell信息
+	UpdateCell(ctx context.Context, in *UpdateCellReq, opts ...client.CallOption) (*Response, error)
+	// 更新Cell 储位状态
+	SetCellStatus(ctx context.Context, in *CellStatusReq, opts ...client.CallOption) (*Response, error)
 	GetOneCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Cell, error)
 	// 根据查询条件获取满足条件的货架
 	GetCells(ctx context.Context, in *CellQuery, opts ...client.CallOption) (*Cells, error)
@@ -304,6 +308,26 @@ func (c *rackService) ReleaseCell(ctx context.Context, in *IDReq, opts ...client
 	return out, nil
 }
 
+func (c *rackService) UpdateCell(ctx context.Context, in *UpdateCellReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.UpdateCell", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) SetCellStatus(ctx context.Context, in *CellStatusReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RackService.SetCellStatus", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *rackService) GetOneCell(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Cell, error) {
 	req := c.c.NewRequest(c.name, "RackService.GetOneCell", in)
 	out := new(Cell)
@@ -385,6 +409,10 @@ type RackServiceHandler interface {
 	ReleaseRack(context.Context, *IDReq, *Response) error
 	OccupyCell(context.Context, *IDReq, *Response) error
 	ReleaseCell(context.Context, *IDReq, *Response) error
+	// 更新Cell信息
+	UpdateCell(context.Context, *UpdateCellReq, *Response) error
+	// 更新Cell 储位状态
+	SetCellStatus(context.Context, *CellStatusReq, *Response) error
 	GetOneCell(context.Context, *IDReq, *Cell) error
 	// 根据查询条件获取满足条件的货架
 	GetCells(context.Context, *CellQuery, *Cells) error
@@ -417,6 +445,8 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		ReleaseRack(ctx context.Context, in *IDReq, out *Response) error
 		OccupyCell(ctx context.Context, in *IDReq, out *Response) error
 		ReleaseCell(ctx context.Context, in *IDReq, out *Response) error
+		UpdateCell(ctx context.Context, in *UpdateCellReq, out *Response) error
+		SetCellStatus(ctx context.Context, in *CellStatusReq, out *Response) error
 		GetOneCell(ctx context.Context, in *IDReq, out *Cell) error
 		GetCells(ctx context.Context, in *CellQuery, out *Cells) error
 		SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error
@@ -515,6 +545,14 @@ func (h *rackServiceHandler) OccupyCell(ctx context.Context, in *IDReq, out *Res
 
 func (h *rackServiceHandler) ReleaseCell(ctx context.Context, in *IDReq, out *Response) error {
 	return h.RackServiceHandler.ReleaseCell(ctx, in, out)
+}
+
+func (h *rackServiceHandler) UpdateCell(ctx context.Context, in *UpdateCellReq, out *Response) error {
+	return h.RackServiceHandler.UpdateCell(ctx, in, out)
+}
+
+func (h *rackServiceHandler) SetCellStatus(ctx context.Context, in *CellStatusReq, out *Response) error {
+	return h.RackServiceHandler.SetCellStatus(ctx, in, out)
 }
 
 func (h *rackServiceHandler) GetOneCell(ctx context.Context, in *IDReq, out *Cell) error {

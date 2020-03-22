@@ -40,11 +40,16 @@ service RackService {
   // 解绑物料
   rpc UnbindMaterial(IDReq) returns (Response);
 
-  rpc  OccupyRack(IDReq) returns (Response);
+  rpc OccupyRack(IDReq) returns (Response);
   rpc ReleaseRack(IDReq) returns (Response);
   rpc OccupyCell(IDReq) returns(Response);
   rpc ReleaseCell(IDReq) returns(Response);
 
+  // 更新Cell信息
+  rpc UpdateCell(UpdateCellReq) returns (Response);
+  // 更新Cell 储位状态
+  rpc SetCellStatus(CellStatusReq) returns (Response);
+  
   rpc GetOneCell(IDReq) returns (Cell);
   // 根据查询条件获取满足条件的货架
   rpc GetCells(CellQuery) returns (Cells);
@@ -95,6 +100,9 @@ message Cell {
 
   //最大负载
   int32 maxLoad = 35;
+
+  //储位状态
+  int32 status = 36;
 }
 
 message Rack {
@@ -141,6 +149,41 @@ message UpdateRack {
     google.protobuf.Int32Value layers = 7;   
     google.protobuf.Int32Value pickingSurface = 8;   
     google.protobuf.StringValue description = 9;   
+}
+
+
+message UpdateCellReq {
+  int32 id = 1;
+  UpdateCell cell = 2;
+}
+
+message UpdateCell {
+  google.protobuf.Int32Value id = 1;                                 
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue tag = 3;          
+  google.protobuf.Int32Value length = 4;   
+  google.protobuf.Int32Value width = 5;   
+  google.protobuf.Int32Value height = 6;   
+  google.protobuf.Int32Value layer = 7;     
+  google.protobuf.Int32Value cellCode = 10;   
+  google.protobuf.Int32Value rackID = 11; 
+  //是否禁用
+  google.protobuf.BoolValue isValid = 12;
+  //存放的物料对于的编号
+  google.protobuf.Int64Value materialID = 13;
+  //物料类型
+  google.protobuf.StringValue materialType = 14;
+  //cell类型id
+  google.protobuf.Int32Value cellType = 15;
+  //是否被占用
+  google.protobuf.BoolValue isOccupied = 16;  
+  //储位状态
+  google.protobuf.Int32Value status = 17;
+}
+
+message CellStatusReq {
+  int32 id = 1;
+  int32 status = 2;
 }
 
 message Racks {
