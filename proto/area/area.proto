@@ -88,6 +88,13 @@ message Area {
   // 所属仓库Ikey
   string warehouseIkey = 30;
   repeated Property props = 31;
+   // 子级区域ID
+   repeated int32 ChildAreaIDs = 27;
+   //任务ids
+   repeated int32 OrderIDs = 26;
+   //任务数量
+   uint32 OrderNum = 33;
+
 }
 
 message UpdateArea {
