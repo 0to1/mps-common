@@ -3,127 +3,98 @@ syntax = "proto3";
 package go.micro.srv.opc;
 
 service OpcService {
-	
-	//read all of signal value for imexport id number
-	rpc	ReadOpcValueById(ReadGroupReq) returns (ReadGroupResp)	{}
+	rpc GetGroup(GrpReq) returns (Group);
+	rpc GetGroups(GrpQuery) returns (Groups);
 
-	//read signal value by some signal item name
-	rpc ReadOpcValueByItems(ReadItemsReq) returns   (ReadItemsResp)	{}
+	rpc AddGroup(Group) returns (Response);
+	rpc UpdateGroup(Group) returns (Response);
+	rpc DeleteGroup(Group) returns (Response);
 
-	//read signal value by one sigal item name
-	rpc ReadOpcValueByItem(ReadItemReq) returns	(ReadItemResp)	{}
+	rpc GetItem(ItemReq) returns (Item);
+	rpc GetItems(ItemQuery) returns (Items);
 
-	//write  signal value by signal item name
-    rpc WriteOpcValueByItem (WriteItemReq) returns (WriteItemResp) {}
-    
-    //Update Xml by xml import
-	rpc UpdateXml(XmlReq)   returns (XmlResp) {}
-	
-	//
-	rpc SetOpcConfig(OpcConfigReq) returns (OpcConfigResp){}
-	//Read Group Item Value
-	rpc ReadItemValue(ItemReq) returns(ItemResp){}
-	//Write Group Item Value
-	rpc WriteItemValue(ItemReq) returns(ItemResp){}
+	rpc AddItem(Item) returns (Response);
+	rpc UpdateItem(Item) returns (Response);
+	rpc DeleteItem(Item) returns (Response);
+
+	rpc WriteItem(ItemValueReq) returns (Response);
+
+	rpc UpdateFile(FileReq) returns (Response);
 }
 
+message Response {}
 
-message Result{
-	Server Servers = 1; 
+message FileReq {
+	uint32 garageID = 1;
+	uint32 groupID = 2;
+	bytes filebytes = 3;
 }
 
-
-message Server{
-	string name = 1;          
-	string IP = 2;            
-	repeated ImExport ImExports = 3; 
+message GrpReq {
+	uint32 garageID = 1;
+	uint32 groupID = 2;
 }
 
-
-message ImExport{
-	int32 id  = 1;         
-	repeated Signal Signal = 2;
+message GrpQuery {
+	uint32 garageID = 1;
+	uint32 page = 2;
+	uint32 perPage = 3;	
 }
 
-
-message Signal {
-	string ItemName = 1;    
-	string Description = 2; 
-	int32 Index = 3;          
-	string PlcName = 4;     
-	string Remark = 5;      
+message Group {
+	uint32 garageID = 1;
+	uint32 groupID = 2;
+	string name = 3;
 }
 
-
-
-message GroupOpcSignalInfo {
-    string  itemName = 1;
-    string  description = 2;
-    int32   quality = 3;
-    int32   value    = 4; 
-}
-
-message OpcSignalInfo {
-    string itemName = 1;
-    int32   value = 2; 
-}
-
-message ReadGroupReq {
-	uint32 groupID = 1;
-}
-
-message ReadGroupResp{
-	repeated GroupOpcSignalInfo groupItemValues = 1;
-}
-
-message ReadItemsReq {
-	repeated string itemNames = 1;
-}
-
-message ReadItemsResp {
-	repeated OpcSignalInfo itemsValues = 1;
-}
-
-message ReadItemReq {
-	string itemName = 1;
-}
-
-message ReadItemResp {
-	int32 itemValue = 1;
-}
-
-message WriteItemReq {
-	string itemName = 1;
-	int32 itemValue = 2;
-}
-
-message WriteItemResp {
-}
-
-message XmlReq {
-    Result result = 1;
-}
-
-message XmlResp{
-}
-
-message OpcConfigReq {
-	string configXml = 1;
-}
-
-message OpcConfigResp {
-	
+message Groups { 
+	repeated Group group = 1;
+	uint32 totalCount = 2; 
 }
 
 message ItemReq {
-	uint32 group = 1;
-	uint32 item  = 2;
-	int32 value = 3;
+	uint32 garageID = 1;
+	uint32 groupID = 2;
+	uint32 itemID = 3;
 }
 
-message ItemResp {
-	uint32 group = 1;
-	uint32 item  = 2;
-	int32 value = 3;
-	string itemName = 4;
+message ItemValueReq {
+	uint32 garageID = 1;
+	uint32 groupID = 2;
+	uint32 itemID = 3;
+	uint32 value = 4;
+}
+
+message ItemQuery {
+	uint32 page = 1;
+  	uint32 perPage = 2;
+  	ItemFilter filter = 3;
+}
+
+message ItemFilter {
+	repeated ItemFilter and = 1;
+	repeated ItemFilter or = 2;
+	repeated uint32 garageIn = 3;
+	repeated uint32 groupIn = 4;
+	repeated uint32 itemIn = 5;
+	repeated string nameLike = 6;
+	repeated string addressLike = 7;
+}
+
+message Item {
+	uint32 garageID = 1;
+	uint32 groupID = 2;
+	uint32 itemID = 3;
+	string name = 4;
+	string address = 5;
+	string datatype = 6;
+	uint32 respectDataType = 7;
+	string clientAccess = 8;
+	uint32 scanRate = 9;
+	uint32 value = 10;
+}
+
+message Items { 
+	repeated Item item = 1;
+	uint32 totalCount = 2; 
 }

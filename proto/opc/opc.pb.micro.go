@@ -34,22 +34,18 @@ var _ server.Option
 // Client API for OpcService service
 
 type OpcService interface {
-	//read all of signal value for imexport id number
-	ReadOpcValueById(ctx context.Context, in *ReadGroupReq, opts ...client.CallOption) (*ReadGroupResp, error)
-	//read signal value by some signal item name
-	ReadOpcValueByItems(ctx context.Context, in *ReadItemsReq, opts ...client.CallOption) (*ReadItemsResp, error)
-	//read signal value by one sigal item name
-	ReadOpcValueByItem(ctx context.Context, in *ReadItemReq, opts ...client.CallOption) (*ReadItemResp, error)
-	//write  signal value by signal item name
-	WriteOpcValueByItem(ctx context.Context, in *WriteItemReq, opts ...client.CallOption) (*WriteItemResp, error)
-	//Update Xml by xml import
-	UpdateXml(ctx context.Context, in *XmlReq, opts ...client.CallOption) (*XmlResp, error)
-	//
-	SetOpcConfig(ctx context.Context, in *OpcConfigReq, opts ...client.CallOption) (*OpcConfigResp, error)
-	//Read Group Item Value
-	ReadItemValue(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemResp, error)
-	//Write Group Item Value
-	WriteItemValue(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemResp, error)
+	GetGroup(ctx context.Context, in *GrpReq, opts ...client.CallOption) (*Group, error)
+	GetGroups(ctx context.Context, in *GrpQuery, opts ...client.CallOption) (*Groups, error)
+	AddGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error)
+	UpdateGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error)
+	DeleteGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error)
+	GetItem(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*Item, error)
+	GetItems(ctx context.Context, in *ItemQuery, opts ...client.CallOption) (*Items, error)
+	AddItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error)
+	UpdateItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error)
+	DeleteItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error)
+	WriteItem(ctx context.Context, in *ItemValueReq, opts ...client.CallOption) (*Response, error)
+	UpdateFile(ctx context.Context, in *FileReq, opts ...client.CallOption) (*Response, error)
 }
 
 type opcService struct {
@@ -64,9 +60,9 @@ func NewOpcService(name string, c client.Client) OpcService {
 	}
 }
 
-func (c *opcService) ReadOpcValueById(ctx context.Context, in *ReadGroupReq, opts ...client.CallOption) (*ReadGroupResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.ReadOpcValueById", in)
-	out := new(ReadGroupResp)
+func (c *opcService) GetGroup(ctx context.Context, in *GrpReq, opts ...client.CallOption) (*Group, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetGroup", in)
+	out := new(Group)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,9 +70,9 @@ func (c *opcService) ReadOpcValueById(ctx context.Context, in *ReadGroupReq, opt
 	return out, nil
 }
 
-func (c *opcService) ReadOpcValueByItems(ctx context.Context, in *ReadItemsReq, opts ...client.CallOption) (*ReadItemsResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.ReadOpcValueByItems", in)
-	out := new(ReadItemsResp)
+func (c *opcService) GetGroups(ctx context.Context, in *GrpQuery, opts ...client.CallOption) (*Groups, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetGroups", in)
+	out := new(Groups)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -84,9 +80,9 @@ func (c *opcService) ReadOpcValueByItems(ctx context.Context, in *ReadItemsReq, 
 	return out, nil
 }
 
-func (c *opcService) ReadOpcValueByItem(ctx context.Context, in *ReadItemReq, opts ...client.CallOption) (*ReadItemResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.ReadOpcValueByItem", in)
-	out := new(ReadItemResp)
+func (c *opcService) AddGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.AddGroup", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -94,9 +90,9 @@ func (c *opcService) ReadOpcValueByItem(ctx context.Context, in *ReadItemReq, op
 	return out, nil
 }
 
-func (c *opcService) WriteOpcValueByItem(ctx context.Context, in *WriteItemReq, opts ...client.CallOption) (*WriteItemResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.WriteOpcValueByItem", in)
-	out := new(WriteItemResp)
+func (c *opcService) UpdateGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.UpdateGroup", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -104,9 +100,9 @@ func (c *opcService) WriteOpcValueByItem(ctx context.Context, in *WriteItemReq, 
 	return out, nil
 }
 
-func (c *opcService) UpdateXml(ctx context.Context, in *XmlReq, opts ...client.CallOption) (*XmlResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.UpdateXml", in)
-	out := new(XmlResp)
+func (c *opcService) DeleteGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.DeleteGroup", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,9 +110,9 @@ func (c *opcService) UpdateXml(ctx context.Context, in *XmlReq, opts ...client.C
 	return out, nil
 }
 
-func (c *opcService) SetOpcConfig(ctx context.Context, in *OpcConfigReq, opts ...client.CallOption) (*OpcConfigResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.SetOpcConfig", in)
-	out := new(OpcConfigResp)
+func (c *opcService) GetItem(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*Item, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetItem", in)
+	out := new(Item)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -124,9 +120,9 @@ func (c *opcService) SetOpcConfig(ctx context.Context, in *OpcConfigReq, opts ..
 	return out, nil
 }
 
-func (c *opcService) ReadItemValue(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.ReadItemValue", in)
-	out := new(ItemResp)
+func (c *opcService) GetItems(ctx context.Context, in *ItemQuery, opts ...client.CallOption) (*Items, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetItems", in)
+	out := new(Items)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -134,9 +130,49 @@ func (c *opcService) ReadItemValue(ctx context.Context, in *ItemReq, opts ...cli
 	return out, nil
 }
 
-func (c *opcService) WriteItemValue(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemResp, error) {
-	req := c.c.NewRequest(c.name, "OpcService.WriteItemValue", in)
-	out := new(ItemResp)
+func (c *opcService) AddItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.AddItem", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) UpdateItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.UpdateItem", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) DeleteItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.DeleteItem", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) WriteItem(ctx context.Context, in *ItemValueReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.WriteItem", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) UpdateFile(ctx context.Context, in *FileReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.UpdateFile", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -147,34 +183,34 @@ func (c *opcService) WriteItemValue(ctx context.Context, in *ItemReq, opts ...cl
 // Server API for OpcService service
 
 type OpcServiceHandler interface {
-	//read all of signal value for imexport id number
-	ReadOpcValueById(context.Context, *ReadGroupReq, *ReadGroupResp) error
-	//read signal value by some signal item name
-	ReadOpcValueByItems(context.Context, *ReadItemsReq, *ReadItemsResp) error
-	//read signal value by one sigal item name
-	ReadOpcValueByItem(context.Context, *ReadItemReq, *ReadItemResp) error
-	//write  signal value by signal item name
-	WriteOpcValueByItem(context.Context, *WriteItemReq, *WriteItemResp) error
-	//Update Xml by xml import
-	UpdateXml(context.Context, *XmlReq, *XmlResp) error
-	//
-	SetOpcConfig(context.Context, *OpcConfigReq, *OpcConfigResp) error
-	//Read Group Item Value
-	ReadItemValue(context.Context, *ItemReq, *ItemResp) error
-	//Write Group Item Value
-	WriteItemValue(context.Context, *ItemReq, *ItemResp) error
+	GetGroup(context.Context, *GrpReq, *Group) error
+	GetGroups(context.Context, *GrpQuery, *Groups) error
+	AddGroup(context.Context, *Group, *Response) error
+	UpdateGroup(context.Context, *Group, *Response) error
+	DeleteGroup(context.Context, *Group, *Response) error
+	GetItem(context.Context, *ItemReq, *Item) error
+	GetItems(context.Context, *ItemQuery, *Items) error
+	AddItem(context.Context, *Item, *Response) error
+	UpdateItem(context.Context, *Item, *Response) error
+	DeleteItem(context.Context, *Item, *Response) error
+	WriteItem(context.Context, *ItemValueReq, *Response) error
+	UpdateFile(context.Context, *FileReq, *Response) error
 }
 
 func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...server.HandlerOption) error {
 	type opcService interface {
-		ReadOpcValueById(ctx context.Context, in *ReadGroupReq, out *ReadGroupResp) error
-		ReadOpcValueByItems(ctx context.Context, in *ReadItemsReq, out *ReadItemsResp) error
-		ReadOpcValueByItem(ctx context.Context, in *ReadItemReq, out *ReadItemResp) error
-		WriteOpcValueByItem(ctx context.Context, in *WriteItemReq, out *WriteItemResp) error
-		UpdateXml(ctx context.Context, in *XmlReq, out *XmlResp) error
-		SetOpcConfig(ctx context.Context, in *OpcConfigReq, out *OpcConfigResp) error
-		ReadItemValue(ctx context.Context, in *ItemReq, out *ItemResp) error
-		WriteItemValue(ctx context.Context, in *ItemReq, out *ItemResp) error
+		GetGroup(ctx context.Context, in *GrpReq, out *Group) error
+		GetGroups(ctx context.Context, in *GrpQuery, out *Groups) error
+		AddGroup(ctx context.Context, in *Group, out *Response) error
+		UpdateGroup(ctx context.Context, in *Group, out *Response) error
+		DeleteGroup(ctx context.Context, in *Group, out *Response) error
+		GetItem(ctx context.Context, in *ItemReq, out *Item) error
+		GetItems(ctx context.Context, in *ItemQuery, out *Items) error
+		AddItem(ctx context.Context, in *Item, out *Response) error
+		UpdateItem(ctx context.Context, in *Item, out *Response) error
+		DeleteItem(ctx context.Context, in *Item, out *Response) error
+		WriteItem(ctx context.Context, in *ItemValueReq, out *Response) error
+		UpdateFile(ctx context.Context, in *FileReq, out *Response) error
 	}
 	type OpcService struct {
 		opcService
@@ -187,34 +223,50 @@ type opcServiceHandler struct {
 	OpcServiceHandler
 }
 
-func (h *opcServiceHandler) ReadOpcValueById(ctx context.Context, in *ReadGroupReq, out *ReadGroupResp) error {
-	return h.OpcServiceHandler.ReadOpcValueById(ctx, in, out)
+func (h *opcServiceHandler) GetGroup(ctx context.Context, in *GrpReq, out *Group) error {
+	return h.OpcServiceHandler.GetGroup(ctx, in, out)
 }
 
-func (h *opcServiceHandler) ReadOpcValueByItems(ctx context.Context, in *ReadItemsReq, out *ReadItemsResp) error {
-	return h.OpcServiceHandler.ReadOpcValueByItems(ctx, in, out)
+func (h *opcServiceHandler) GetGroups(ctx context.Context, in *GrpQuery, out *Groups) error {
+	return h.OpcServiceHandler.GetGroups(ctx, in, out)
 }
 
-func (h *opcServiceHandler) ReadOpcValueByItem(ctx context.Context, in *ReadItemReq, out *ReadItemResp) error {
-	return h.OpcServiceHandler.ReadOpcValueByItem(ctx, in, out)
+func (h *opcServiceHandler) AddGroup(ctx context.Context, in *Group, out *Response) error {
+	return h.OpcServiceHandler.AddGroup(ctx, in, out)
 }
 
-func (h *opcServiceHandler) WriteOpcValueByItem(ctx context.Context, in *WriteItemReq, out *WriteItemResp) error {
-	return h.OpcServiceHandler.WriteOpcValueByItem(ctx, in, out)
+func (h *opcServiceHandler) UpdateGroup(ctx context.Context, in *Group, out *Response) error {
+	return h.OpcServiceHandler.UpdateGroup(ctx, in, out)
 }
 
-func (h *opcServiceHandler) UpdateXml(ctx context.Context, in *XmlReq, out *XmlResp) error {
-	return h.OpcServiceHandler.UpdateXml(ctx, in, out)
+func (h *opcServiceHandler) DeleteGroup(ctx context.Context, in *Group, out *Response) error {
+	return h.OpcServiceHandler.DeleteGroup(ctx, in, out)
 }
 
-func (h *opcServiceHandler) SetOpcConfig(ctx context.Context, in *OpcConfigReq, out *OpcConfigResp) error {
-	return h.OpcServiceHandler.SetOpcConfig(ctx, in, out)
+func (h *opcServiceHandler) GetItem(ctx context.Context, in *ItemReq, out *Item) error {
+	return h.OpcServiceHandler.GetItem(ctx, in, out)
 }
 
-func (h *opcServiceHandler) ReadItemValue(ctx context.Context, in *ItemReq, out *ItemResp) error {
-	return h.OpcServiceHandler.ReadItemValue(ctx, in, out)
+func (h *opcServiceHandler) GetItems(ctx context.Context, in *ItemQuery, out *Items) error {
+	return h.OpcServiceHandler.GetItems(ctx, in, out)
 }
 
-func (h *opcServiceHandler) WriteItemValue(ctx context.Context, in *ItemReq, out *ItemResp) error {
-	return h.OpcServiceHandler.WriteItemValue(ctx, in, out)
+func (h *opcServiceHandler) AddItem(ctx context.Context, in *Item, out *Response) error {
+	return h.OpcServiceHandler.AddItem(ctx, in, out)
+}
+
+func (h *opcServiceHandler) UpdateItem(ctx context.Context, in *Item, out *Response) error {
+	return h.OpcServiceHandler.UpdateItem(ctx, in, out)
+}
+
+func (h *opcServiceHandler) DeleteItem(ctx context.Context, in *Item, out *Response) error {
+	return h.OpcServiceHandler.DeleteItem(ctx, in, out)
+}
+
+func (h *opcServiceHandler) WriteItem(ctx context.Context, in *ItemValueReq, out *Response) error {
+	return h.OpcServiceHandler.WriteItem(ctx, in, out)
+}
+
+func (h *opcServiceHandler) UpdateFile(ctx context.Context, in *FileReq, out *Response) error {
+	return h.OpcServiceHandler.UpdateFile(ctx, in, out)
 }
