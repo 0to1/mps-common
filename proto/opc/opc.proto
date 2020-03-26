@@ -25,6 +25,7 @@ service OpcService {
 	rpc DeleteItem(Item) returns (Response);
 
 	rpc WriteItem(ItemValueReq) returns (Response);
+	rpc ReadItem(ItemReq) returns (ItemValueResp);
 
 	rpc UpdateFile(FileReq) returns (Response);
 }
@@ -83,6 +84,11 @@ message ItemValueReq {
 	uint32 value = 4;
 }
 
+message ItemValueResp {
+	uint32 value = 1;
+	uint32 quality = 2;
+}
+
 message ItemQuery {
 	uint32 page = 1;
   	uint32 perPage = 2;
@@ -109,7 +115,6 @@ message Item {
 	uint32 respectDataType = 7;
 	string clientAccess = 8;
 	uint32 scanRate = 9;
-	uint32 value = 10;
 }
 
 message Items { 

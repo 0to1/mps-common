@@ -50,6 +50,7 @@ type OpcService interface {
 	UpdateItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error)
 	DeleteItem(ctx context.Context, in *Item, opts ...client.CallOption) (*Response, error)
 	WriteItem(ctx context.Context, in *ItemValueReq, opts ...client.CallOption) (*Response, error)
+	ReadItem(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemValueResp, error)
 	UpdateFile(ctx context.Context, in *FileReq, opts ...client.CallOption) (*Response, error)
 }
 
@@ -225,6 +226,16 @@ func (c *opcService) WriteItem(ctx context.Context, in *ItemValueReq, opts ...cl
 	return out, nil
 }
 
+func (c *opcService) ReadItem(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemValueResp, error) {
+	req := c.c.NewRequest(c.name, "OpcService.ReadItem", in)
+	out := new(ItemValueResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *opcService) UpdateFile(ctx context.Context, in *FileReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "OpcService.UpdateFile", in)
 	out := new(Response)
@@ -254,6 +265,7 @@ type OpcServiceHandler interface {
 	UpdateItem(context.Context, *Item, *Response) error
 	DeleteItem(context.Context, *Item, *Response) error
 	WriteItem(context.Context, *ItemValueReq, *Response) error
+	ReadItem(context.Context, *ItemReq, *ItemValueResp) error
 	UpdateFile(context.Context, *FileReq, *Response) error
 }
 
@@ -275,6 +287,7 @@ func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...
 		UpdateItem(ctx context.Context, in *Item, out *Response) error
 		DeleteItem(ctx context.Context, in *Item, out *Response) error
 		WriteItem(ctx context.Context, in *ItemValueReq, out *Response) error
+		ReadItem(ctx context.Context, in *ItemReq, out *ItemValueResp) error
 		UpdateFile(ctx context.Context, in *FileReq, out *Response) error
 	}
 	type OpcService struct {
@@ -350,6 +363,10 @@ func (h *opcServiceHandler) DeleteItem(ctx context.Context, in *Item, out *Respo
 
 func (h *opcServiceHandler) WriteItem(ctx context.Context, in *ItemValueReq, out *Response) error {
 	return h.OpcServiceHandler.WriteItem(ctx, in, out)
+}
+
+func (h *opcServiceHandler) ReadItem(ctx context.Context, in *ItemReq, out *ItemValueResp) error {
+	return h.OpcServiceHandler.ReadItem(ctx, in, out)
 }
 
 func (h *opcServiceHandler) UpdateFile(ctx context.Context, in *FileReq, out *Response) error {
