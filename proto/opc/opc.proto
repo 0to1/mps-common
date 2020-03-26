@@ -86,7 +86,7 @@ message ItemValueReq {
 
 message ItemValueResp {
 	uint32 value = 1;
-	uint32 quality = 2;
+	bool quality = 2;
 }
 
 message ItemQuery {
