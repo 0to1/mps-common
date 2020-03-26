@@ -3,6 +3,13 @@ syntax = "proto3";
 package go.micro.srv.opc;
 
 service OpcService {
+	rpc AddServer(Server) returns (Response);
+	rpc UpdateServer(Server) returns (Response);
+	rpc DeleteServer(Server) returns (Response);
+
+	rpc GetServer(SrvReq) returns (Server);
+	rpc GetServers(SrvQuery) returns (Servers);
+
 	rpc GetGroup(GrpReq) returns (Group);
 	rpc GetGroups(GrpQuery) returns (Groups);
 
@@ -23,6 +30,16 @@ service OpcService {
 }
 
 message Response {}
+
+message SrvReq {
+	uint32 garageID = 1;
+}
+
+message SrvQuery {
+	uint32 garageID = 1;
+	uint32 page = 2;
+	uint32 perPage = 3;	
+}
 
 message FileReq {
 	uint32 garageID = 1;
@@ -45,6 +62,7 @@ message Group {
 	uint32 garageID = 1;
 	uint32 groupID = 2;
 	string name = 3;
+	string tag = 4;
 }
 
 message Groups { 
@@ -96,5 +114,17 @@ message Item {
 
 message Items { 
 	repeated Item item = 1;
+	uint32 totalCount = 2; 
+}
+
+message Server {
+	uint32 garageID = 1;
+	string name = 2;
+	string ip = 3;
+	string tag = 4;
+}
+
+message Servers { 
+	repeated Server server = 1;
 	uint32 totalCount = 2; 
 }

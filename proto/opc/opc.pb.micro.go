@@ -34,6 +34,11 @@ var _ server.Option
 // Client API for OpcService service
 
 type OpcService interface {
+	AddServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error)
+	UpdateServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error)
+	DeleteServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error)
+	GetServer(ctx context.Context, in *SrvReq, opts ...client.CallOption) (*Server, error)
+	GetServers(ctx context.Context, in *SrvQuery, opts ...client.CallOption) (*Servers, error)
 	GetGroup(ctx context.Context, in *GrpReq, opts ...client.CallOption) (*Group, error)
 	GetGroups(ctx context.Context, in *GrpQuery, opts ...client.CallOption) (*Groups, error)
 	AddGroup(ctx context.Context, in *Group, opts ...client.CallOption) (*Response, error)
@@ -58,6 +63,56 @@ func NewOpcService(name string, c client.Client) OpcService {
 		c:    c,
 		name: name,
 	}
+}
+
+func (c *opcService) AddServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.AddServer", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) UpdateServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.UpdateServer", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) DeleteServer(ctx context.Context, in *Server, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "OpcService.DeleteServer", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) GetServer(ctx context.Context, in *SrvReq, opts ...client.CallOption) (*Server, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetServer", in)
+	out := new(Server)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) GetServers(ctx context.Context, in *SrvQuery, opts ...client.CallOption) (*Servers, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetServers", in)
+	out := new(Servers)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *opcService) GetGroup(ctx context.Context, in *GrpReq, opts ...client.CallOption) (*Group, error) {
@@ -183,6 +238,11 @@ func (c *opcService) UpdateFile(ctx context.Context, in *FileReq, opts ...client
 // Server API for OpcService service
 
 type OpcServiceHandler interface {
+	AddServer(context.Context, *Server, *Response) error
+	UpdateServer(context.Context, *Server, *Response) error
+	DeleteServer(context.Context, *Server, *Response) error
+	GetServer(context.Context, *SrvReq, *Server) error
+	GetServers(context.Context, *SrvQuery, *Servers) error
 	GetGroup(context.Context, *GrpReq, *Group) error
 	GetGroups(context.Context, *GrpQuery, *Groups) error
 	AddGroup(context.Context, *Group, *Response) error
@@ -199,6 +259,11 @@ type OpcServiceHandler interface {
 
 func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...server.HandlerOption) error {
 	type opcService interface {
+		AddServer(ctx context.Context, in *Server, out *Response) error
+		UpdateServer(ctx context.Context, in *Server, out *Response) error
+		DeleteServer(ctx context.Context, in *Server, out *Response) error
+		GetServer(ctx context.Context, in *SrvReq, out *Server) error
+		GetServers(ctx context.Context, in *SrvQuery, out *Servers) error
 		GetGroup(ctx context.Context, in *GrpReq, out *Group) error
 		GetGroups(ctx context.Context, in *GrpQuery, out *Groups) error
 		AddGroup(ctx context.Context, in *Group, out *Response) error
@@ -221,6 +286,26 @@ func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...
 
 type opcServiceHandler struct {
 	OpcServiceHandler
+}
+
+func (h *opcServiceHandler) AddServer(ctx context.Context, in *Server, out *Response) error {
+	return h.OpcServiceHandler.AddServer(ctx, in, out)
+}
+
+func (h *opcServiceHandler) UpdateServer(ctx context.Context, in *Server, out *Response) error {
+	return h.OpcServiceHandler.UpdateServer(ctx, in, out)
+}
+
+func (h *opcServiceHandler) DeleteServer(ctx context.Context, in *Server, out *Response) error {
+	return h.OpcServiceHandler.DeleteServer(ctx, in, out)
+}
+
+func (h *opcServiceHandler) GetServer(ctx context.Context, in *SrvReq, out *Server) error {
+	return h.OpcServiceHandler.GetServer(ctx, in, out)
+}
+
+func (h *opcServiceHandler) GetServers(ctx context.Context, in *SrvQuery, out *Servers) error {
+	return h.OpcServiceHandler.GetServers(ctx, in, out)
 }
 
 func (h *opcServiceHandler) GetGroup(ctx context.Context, in *GrpReq, out *Group) error {
