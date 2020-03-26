@@ -21,6 +21,7 @@ message Params {
   uint32 garageID = 1;
   string serverIp = 2;
   uint32 serverPort = 3;
+  bool ignoreReply = 4;
 }
 
 message Response {
