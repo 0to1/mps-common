@@ -93,7 +93,7 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.LogModel, error) {
 	pc, file, line, ok := runtime.Caller(9)
 	if ok {
 		funcName := runtime.FuncForPC(pc).Name()
-		log.Println("file: ", file, " ,line: ", line, " ,funcName: ", funcName)
+		//log.Println("file: ", file, " ,line: ", line, " ,funcName: ", funcName)
 
 		if len(content.File) < 4 {
 			content.File = file
