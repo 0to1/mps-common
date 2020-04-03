@@ -144,7 +144,7 @@ message Query {
 }
 
 message Parameter {
-  string type = 1;  //参数类型，支持string, int, float三种类型，默认为string类型
+  string type = 1;  //参数类型，支持string, int, float，bool三种类型，默认为string类型
   string key = 2;
   string value = 3;
 }
