@@ -2,7 +2,7 @@ package events
 
 import "encoding/json"
 
-const SMessageTopic = "go.micro.topic.smessage"
+const TopicSMessage string = "go.micro.topic.smessage"
 
 type SMessage struct {
 	Index          uint16

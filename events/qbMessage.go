@@ -2,7 +2,7 @@ package events
 
 import "encoding/json"
 
-const QBMessageTopic = "go.micro.topic.qbmessage"
+const TopicQBMessage = "go.micro.topic.qbmessage"
 
 type QBMessage struct {
 	TsID       uint16
