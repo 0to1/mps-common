@@ -151,6 +151,7 @@ message MaterialsResp {
 message PropertiesFilter {
   string key  = 1;
   string value = 2; 
+  bool isFuzzy = 3;
 }
 
 message Property{
