@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package go.micro.srv.log;
+
+service Log {
+  rpc UpdateConfig(CfgReq) returns (Response);
+  rpc GetConfig(Request) returns (CfgReq);
+  rpc GetLogs(Query) returns (LogContents);
+  rpc WriteLog(LogContent) returns (Response);
+}
+
+message CfgReq {
+  uint32 logKeepTime = 1;
+  string filenameFormat = 2;
+  bool reportCaller = 3;
+}
+
+message LogContent {
+  string time = 1;
+  string level = 2;
+  string funcName = 3;
+  string fileName = 4;
+  string service = 5;
+  string ipAddr = 6;
+  string msg = 7;
+}
+
+message Request {}
+
+message Response {}
+
+message Query {
+  uint32 page = 1;
+  uint32 per_page = 2;
+  LogFilter filter = 3;
+}
+
+message LogFilter {
+  repeated LogFilter and = 1;
+  repeated LogFilter or = 2;
+  string fromTime = 3;
+  string toTime = 4;
+  repeated int32 levelIn = 5;  
+  string fileName = 6;
+  string funcName = 7;
+  string ipAddr = 8;
+  string likeMsg = 9;   
+}
+
+message LogContents { 
+  repeated LogContent logContents = 1;
+  uint32 TotalCount = 2; 
+}

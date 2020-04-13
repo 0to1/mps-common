@@ -28,3 +28,5 @@ proto:
 
 	protoc --proto_path=. --micro_out=. --go_out=. proto/task/task.proto
 	protoc --proto_path=. --micro_out=. --go_out=. proto/script/script.proto
+
+	protoc --proto_path=. --micro_out=. --go_out=. proto/log/log.proto
