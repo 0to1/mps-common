@@ -34,6 +34,8 @@ var _ server.Option
 // Client API for Agv service
 
 type AgvService interface {
+	//获取AGV故障日志//
+	GetAgvErrors(ctx context.Context, in *QueryError, opts ...client.CallOption) (*AgvErrors, error)
 	//获取一个AGV数据//
 	GetAgvByID(ctx context.Context, in *AgvReq, opts ...client.CallOption) (*AgvMessage, error)
 	//获取所有的AGV数据//
@@ -60,6 +62,16 @@ func NewAgvService(name string, c client.Client) AgvService {
 		c:    c,
 		name: name,
 	}
+}
+
+func (c *agvService) GetAgvErrors(ctx context.Context, in *QueryError, opts ...client.CallOption) (*AgvErrors, error) {
+	req := c.c.NewRequest(c.name, "Agv.GetAgvErrors", in)
+	out := new(AgvErrors)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *agvService) GetAgvByID(ctx context.Context, in *AgvReq, opts ...client.CallOption) (*AgvMessage, error) {
@@ -135,6 +147,8 @@ func (c *agvService) GetStatusConfig(ctx context.Context, in *IDRequest, opts ..
 // Server API for Agv service
 
 type AgvHandler interface {
+	//获取AGV故障日志//
+	GetAgvErrors(context.Context, *QueryError, *AgvErrors) error
 	//获取一个AGV数据//
 	GetAgvByID(context.Context, *AgvReq, *AgvMessage) error
 	//获取所有的AGV数据//
@@ -153,6 +167,7 @@ type AgvHandler interface {
 
 func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.HandlerOption) error {
 	type agv interface {
+		GetAgvErrors(ctx context.Context, in *QueryError, out *AgvErrors) error
 		GetAgvByID(ctx context.Context, in *AgvReq, out *AgvMessage) error
 		GetAgvs(ctx context.Context, in *Query, out *AgvsResponse) error
 		StopAgvByID(ctx context.Context, in *AgvReq, out *Response) error
@@ -170,6 +185,10 @@ func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.Handler
 
 type agvHandler struct {
 	AgvHandler
+}
+
+func (h *agvHandler) GetAgvErrors(ctx context.Context, in *QueryError, out *AgvErrors) error {
+	return h.AgvHandler.GetAgvErrors(ctx, in, out)
 }
 
 func (h *agvHandler) GetAgvByID(ctx context.Context, in *AgvReq, out *AgvMessage) error {

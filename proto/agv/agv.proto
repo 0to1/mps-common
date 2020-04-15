@@ -3,6 +3,8 @@ syntax = "proto3";
 package go.micro.srv.agv;
 
 service Agv {
+  //获取AGV故障日志//
+  rpc GetAgvErrors(QueryError) returns (AgvErrors);
   //获取一个AGV数据//
   rpc GetAgvByID(AgvReq) returns (AgvMessage);
   //获取所有的AGV数据//
@@ -68,4 +70,34 @@ message AgvReq {
 
 message AgvsResponse{
   repeated AgvMessage agvs = 1;
+}
+
+message QueryError {
+  uint32 page = 1;
+  uint32 per_page = 2;
+  ErrFilter filter = 3;
+}
+
+message ErrFilter {
+  repeated ErrFilter and = 1;
+  repeated ErrFilter or = 2;
+  string fromTime = 3;
+  string toTime = 4;
+  repeated uint32 garageIn = 5;
+  repeated uint32 agvIn = 6;
+  repeated uint32 errorIn = 7;
+}
+
+message AgvError {
+  uint32 garageID = 1;
+  uint32 agvID = 2;
+  uint32 errorCode = 3;
+  uint32 pointID = 4;
+  string startTime = 5;
+  string endTime = 6;
+}
+
+message AgvErrors { 
+  repeated AgvError agvError = 1;
+  uint32 TotalCount = 2; 
 }
