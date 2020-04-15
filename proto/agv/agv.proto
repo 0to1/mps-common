@@ -3,6 +3,8 @@ syntax = "proto3";
 package go.micro.srv.agv;
 
 service Agv {
+  //获取AGV故障报表//
+  rpc GetAgvErrReport(ErrReportReq) returns (ErrReportItems);
   //获取AGV故障日志//
   rpc GetAgvErrors(QueryError) returns (AgvErrors);
   //获取一个AGV数据//
@@ -99,5 +101,21 @@ message AgvError {
 
 message AgvErrors { 
   repeated AgvError agvError = 1;
+  uint32 TotalCount = 2; 
+}
+
+message ErrReportReq {
+  string startTime = 1;
+  string endTime = 2;
+  uint32 code = 3;
+}
+
+message ErrReportItem {
+  string name = 1;
+  uint32 count = 2;
+}
+
+message ErrReportItems {
+  repeated ErrReportItem item = 1;
   uint32 TotalCount = 2; 
 }

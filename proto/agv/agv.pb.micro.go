@@ -34,6 +34,8 @@ var _ server.Option
 // Client API for Agv service
 
 type AgvService interface {
+	//获取AGV故障报表//
+	GetAgvErrReport(ctx context.Context, in *ErrReportReq, opts ...client.CallOption) (*ErrReportItems, error)
 	//获取AGV故障日志//
 	GetAgvErrors(ctx context.Context, in *QueryError, opts ...client.CallOption) (*AgvErrors, error)
 	//获取一个AGV数据//
@@ -62,6 +64,16 @@ func NewAgvService(name string, c client.Client) AgvService {
 		c:    c,
 		name: name,
 	}
+}
+
+func (c *agvService) GetAgvErrReport(ctx context.Context, in *ErrReportReq, opts ...client.CallOption) (*ErrReportItems, error) {
+	req := c.c.NewRequest(c.name, "Agv.GetAgvErrReport", in)
+	out := new(ErrReportItems)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *agvService) GetAgvErrors(ctx context.Context, in *QueryError, opts ...client.CallOption) (*AgvErrors, error) {
@@ -147,6 +159,8 @@ func (c *agvService) GetStatusConfig(ctx context.Context, in *IDRequest, opts ..
 // Server API for Agv service
 
 type AgvHandler interface {
+	//获取AGV故障报表//
+	GetAgvErrReport(context.Context, *ErrReportReq, *ErrReportItems) error
 	//获取AGV故障日志//
 	GetAgvErrors(context.Context, *QueryError, *AgvErrors) error
 	//获取一个AGV数据//
@@ -167,6 +181,7 @@ type AgvHandler interface {
 
 func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.HandlerOption) error {
 	type agv interface {
+		GetAgvErrReport(ctx context.Context, in *ErrReportReq, out *ErrReportItems) error
 		GetAgvErrors(ctx context.Context, in *QueryError, out *AgvErrors) error
 		GetAgvByID(ctx context.Context, in *AgvReq, out *AgvMessage) error
 		GetAgvs(ctx context.Context, in *Query, out *AgvsResponse) error
@@ -185,6 +200,10 @@ func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.Handler
 
 type agvHandler struct {
 	AgvHandler
+}
+
+func (h *agvHandler) GetAgvErrReport(ctx context.Context, in *ErrReportReq, out *ErrReportItems) error {
+	return h.AgvHandler.GetAgvErrReport(ctx, in, out)
 }
 
 func (h *agvHandler) GetAgvErrors(ctx context.Context, in *QueryError, out *AgvErrors) error {
