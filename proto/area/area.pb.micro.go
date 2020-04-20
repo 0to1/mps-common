@@ -258,7 +258,7 @@ func (c *areaService) SetValid(ctx context.Context, in *FlagReq, opts ...client.
 }
 
 func (c *areaService) SetParentArea(ctx context.Context, in *ParentReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AreaService.setParentArea", in)
+	req := c.c.NewRequest(c.name, "AreaService.SetParentArea", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {

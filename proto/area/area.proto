@@ -42,7 +42,7 @@ service AreaService {
   // 设置是否启用
   rpc SetValid(FlagReq) returns (Response);
   //设置父区域
-  rpc setParentArea(ParentReq) returns(Response);
+  rpc SetParentArea(ParentReq) returns(Response);
 
   //增加属性
   rpc SetProperties(PropertiesReq) returns(Response);
@@ -87,13 +87,15 @@ message Area {
   bool valid =  32;
   // 所属仓库Ikey
   string warehouseIkey = 30;
-  repeated Property props = 31;
+//   repeated Property props = 31;
    // 子级区域ID
    repeated int32 ChildAreaIDs = 27;
    //任务ids
    repeated int32 OrderIDs = 26;
    //任务数量
    uint32 OrderNum = 33;
+
+   map<string,string> props = 31;
 
 }
 
