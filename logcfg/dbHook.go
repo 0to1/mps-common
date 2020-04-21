@@ -8,7 +8,7 @@ import (
 
 	"github.com/0to1/mps-common/models"
 	"github.com/jinzhu/gorm"
-	"github.com/micro/go-micro/errors"
+	"github.com/micro/go-micro/v2/errors"
 	"github.com/sirupsen/logrus"
 )
 
