@@ -8,11 +8,8 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
-	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4 // indirect
 	github.com/golang/protobuf v1.3.2
-	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jinzhu/gorm v1.9.11
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
@@ -21,9 +18,7 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/micro/go-micro v1.16.0
-	github.com/micro/go-micro/v2 v2.1.0
-	github.com/micro/protoc-gen-micro v1.0.0 // indirect
+	github.com/micro/go-micro/v2 v2.3.0
 	github.com/microcosm-cc/bluemonday v1.0.2
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
