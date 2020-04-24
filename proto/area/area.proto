@@ -52,12 +52,14 @@ message AreaType {
   int32 id = 1;
   string name = 2;
   string description = 3;
+  string properties = 4;
 }
 
 message UpdateAreaType {
   google.protobuf.Int32Value id = 1;
   google.protobuf.StringValue name = 2;  
   google.protobuf.StringValue description= 3;  
+  string properties = 4;
 }
 
 message AreaTypes {
@@ -96,7 +98,6 @@ message Area {
    uint32 OrderNum = 33;
 
    map<string,string> props = 31;
-
 }
 
 message UpdateArea {
@@ -115,7 +116,7 @@ message UpdateArea {
   //区域的货位列表，待仔细考虑
   repeated int32 racklots = 23;
 
-  repeated Property props = 31;
+  map<string,string> props = 31;
 }
 
 message UpdateAreaReq {
@@ -127,13 +128,6 @@ message UpdateAreaTypeReq {
     int32 id = 1;
     UpdateAreaType area = 2;
 }
-
-
-
-// message UpdateAreaType {
-//   int32 id = 1;
-//   UpdateAreaType areaType = 2;
-// }
 
 message Response {}
 
