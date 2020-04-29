@@ -257,7 +257,9 @@ message MultipleGroupFilter {
   message RacklotFilter {
     repeated RacklotFilter and = 1;
     repeated RacklotFilter or = 2;
-    repeated int32 idIn = 3;                                 
+    repeated int32 idIn = 3;
+    repeated int32 idNotIn = 14;
+    repeated int32 rackIdNotIn = 15;           
     google.protobuf.Int32Value stationID = 4;                          
     google.protobuf.Int32Value rackID = 5;          
     google.protobuf.BoolValue isDeliv = 6;             

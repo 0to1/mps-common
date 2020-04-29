@@ -239,7 +239,8 @@ message RackQuery {
   message RackFilter {
     repeated RackFilter and = 1;
     repeated RackFilter or = 2;
-    repeated int32 idIn = 3;                                 
+    repeated int32 idIn = 3;
+    repeated int32 racklotIdIn = 14;                                   
 
     google.protobuf.Int32Value racklotID = 5;          
          
