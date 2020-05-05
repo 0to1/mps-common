@@ -50,6 +50,7 @@ message CellType {
   uint32 maxLoad = 7;
   string description = 8;
   bool isValid = 9;
+  string properties = 10;
 }
 
 message UpdateRackTypeReq {
@@ -85,6 +86,7 @@ message UpdateCellType {
     google.protobuf.Int32Value maxLoad = 7;      
     google.protobuf.StringValue description = 9;   
     google.protobuf.BoolValue isValid = 10;
+    string properties = 11;
 }
 
 
