@@ -41,18 +41,16 @@ message Task {
 }
 
 message QBMessage {
-  uint32 garageID = 1;
-  uint32 tsID = 2;
-  uint32 priority = 3;
-  uint32 code = 4;
-  uint32 ikey = 5;
-  repeated uint32 params = 6;
+  uint32 tsID = 1;
+  uint32 priority = 2;
+  uint32 code = 3;
+  uint32 ikey = 4;
+  repeated uint32 params = 5;
 }
 
 message MMessage {
-  uint32 garageID = 1;
-  uint32 index = 2;
-  uint32 function = 3;
-  uint32 parNo = 4;
-  repeated uint32 params = 5;
+  uint32 index = 1;
+  uint32 function = 2;
+  uint32 parNo = 3;
+  repeated uint32 params = 4;
 }

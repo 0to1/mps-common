@@ -14,14 +14,13 @@ service System {
 }
 
 message ParamReq {
-  uint32 garageID = 1;
+  
 }
 
 message Params {
-  uint32 garageID = 1;
-  string serverIp = 2;
-  uint32 serverPort = 3;
-  bool ignoreReply = 4;
+  string serverIp = 1;
+  uint32 serverPort = 2;
+  bool ignoreReply = 3;
 }
 
 message Response {
@@ -30,11 +29,10 @@ message Response {
 }
 
 message Request {
-  uint32 garageID = 1;
   enum OperationCode {
 		Stop = 0;//停止系统连接//
 		Start = 1;//开启系统连接//
 		Restart = 2;//重启系统连接//
   }
-  OperationCode code = 2;
+  OperationCode code = 1;
 }

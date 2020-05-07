@@ -9,45 +9,31 @@ service Point{
 
     //Get all points message
     rpc GetPoints(Query) returns (PointsResponse){}
-
-     //Get points by graphql
-     rpc GetPointsByGraphql(GraphqlQuery) returns (GraphqlPoints){}
-}
-
-message GraphqlQuery {
-    string query = 1;
-}
-
-message GraphqlPoints {
-    string response = 1;
 }
 
 message IdRequest{
-    uint32 garageID = 1;
-    uint32 id = 2;
+    uint32 id = 1;
 }
 
 message Query {
-    uint32 garageID = 1;
-    uint32 limit = 2;
-    uint32 offset = 3;
-    uint32 page = 4;
-    uint32 perPage = 5;
-    string queryString = 6;
+    uint32 limit = 1;
+    uint32 offset = 2;
+    uint32 page = 3;
+    uint32 perPage = 4;
+    string queryString = 5;
 }
 
 message PointResponse{
-    uint32 garageID = 1;
-    uint32 pointID = 2;
-    uint32 x = 3;
-    uint32 y = 4;
-    uint32 angle = 5; 
-    uint32 curvature = 6; 
-    uint32 plcBits = 7; 
-    uint32 plcWord = 8; 
-    uint32 plcWord2 = 9; 
-    uint32 changeTime = 10;
-    string remark = 11;
+    uint32 pointID = 1;
+    uint32 x = 2;
+    uint32 y = 3;
+    uint32 angle = 4; 
+    uint32 curvature = 5; 
+    uint32 plcBits = 6; 
+    uint32 plcWord = 7; 
+    uint32 plcWord2 = 8; 
+    uint32 changeTime = 9;
+    string remark = 10;
 }
 
 message PointsResponse{

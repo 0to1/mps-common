@@ -33,37 +33,32 @@ service OpcService {
 message Response {}
 
 message SrvReq {
-	uint32 garageID = 1;
+	
 }
 
 message SrvQuery {
-	uint32 garageID = 1;
-	uint32 page = 2;
-	uint32 perPage = 3;	
+	uint32 page = 1;
+	uint32 perPage = 2;	
 }
 
 message FileReq {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
-	bytes filebytes = 3;
+	uint32 groupID = 1;
+	bytes filebytes = 2;
 }
 
 message GrpReq {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
+	uint32 groupID = 1;
 }
 
 message GrpQuery {
-	uint32 garageID = 1;
-	uint32 page = 2;
-	uint32 perPage = 3;	
+	uint32 page = 1;
+	uint32 perPage = 2;	
 }
 
 message Group {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
-	string name = 3;
-	string tag = 4;
+	uint32 groupID = 1;
+	string name = 2;
+	string tag = 3;
 }
 
 message Groups { 
@@ -72,16 +67,14 @@ message Groups {
 }
 
 message ItemReq {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
-	uint32 itemID = 3;
+	uint32 groupID = 1;
+	uint32 itemID = 2;
 }
 
 message ItemValueReq {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
-	uint32 itemID = 3;
-	uint32 value = 4;
+	uint32 groupID = 1;
+	uint32 itemID = 2;
+	uint32 value = 3;
 }
 
 message ItemValueResp {
@@ -98,23 +91,21 @@ message ItemQuery {
 message ItemFilter {
 	repeated ItemFilter and = 1;
 	repeated ItemFilter or = 2;
-	repeated uint32 garageIn = 3;
-	repeated uint32 groupIn = 4;
-	repeated uint32 itemIn = 5;
-	repeated string nameLike = 6;
-	repeated string addressLike = 7;
+	repeated uint32 groupIn = 3;
+	repeated uint32 itemIn = 4;
+	repeated string nameLike = 5;
+	repeated string addressLike = 6;
 }
 
 message Item {
-	uint32 garageID = 1;
-	uint32 groupID = 2;
-	uint32 itemID = 3;
-	string name = 4;
-	string address = 5;
-	string datatype = 6;
-	uint32 respectDataType = 7;
-	string clientAccess = 8;
-	uint32 scanRate = 9;
+	uint32 groupID = 1;
+	uint32 itemID = 2;
+	string name = 3;
+	string address = 4;
+	string datatype = 5;
+	uint32 respectDataType = 6;
+	string clientAccess = 7;
+	uint32 scanRate = 8;
 }
 
 message Items { 
@@ -123,10 +114,9 @@ message Items {
 }
 
 message Server {
-	uint32 garageID = 1;
-	string name = 2;
-	string ip = 3;
-	string tag = 4;
+	string name = 1;
+	string ip = 2;
+	string tag = 3;
 }
 
 message Servers { 

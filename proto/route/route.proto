@@ -24,9 +24,8 @@ service Route{
 }
 
 message MapFile{
-    uint32 garageID = 1;
-    string fileName = 2;
-    bytes filebytes = 3;
+    string fileName = 1;
+    bytes filebytes = 2;
 }
 
 message MapFiles{
@@ -34,7 +33,7 @@ message MapFiles{
 }
 
 message Request{
-    uint32 garageID = 1;
+    
 }
 
 message Response{
@@ -42,14 +41,12 @@ message Response{
 }
 
 message StationsRequest{
-    uint32 garageID = 1;
-    uint32 startStn = 2;
-    repeated uint32 stations = 3;
+    uint32 startStn = 1;
+    repeated uint32 stations = 2;
 }
 
 message GetStationListRequest{
-    uint32 garageID = 1;
-    uint32 val1 = 2;
+    uint32 val1 = 1;
 }
 
 message StationWeight{
@@ -63,9 +60,8 @@ message GetStationListResponse{
 }
 
 message GetRouteRequest{
-    uint32 garageID = 1;
-    uint32 val1 = 2;
-    uint32 val2 = 3;
+    uint32 val1 = 1;
+    uint32 val2 = 2;
 }
 
 message GetRouteResponse{

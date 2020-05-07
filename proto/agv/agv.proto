@@ -38,13 +38,12 @@ message IDRequest{
 }
 
 message Query{
-  uint32 garageID = 1;
-  uint32 page = 2;
-  uint32 perPage = 3;
+  uint32 page = 1;
+  uint32 perPage = 2;
 }
 
 message Request{
-  uint32 garageID = 1;
+  
 }
 
 message Response{
@@ -52,22 +51,20 @@ message Response{
 }
 
 message AgvMessage {
-  uint32 garageID = 1;
-  uint32 id = 2;
-  uint32 type  = 3;
-  uint32 x = 4;
-  uint32 y = 5;
-  uint32 angle  = 6;
-  uint32 point  = 7;
-  uint32 segment   = 8;
-  uint32 battery  = 9;
-  uint32 plc  = 10;
-  uint32 status  = 11;
+  uint32 id = 1;
+  uint32 type  = 2;
+  uint32 x = 3;
+  uint32 y = 4;
+  uint32 angle  = 5;
+  uint32 point  = 6;
+  uint32 segment   = 7;
+  uint32 battery  = 8;
+  uint32 plc  = 9;
+  uint32 status  = 10;
 }
 
 message AgvReq {
-  uint32 garageID = 1;
-  uint32 agvID = 2;
+  uint32 agvID = 1;
 }
 
 message AgvsResponse{
@@ -85,18 +82,16 @@ message ErrFilter {
   repeated ErrFilter or = 2;
   string fromTime = 3;
   string toTime = 4;
-  repeated uint32 garageIn = 5;
-  repeated uint32 agvIn = 6;
-  repeated uint32 errorIn = 7;
+  repeated uint32 agvIn = 5;
+  repeated uint32 errorIn = 6;
 }
 
 message AgvError {
-  uint32 garageID = 1;
-  uint32 agvID = 2;
-  uint32 errorCode = 3;
-  uint32 pointID = 4;
-  string startTime = 5;
-  string endTime = 6;
+  uint32 agvID = 1;
+  uint32 errorCode = 2;
+  uint32 pointID = 3;
+  string startTime = 4;
+  string endTime = 5;
 }
 
 message AgvErrors { 
