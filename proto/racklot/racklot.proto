@@ -143,6 +143,8 @@ message Racklot {
   bool inbound = 16;
 
   bool outbound = 17;
+
+  repeated int32 areas = 18;
 }
 
 message UpdateRacklotReq {
