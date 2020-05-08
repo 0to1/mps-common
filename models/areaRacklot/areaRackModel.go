@@ -1,4 +1,4 @@
-package models
+package areaRacklot
 
 import (
 	"errors"
@@ -14,7 +14,7 @@ type AreaRacklot struct {
 	RacklotID int
 }
 
-func QueryAreaRacklot(db *gorm.DB, AreaID int, RacklotID int) (*AreaRacklot, error) {
+func Query(db *gorm.DB, AreaID int, RacklotID int) (*AreaRacklot, error) {
 
 	if AreaID == 0 && RacklotID == 0 {
 		return nil, nil
@@ -33,13 +33,62 @@ func QueryAreaRacklot(db *gorm.DB, AreaID int, RacklotID int) (*AreaRacklot, err
 	return &m, nil
 }
 
-func CreateAreaRacklot(db *gorm.DB, areaID int, racklotID int) (bool, error) {
+func IsExit(db *gorm.DB, AreaID int, RacklotID int) (bool, error) {
+	if AreaID == 0 && RacklotID == 0 {
+		return false, nil
+	}
+
+	db = db.Where("area_id = ? and racklot_id = ?", AreaID, RacklotID).First(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func IsExitByRacklot(db *gorm.DB, racklotID int) (bool, error) {
+	if racklotID == 0 {
+		return false, nil
+	}
+
+	db = db.Where("racklot_id  = ? ", racklotID).First(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func IsExitByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
+	if racklotIDs == nil {
+		return false, nil
+	}
+
+	db = db.Where("racklot_id  in (?) ", racklotIDs).First(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func Create(db *gorm.DB, areaID int, racklotID int) (bool, error) {
 
 	if areaID == 0 && racklotID == 0 {
 		return false, nil
 	}
 
-	if r, _ := QueryAreaRacklot(db, areaID, racklotID); r != nil {
+	if res, _ := IsExit(db, areaID, racklotID); res != true {
 		return false, errors.New("CreateAreaRacklot Exist")
 	}
 
@@ -50,7 +99,7 @@ func CreateAreaRacklot(db *gorm.DB, areaID int, racklotID int) (bool, error) {
 	return true, nil
 }
 
-func BatchCreateAreaRacklot(db *gorm.DB, areaID int, racklots []int) (bool, error) {
+func BatchCreate(db *gorm.DB, areaID int, racklots []int) (bool, error) {
 
 	var data []interface{}
 	for _, v := range racklots {
@@ -68,7 +117,7 @@ func BatchCreateAreaRacklot(db *gorm.DB, areaID int, racklots []int) (bool, erro
 	return true, nil
 }
 
-func UpdateAreaRacklot(db *gorm.DB, id int, updateMap map[string]interface{}) (bool, error) {
+func Update(db *gorm.DB, id int, updateMap map[string]interface{}) (bool, error) {
 
 	db = db.Model(&AreaRacklot{}).Where("id = ?", id).Update(updateMap)
 
@@ -83,7 +132,7 @@ func UpdateAreaRacklot(db *gorm.DB, id int, updateMap map[string]interface{}) (b
 	return true, nil
 }
 
-func DeleteAreaRacklot(db *gorm.DB, areaID int, racklotID int) (bool, error) {
+func Delete(db *gorm.DB, areaID int, racklotID int) (bool, error) {
 
 	db = db.Where("area_id = ? and racklot_id = ?", areaID, racklotID).Unscoped().Delete(&AreaRacklot{})
 	if err := db.Error; err != nil {
@@ -97,7 +146,7 @@ func DeleteAreaRacklot(db *gorm.DB, areaID int, racklotID int) (bool, error) {
 	return true, nil
 }
 
-func DeleteAreaRacklotByArea(db *gorm.DB, areaID int) (bool, error) {
+func DeleteByArea(db *gorm.DB, areaID int) (bool, error) {
 
 	db = db.Where("area_id = ?", areaID).Unscoped().Delete(&AreaRacklot{})
 	if err := db.Error; err != nil {
@@ -111,9 +160,23 @@ func DeleteAreaRacklotByArea(db *gorm.DB, areaID int) (bool, error) {
 	return true, nil
 }
 
-func DeleteAreaRacklotByRacklot(db *gorm.DB, areaID int, racklotID int) (bool, error) {
+func DeleteByRacklot(db *gorm.DB, racklotID int) (bool, error) {
 
 	db = db.Where("racklot_id = ?", racklotID).Unscoped().Delete(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func DeleteByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
+
+	db = db.Where("racklot_id in (?)", racklotIDs).Unscoped().Delete(&AreaRacklot{})
 	if err := db.Error; err != nil {
 		return false, err
 	}

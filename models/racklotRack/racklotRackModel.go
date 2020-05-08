@@ -1,4 +1,4 @@
-package models
+package racklotRack
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ type RacklotRack struct {
 	RackID    int
 }
 
-func QueryRacklotRack(db *gorm.DB, racklotID int, rackID int) (*RacklotRack, error) {
+func Query(db *gorm.DB, racklotID int, rackID int) (*RacklotRack, error) {
 
 	if racklotID == 0 && rackID == 0 {
 		return nil, nil
@@ -32,13 +32,46 @@ func QueryRacklotRack(db *gorm.DB, racklotID int, rackID int) (*RacklotRack, err
 	return &m, nil
 }
 
-func CreateRacklotRack(db *gorm.DB, racklotID int, rackID int) (bool, error) {
+func IsExit(db *gorm.DB, racklotID int, rackID int) (bool, error) {
+	if racklotID == 0 && rackID == 0 {
+		return false, nil
+	}
+
+	db = db.Where("racklot_id = ? or rack_id = ?", racklotID, rackID).First(&RacklotRack{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func IsExitByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
+	if racklotIDs == nil {
+		return false, nil
+	}
+
+	db = db.Where("racklot_id  in (?) ", racklotIDs).First(&RacklotRack{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func Create(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 
 	if racklotID == 0 && rackID == 0 {
 		return false, nil
 	}
 
-	if r, _ := QueryRacklotRack(db, racklotID, rackID); r != nil {
+	if r, _ := IsExit(db, racklotID, rackID); r != true {
 		return false, errors.New("CreateRacklotRack Exist")
 	}
 
@@ -49,7 +82,7 @@ func CreateRacklotRack(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 	return true, nil
 }
 
-func UpdateRacklotRack(db *gorm.DB, id int, updateMap map[string]interface{}) (bool, error) {
+func Update(db *gorm.DB, id int, updateMap map[string]interface{}) (bool, error) {
 
 	db = db.Model(&RacklotRack{}).Where("id = ?", id).Update(updateMap)
 
@@ -64,7 +97,7 @@ func UpdateRacklotRack(db *gorm.DB, id int, updateMap map[string]interface{}) (b
 	return true, nil
 }
 
-func DeleteRacklotRack(db *gorm.DB, racklotID int, rackID int) (bool, error) {
+func Delete(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 
 	db = db.Where("racklot_id = ? or rack_id = ?", racklotID, rackID).Unscoped().Delete(&RacklotRack{})
 	if err := db.Error; err != nil {
