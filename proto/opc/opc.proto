@@ -3,12 +3,9 @@ syntax = "proto3";
 package go.micro.srv.opc;
 
 service OpcService {
-	rpc AddServer(Server) returns (Response);
 	rpc UpdateServer(Server) returns (Response);
-	rpc DeleteServer(Server) returns (Response);
 
 	rpc GetServer(SrvReq) returns (Server);
-	rpc GetServers(SrvQuery) returns (Servers);
 
 	rpc GetGroup(GrpReq) returns (Group);
 	rpc GetGroups(GrpQuery) returns (Groups);
