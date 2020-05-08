@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package go.micro.srv.config;
+
+service ConfigService {
+	// 修改仓库信息
+	rpc UpdateWarehouse(Warehouse) returns (Response);
+	// 获取仓库信息
+	rpc GetWarehouse(Request) returns (Warehouse);
+
+	// 增加脚本按钮
+	rpc AddScriptButton(ScriptButton) returns (Response);
+	// 修改脚本按钮
+	rpc UpdateScriptButton(ScriptButton) returns (Response);
+	// 删除脚本按钮
+	rpc DeleteScriptButton(IkeyRequest) returns (Response);
+	// 查询单个脚本按钮
+	rpc GetScriptButton(IkeyRequest) returns (ScriptButton);
+	// 查询所有的脚本按钮
+	rpc GetScriptButtons(Query) returns (ScriptButtons);
+}
+
+message Warehouse {
+	string ikey = 1;
+	string name = 2;
+	string address = 3;
+	uint32 longitude = 4;
+	uint32 latitude = 5;
+	uint32 floorNumber = 6;
+	uint32 length = 7;
+	uint32 width = 8;
+}
+
+message ScriptButton {
+	string ikey = 1;
+	string name = 2;
+	uint32 scriptId = 3;
+	string parameters = 4;
+}
+
+message ScriptButtons {
+	repeated ScriptButton button = 1;
+	uint32 totalCount = 2; 
+}
+
+message Request {}
+message Response {}
+
+message IkeyRequest {
+	string ikey = 1;
+}
+
+message Query {
+	uint32 page = 1;
+  	uint32 perPage = 2;
+}
