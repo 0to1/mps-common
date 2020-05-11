@@ -5,62 +5,58 @@ package go.micro.srv.racklot;
 import "google/protobuf/wrappers.proto";
 
 service RacklotService {
+
+    // 根据查询条件获取货位
+    rpc GetRacklots(RacklotQuery) returns (Racklots);
+    // 根据ID获取货位信息
+    rpc GetRacklot(RacklotIDReq) returns (Racklot);
+
+      // 获取货位类型
+  rpc GetRacklotTypes(RacklotTypeQuery) returns (RacklotTypes);
+  // 获取货位类型
+  rpc GetRacklotType(RacklotIDReq) returns (RacklotType);
+
+
+    // 添加货位
+    rpc AddRacklot(Racklot) returns (AddResp);
+    // 批量导入货位
+    rpc BatchAddRacklots(Racklots) returns (Response);
+    // 删除货位
+    rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
+    // 批量删除货位
+    rpc BatchDeleteRacklots(DeleteRacklotsReq) returns (Response);
+    // 更新货位基础信息
+    rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
+      // 批量修改货位
+      rpc BatchUpdateRacklots(UpdateRacklotsReq) returns (Response);
+
+
   // 添加货位类型
   rpc AddRacklotType(RacklotType) returns (AddResp);
   // 修改货位类型
   rpc UpdateRacklotType(UpdateRacklotTypeReq) returns (UpdateResp);
   // 删除货GetBindedRack位类型
   rpc DeleteRacklotType(RacklotType) returns (DeleteResp);
-  // 获取货位类型
-  rpc GetRacklotTypes(RacklotTypeQuery) returns (RacklotTypes);
-    // 获取货位类型
-    rpc GetOneRacklotType(RacklotIDReq) returns (RacklotType);
-  // 添加货位
-  rpc AddRacklot(Racklot) returns (AddResp);
-  // 批量导入货位
-  rpc BatchAddRacklots(Racklots) returns (Response);
-  // 删除货位
-  rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
-  // 批量删除货位
-  rpc BatchDeleteRacklots(DeleteRacklotsReq) returns (Response);
-  // 更新货位基础信息
-  rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
-    // 批量修改货位
-    rpc BatchUpdateRacklots(UpdateRacklotsReq) returns (Response);
-  // 根据查询条件获取货位
-  rpc GetRacklots(RacklotQuery) returns (Racklots);
-  // 根据ID获取货位信息
-  rpc GetOneRacklot(RacklotIDReq) returns (Racklot);
+
+
   // 设置重列组
   rpc SetMultipleGroup(MultipleGroup) returns (Response);
-  // 设置货位组
-  rpc SetRacklotGroup(RacklotGroup) returns (Response);
+
   // 为货位绑定/解绑货架
   rpc BindRack(RackIDReq) returns (Response);
   rpc UnbindRack(RackIDReq) returns (Response);
   // 禁用/启用货位
   rpc DisableRacklots(RacklotIDsReq) returns (Response);
   rpc EnableRacklots(RacklotIDsReq) returns (Response);
-  //站台分组
-  rpc AddRacklotsGroup(RacklotGroupsReq) returns (Response);
-  rpc RemoveRacklotsGroup(RacklotGroupsReq) returns (Response);
+
   //占用/释放货位
-  rpc OccupyRacklot(RacklotIDReq) returns (Response);
-  rpc ReleaseRacklot(RacklotIDReq) returns (Response);
-  // 判断货位是否存在
-  rpc IsExist(RacklotIDReq) returns (Response);
-  // 判断货位是否有效
-  rpc IsAvailable(RacklotIDReq) returns (Response);
-  // 获取货位关联的货架
-  rpc GetBindedRack(RacklotIDReq) returns (IDReq);
+  rpc OccupyRacklots(RacklotIDsReq) returns (Response);
+  rpc ReleaseRacklots(RacklotIDsReq) returns (Response);
+
     // 设置是否允许存车
-    rpc Inbound(FlagReq) returns (Response);
+    rpc SetInbound(FlagReq) returns (Response);
     // 设置是否允许取车
-    rpc Outbound(FlagReq) returns (Response);
-      //增加属性
-  rpc SetProperties(PropertiesReq) returns(Response);
-      // 设置类型
-  rpc SetRacklotType(TypeReq) returns (Response);
+    rpc SetOutbound(FlagReq) returns (Response);
 }
 
 message IDReq {
@@ -72,16 +68,16 @@ message RacklotType {
   int32 id = 1;
   string name = 2;
   string description = 3;
-  int32 Length  = 4 ;
-	int32 Width  = 5;
+  int32 length  = 4 ;
+	int32 width  = 5;
 }
 
 message UpdateRacklotType {
     google.protobuf.Int32Value id = 1;
     google.protobuf.StringValue name = 2;
     google.protobuf.StringValue description = 3;
-    google.protobuf.Int32Value Length  = 4 ;
-    google.protobuf.Int32Value Width  = 5;
+    google.protobuf.Int32Value length  = 4 ;
+    google.protobuf.Int32Value width  = 5;
   }
 
 message UpdateRacklotTypeReq {
@@ -103,17 +99,6 @@ message MultipleGroup {
   int32 item = 3;
 }
 
-// RacklotGroup 货位组
-message RacklotGroup {
-  int32 racklotID = 1;
-  int32 group = 2;
-}
-
-// RacklotGroup 货位组
-message RacklotsGroup {
-  repeated int32 racklotIDs = 1;
-  int32 group = 2;
-}
 
 // Racklot 货位
 message Racklot {
@@ -126,23 +111,21 @@ message Racklot {
   int32 width = 7;
   // 站台重列分组信息
   MultipleGroup multiGroup = 8;
-  // 站台分组的ID
-  int32 groupID = 9;
   string description = 10;
   // 站台是否有效，被禁用则无效，启用则有效，默认为有效
   bool valid = 11;
   // 关联的货架ID，在货位上没有放置货架时为空
   int32 rackID = 12;
   //是否被占用
-  bool occupied = 13;
+  bool isOccupied = 13;
 
   int32 areaID = 14;
 
   int32 stationID = 15;
 
-  bool inbound = 16;
+  bool isInbound = 16;
 
-  bool outbound = 17;
+  bool isOutbound = 17;
 
   repeated int32 areas = 18;
 }
@@ -165,11 +148,14 @@ message UpdateRacklot {
   // 
   google.protobuf.Int32Value racklotType = 24;
   google.protobuf.Int32Value stationID = 25;
-  //是否有效
-  google.protobuf.BoolValue valid = 27;
-  google.protobuf.StringValue description = 30;
 
- repeated Property props = 31;
+  //是否有效
+  google.protobuf.BoolValue isValid = 27;
+  google.protobuf.BoolValue isInbound = 28;
+  google.protobuf.BoolValue isOutbound = 29;
+  google.protobuf.BoolValue isOccupied = 31;
+
+  google.protobuf.StringValue description = 30;
 
 }
 
@@ -261,11 +247,12 @@ message MultipleGroupFilter {
     repeated RacklotFilter or = 2;
     repeated int32 idIn = 3;
     repeated int32 idNotIn = 14;
-    repeated int32 rackIdNotIn = 15;           
+    repeated int32 rackIdNotIn = 15;
+    repeated int32 rackIdIn = 16;                 
     google.protobuf.Int32Value stationID = 4;                          
     google.protobuf.Int32Value rackID = 5;          
-    google.protobuf.BoolValue isDeliv = 6;             
-      google.protobuf.BoolValue isFetch = 7;             
+    google.protobuf.BoolValue isInbound = 6;             
+    google.protobuf.BoolValue isOutbound = 7;             
     google.protobuf.BoolValue isValid = 8;     
     google.protobuf.BoolValue isOccupied = 9; 
     RacklotTypeFilter typeFilter  = 11;
@@ -295,11 +282,6 @@ message MultipleGroupFilter {
 message FlagReq {
     int32 id = 1;
     bool flag = 2;
-  }
-
-  message PropertiesReq {
-    int32 id = 1;
-    repeated Property properties = 2;
   }
 
   message TypeReq {

@@ -43,16 +43,14 @@ func NewRacklotServiceEndpoints() []*api.Endpoint {
 // Client API for RacklotService service
 
 type RacklotService interface {
-	// 添加货位类型
-	AddRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*AddResp, error)
-	// 修改货位类型
-	UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error)
-	// 删除货GetBindedRack位类型
-	DeleteRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*DeleteResp, error)
+	// 根据查询条件获取货位
+	GetRacklots(ctx context.Context, in *RacklotQuery, opts ...client.CallOption) (*Racklots, error)
+	// 根据ID获取货位信息
+	GetRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Racklot, error)
 	// 获取货位类型
 	GetRacklotTypes(ctx context.Context, in *RacklotTypeQuery, opts ...client.CallOption) (*RacklotTypes, error)
 	// 获取货位类型
-	GetOneRacklotType(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*RacklotType, error)
+	GetRacklotType(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*RacklotType, error)
 	// 添加货位
 	AddRacklot(ctx context.Context, in *Racklot, opts ...client.CallOption) (*AddResp, error)
 	// 批量导入货位
@@ -65,40 +63,27 @@ type RacklotService interface {
 	UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, opts ...client.CallOption) (*UpdateResp, error)
 	// 批量修改货位
 	BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, opts ...client.CallOption) (*Response, error)
-	// 根据查询条件获取货位
-	GetRacklots(ctx context.Context, in *RacklotQuery, opts ...client.CallOption) (*Racklots, error)
-	// 根据ID获取货位信息
-	GetOneRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Racklot, error)
+	// 添加货位类型
+	AddRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*AddResp, error)
+	// 修改货位类型
+	UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error)
+	// 删除货GetBindedRack位类型
+	DeleteRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*DeleteResp, error)
 	// 设置重列组
 	SetMultipleGroup(ctx context.Context, in *MultipleGroup, opts ...client.CallOption) (*Response, error)
-	// 设置货位组
-	SetRacklotGroup(ctx context.Context, in *RacklotGroup, opts ...client.CallOption) (*Response, error)
 	// 为货位绑定/解绑货架
 	BindRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
 	UnbindRack(ctx context.Context, in *RackIDReq, opts ...client.CallOption) (*Response, error)
 	// 禁用/启用货位
 	DisableRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error)
 	EnableRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error)
-	//站台分组
-	AddRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, opts ...client.CallOption) (*Response, error)
-	RemoveRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, opts ...client.CallOption) (*Response, error)
 	//占用/释放货位
-	OccupyRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error)
-	ReleaseRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error)
-	// 判断货位是否存在
-	IsExist(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error)
-	// 判断货位是否有效
-	IsAvailable(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error)
-	// 获取货位关联的货架
-	GetBindedRack(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*IDReq, error)
+	OccupyRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error)
+	ReleaseRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error)
 	// 设置是否允许存车
-	Inbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
+	SetInbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	// 设置是否允许取车
-	Outbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
-	//增加属性
-	SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
-	// 设置类型
-	SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error)
+	SetOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 }
 
 type racklotService struct {
@@ -113,9 +98,9 @@ func NewRacklotService(name string, c client.Client) RacklotService {
 	}
 }
 
-func (c *racklotService) AddRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*AddResp, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.AddRacklotType", in)
-	out := new(AddResp)
+func (c *racklotService) GetRacklots(ctx context.Context, in *RacklotQuery, opts ...client.CallOption) (*Racklots, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetRacklots", in)
+	out := new(Racklots)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -123,19 +108,9 @@ func (c *racklotService) AddRacklotType(ctx context.Context, in *RacklotType, op
 	return out, nil
 }
 
-func (c *racklotService) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.UpdateRacklotType", in)
-	out := new(UpdateResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) DeleteRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*DeleteResp, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.DeleteRacklotType", in)
-	out := new(DeleteResp)
+func (c *racklotService) GetRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Racklot, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetRacklot", in)
+	out := new(Racklot)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -153,8 +128,8 @@ func (c *racklotService) GetRacklotTypes(ctx context.Context, in *RacklotTypeQue
 	return out, nil
 }
 
-func (c *racklotService) GetOneRacklotType(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*RacklotType, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.GetOneRacklotType", in)
+func (c *racklotService) GetRacklotType(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*RacklotType, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetRacklotType", in)
 	out := new(RacklotType)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -223,9 +198,9 @@ func (c *racklotService) BatchUpdateRacklots(ctx context.Context, in *UpdateRack
 	return out, nil
 }
 
-func (c *racklotService) GetRacklots(ctx context.Context, in *RacklotQuery, opts ...client.CallOption) (*Racklots, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.GetRacklots", in)
-	out := new(Racklots)
+func (c *racklotService) AddRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*AddResp, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.AddRacklotType", in)
+	out := new(AddResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -233,9 +208,19 @@ func (c *racklotService) GetRacklots(ctx context.Context, in *RacklotQuery, opts
 	return out, nil
 }
 
-func (c *racklotService) GetOneRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Racklot, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.GetOneRacklot", in)
-	out := new(Racklot)
+func (c *racklotService) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, opts ...client.CallOption) (*UpdateResp, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.UpdateRacklotType", in)
+	out := new(UpdateResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *racklotService) DeleteRacklotType(ctx context.Context, in *RacklotType, opts ...client.CallOption) (*DeleteResp, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.DeleteRacklotType", in)
+	out := new(DeleteResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -245,16 +230,6 @@ func (c *racklotService) GetOneRacklot(ctx context.Context, in *RacklotIDReq, op
 
 func (c *racklotService) SetMultipleGroup(ctx context.Context, in *MultipleGroup, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "RacklotService.SetMultipleGroup", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) SetRacklotGroup(ctx context.Context, in *RacklotGroup, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.SetRacklotGroup", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -303,8 +278,8 @@ func (c *racklotService) EnableRacklots(ctx context.Context, in *RacklotIDsReq, 
 	return out, nil
 }
 
-func (c *racklotService) AddRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.AddRacklotsGroup", in)
+func (c *racklotService) OccupyRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.OccupyRacklots", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -313,8 +288,8 @@ func (c *racklotService) AddRacklotsGroup(ctx context.Context, in *RacklotGroups
 	return out, nil
 }
 
-func (c *racklotService) RemoveRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.RemoveRacklotsGroup", in)
+func (c *racklotService) ReleaseRacklots(ctx context.Context, in *RacklotIDsReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.ReleaseRacklots", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -323,8 +298,8 @@ func (c *racklotService) RemoveRacklotsGroup(ctx context.Context, in *RacklotGro
 	return out, nil
 }
 
-func (c *racklotService) OccupyRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.OccupyRacklot", in)
+func (c *racklotService) SetInbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.SetInbound", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -333,78 +308,8 @@ func (c *racklotService) OccupyRacklot(ctx context.Context, in *RacklotIDReq, op
 	return out, nil
 }
 
-func (c *racklotService) ReleaseRacklot(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.ReleaseRacklot", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) IsExist(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.IsExist", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) IsAvailable(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.IsAvailable", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) GetBindedRack(ctx context.Context, in *RacklotIDReq, opts ...client.CallOption) (*IDReq, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.GetBindedRack", in)
-	out := new(IDReq)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) Inbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.Inbound", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) Outbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.Outbound", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) SetProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.SetProperties", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *racklotService) SetRacklotType(ctx context.Context, in *TypeReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "RacklotService.SetRacklotType", in)
+func (c *racklotService) SetOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.SetOutbound", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -416,16 +321,14 @@ func (c *racklotService) SetRacklotType(ctx context.Context, in *TypeReq, opts .
 // Server API for RacklotService service
 
 type RacklotServiceHandler interface {
-	// 添加货位类型
-	AddRacklotType(context.Context, *RacklotType, *AddResp) error
-	// 修改货位类型
-	UpdateRacklotType(context.Context, *UpdateRacklotTypeReq, *UpdateResp) error
-	// 删除货GetBindedRack位类型
-	DeleteRacklotType(context.Context, *RacklotType, *DeleteResp) error
+	// 根据查询条件获取货位
+	GetRacklots(context.Context, *RacklotQuery, *Racklots) error
+	// 根据ID获取货位信息
+	GetRacklot(context.Context, *RacklotIDReq, *Racklot) error
 	// 获取货位类型
 	GetRacklotTypes(context.Context, *RacklotTypeQuery, *RacklotTypes) error
 	// 获取货位类型
-	GetOneRacklotType(context.Context, *RacklotIDReq, *RacklotType) error
+	GetRacklotType(context.Context, *RacklotIDReq, *RacklotType) error
 	// 添加货位
 	AddRacklot(context.Context, *Racklot, *AddResp) error
 	// 批量导入货位
@@ -438,74 +341,53 @@ type RacklotServiceHandler interface {
 	UpdateRacklot(context.Context, *UpdateRacklotReq, *UpdateResp) error
 	// 批量修改货位
 	BatchUpdateRacklots(context.Context, *UpdateRacklotsReq, *Response) error
-	// 根据查询条件获取货位
-	GetRacklots(context.Context, *RacklotQuery, *Racklots) error
-	// 根据ID获取货位信息
-	GetOneRacklot(context.Context, *RacklotIDReq, *Racklot) error
+	// 添加货位类型
+	AddRacklotType(context.Context, *RacklotType, *AddResp) error
+	// 修改货位类型
+	UpdateRacklotType(context.Context, *UpdateRacklotTypeReq, *UpdateResp) error
+	// 删除货GetBindedRack位类型
+	DeleteRacklotType(context.Context, *RacklotType, *DeleteResp) error
 	// 设置重列组
 	SetMultipleGroup(context.Context, *MultipleGroup, *Response) error
-	// 设置货位组
-	SetRacklotGroup(context.Context, *RacklotGroup, *Response) error
 	// 为货位绑定/解绑货架
 	BindRack(context.Context, *RackIDReq, *Response) error
 	UnbindRack(context.Context, *RackIDReq, *Response) error
 	// 禁用/启用货位
 	DisableRacklots(context.Context, *RacklotIDsReq, *Response) error
 	EnableRacklots(context.Context, *RacklotIDsReq, *Response) error
-	//站台分组
-	AddRacklotsGroup(context.Context, *RacklotGroupsReq, *Response) error
-	RemoveRacklotsGroup(context.Context, *RacklotGroupsReq, *Response) error
 	//占用/释放货位
-	OccupyRacklot(context.Context, *RacklotIDReq, *Response) error
-	ReleaseRacklot(context.Context, *RacklotIDReq, *Response) error
-	// 判断货位是否存在
-	IsExist(context.Context, *RacklotIDReq, *Response) error
-	// 判断货位是否有效
-	IsAvailable(context.Context, *RacklotIDReq, *Response) error
-	// 获取货位关联的货架
-	GetBindedRack(context.Context, *RacklotIDReq, *IDReq) error
+	OccupyRacklots(context.Context, *RacklotIDsReq, *Response) error
+	ReleaseRacklots(context.Context, *RacklotIDsReq, *Response) error
 	// 设置是否允许存车
-	Inbound(context.Context, *FlagReq, *Response) error
+	SetInbound(context.Context, *FlagReq, *Response) error
 	// 设置是否允许取车
-	Outbound(context.Context, *FlagReq, *Response) error
-	//增加属性
-	SetProperties(context.Context, *PropertiesReq, *Response) error
-	// 设置类型
-	SetRacklotType(context.Context, *TypeReq, *Response) error
+	SetOutbound(context.Context, *FlagReq, *Response) error
 }
 
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
 	type racklotService interface {
-		AddRacklotType(ctx context.Context, in *RacklotType, out *AddResp) error
-		UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error
-		DeleteRacklotType(ctx context.Context, in *RacklotType, out *DeleteResp) error
+		GetRacklots(ctx context.Context, in *RacklotQuery, out *Racklots) error
+		GetRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error
 		GetRacklotTypes(ctx context.Context, in *RacklotTypeQuery, out *RacklotTypes) error
-		GetOneRacklotType(ctx context.Context, in *RacklotIDReq, out *RacklotType) error
+		GetRacklotType(ctx context.Context, in *RacklotIDReq, out *RacklotType) error
 		AddRacklot(ctx context.Context, in *Racklot, out *AddResp) error
 		BatchAddRacklots(ctx context.Context, in *Racklots, out *Response) error
 		DeleteRacklot(ctx context.Context, in *RacklotIDReq, out *DeleteResp) error
 		BatchDeleteRacklots(ctx context.Context, in *DeleteRacklotsReq, out *Response) error
 		UpdateRacklot(ctx context.Context, in *UpdateRacklotReq, out *UpdateResp) error
 		BatchUpdateRacklots(ctx context.Context, in *UpdateRacklotsReq, out *Response) error
-		GetRacklots(ctx context.Context, in *RacklotQuery, out *Racklots) error
-		GetOneRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error
+		AddRacklotType(ctx context.Context, in *RacklotType, out *AddResp) error
+		UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error
+		DeleteRacklotType(ctx context.Context, in *RacklotType, out *DeleteResp) error
 		SetMultipleGroup(ctx context.Context, in *MultipleGroup, out *Response) error
-		SetRacklotGroup(ctx context.Context, in *RacklotGroup, out *Response) error
 		BindRack(ctx context.Context, in *RackIDReq, out *Response) error
 		UnbindRack(ctx context.Context, in *RackIDReq, out *Response) error
 		DisableRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error
 		EnableRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error
-		AddRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, out *Response) error
-		RemoveRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, out *Response) error
-		OccupyRacklot(ctx context.Context, in *RacklotIDReq, out *Response) error
-		ReleaseRacklot(ctx context.Context, in *RacklotIDReq, out *Response) error
-		IsExist(ctx context.Context, in *RacklotIDReq, out *Response) error
-		IsAvailable(ctx context.Context, in *RacklotIDReq, out *Response) error
-		GetBindedRack(ctx context.Context, in *RacklotIDReq, out *IDReq) error
-		Inbound(ctx context.Context, in *FlagReq, out *Response) error
-		Outbound(ctx context.Context, in *FlagReq, out *Response) error
-		SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error
-		SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error
+		OccupyRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error
+		ReleaseRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error
+		SetInbound(ctx context.Context, in *FlagReq, out *Response) error
+		SetOutbound(ctx context.Context, in *FlagReq, out *Response) error
 	}
 	type RacklotService struct {
 		racklotService
@@ -518,24 +400,20 @@ type racklotServiceHandler struct {
 	RacklotServiceHandler
 }
 
-func (h *racklotServiceHandler) AddRacklotType(ctx context.Context, in *RacklotType, out *AddResp) error {
-	return h.RacklotServiceHandler.AddRacklotType(ctx, in, out)
+func (h *racklotServiceHandler) GetRacklots(ctx context.Context, in *RacklotQuery, out *Racklots) error {
+	return h.RacklotServiceHandler.GetRacklots(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error {
-	return h.RacklotServiceHandler.UpdateRacklotType(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) DeleteRacklotType(ctx context.Context, in *RacklotType, out *DeleteResp) error {
-	return h.RacklotServiceHandler.DeleteRacklotType(ctx, in, out)
+func (h *racklotServiceHandler) GetRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error {
+	return h.RacklotServiceHandler.GetRacklot(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) GetRacklotTypes(ctx context.Context, in *RacklotTypeQuery, out *RacklotTypes) error {
 	return h.RacklotServiceHandler.GetRacklotTypes(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) GetOneRacklotType(ctx context.Context, in *RacklotIDReq, out *RacklotType) error {
-	return h.RacklotServiceHandler.GetOneRacklotType(ctx, in, out)
+func (h *racklotServiceHandler) GetRacklotType(ctx context.Context, in *RacklotIDReq, out *RacklotType) error {
+	return h.RacklotServiceHandler.GetRacklotType(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) AddRacklot(ctx context.Context, in *Racklot, out *AddResp) error {
@@ -562,20 +440,20 @@ func (h *racklotServiceHandler) BatchUpdateRacklots(ctx context.Context, in *Upd
 	return h.RacklotServiceHandler.BatchUpdateRacklots(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) GetRacklots(ctx context.Context, in *RacklotQuery, out *Racklots) error {
-	return h.RacklotServiceHandler.GetRacklots(ctx, in, out)
+func (h *racklotServiceHandler) AddRacklotType(ctx context.Context, in *RacklotType, out *AddResp) error {
+	return h.RacklotServiceHandler.AddRacklotType(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) GetOneRacklot(ctx context.Context, in *RacklotIDReq, out *Racklot) error {
-	return h.RacklotServiceHandler.GetOneRacklot(ctx, in, out)
+func (h *racklotServiceHandler) UpdateRacklotType(ctx context.Context, in *UpdateRacklotTypeReq, out *UpdateResp) error {
+	return h.RacklotServiceHandler.UpdateRacklotType(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) DeleteRacklotType(ctx context.Context, in *RacklotType, out *DeleteResp) error {
+	return h.RacklotServiceHandler.DeleteRacklotType(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) SetMultipleGroup(ctx context.Context, in *MultipleGroup, out *Response) error {
 	return h.RacklotServiceHandler.SetMultipleGroup(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) SetRacklotGroup(ctx context.Context, in *RacklotGroup, out *Response) error {
-	return h.RacklotServiceHandler.SetRacklotGroup(ctx, in, out)
 }
 
 func (h *racklotServiceHandler) BindRack(ctx context.Context, in *RackIDReq, out *Response) error {
@@ -594,46 +472,18 @@ func (h *racklotServiceHandler) EnableRacklots(ctx context.Context, in *RacklotI
 	return h.RacklotServiceHandler.EnableRacklots(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) AddRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, out *Response) error {
-	return h.RacklotServiceHandler.AddRacklotsGroup(ctx, in, out)
+func (h *racklotServiceHandler) OccupyRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error {
+	return h.RacklotServiceHandler.OccupyRacklots(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) RemoveRacklotsGroup(ctx context.Context, in *RacklotGroupsReq, out *Response) error {
-	return h.RacklotServiceHandler.RemoveRacklotsGroup(ctx, in, out)
+func (h *racklotServiceHandler) ReleaseRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error {
+	return h.RacklotServiceHandler.ReleaseRacklots(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) OccupyRacklot(ctx context.Context, in *RacklotIDReq, out *Response) error {
-	return h.RacklotServiceHandler.OccupyRacklot(ctx, in, out)
+func (h *racklotServiceHandler) SetInbound(ctx context.Context, in *FlagReq, out *Response) error {
+	return h.RacklotServiceHandler.SetInbound(ctx, in, out)
 }
 
-func (h *racklotServiceHandler) ReleaseRacklot(ctx context.Context, in *RacklotIDReq, out *Response) error {
-	return h.RacklotServiceHandler.ReleaseRacklot(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) IsExist(ctx context.Context, in *RacklotIDReq, out *Response) error {
-	return h.RacklotServiceHandler.IsExist(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) IsAvailable(ctx context.Context, in *RacklotIDReq, out *Response) error {
-	return h.RacklotServiceHandler.IsAvailable(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) GetBindedRack(ctx context.Context, in *RacklotIDReq, out *IDReq) error {
-	return h.RacklotServiceHandler.GetBindedRack(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) Inbound(ctx context.Context, in *FlagReq, out *Response) error {
-	return h.RacklotServiceHandler.Inbound(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) Outbound(ctx context.Context, in *FlagReq, out *Response) error {
-	return h.RacklotServiceHandler.Outbound(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) SetProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
-	return h.RacklotServiceHandler.SetProperties(ctx, in, out)
-}
-
-func (h *racklotServiceHandler) SetRacklotType(ctx context.Context, in *TypeReq, out *Response) error {
-	return h.RacklotServiceHandler.SetRacklotType(ctx, in, out)
+func (h *racklotServiceHandler) SetOutbound(ctx context.Context, in *FlagReq, out *Response) error {
+	return h.RacklotServiceHandler.SetOutbound(ctx, in, out)
 }
