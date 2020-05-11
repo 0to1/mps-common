@@ -7,45 +7,50 @@ import "google/protobuf/wrappers.proto";
 
 service AreaService {
 
-   // 添加货位类型
-   rpc AddAreaType(AreaType) returns (Response);
-   // 修改货位类型
-   rpc UpdateAreaType(UpdateAreaTypeReq) returns (Response);
-   // 删除货位类型
-   rpc DeleteAreaType(AreaType) returns (Response);
-   // 获取货位类型
-   rpc GetAreaType(AreaTypeQuery) returns (AreaTypes);
-  // 获取货位类型
-  rpc GetOneAreaType(AreaType) returns (AreaType);
+    // 根据ID获取指定区域信息
+    rpc GetArea(AreaIDReq) returns (Area);
+    // 根据查询条件获取区域
+    rpc GetAreas(AreaQuery) returns (Areas);
+
+
   // 添加区域
   rpc AddArea(Area) returns (Response);
   // 修改区域
   rpc UpdateArea(UpdateAreaReq) returns (Response);
   // 删除区域
   rpc DeleteArea(AreaIDReq) returns (Response);
-  // 根据ID获取指定区域信息
-  rpc GetOneArea(AreaIDReq) returns (Area);
-  // 根据查询条件获取区域
-  rpc GetAreas(AreaQuery) returns (Areas);
+
+    // 获取货位类型
+   rpc GetAreaTypes(AreaTypeQuery) returns (AreaTypes);
+   // 获取货位类型
+   rpc GetAreaType(AreaType) returns (AreaType);
+
+   // 添加货位类型
+   rpc AddAreaType(AreaType) returns (Response);
+   // 修改货位类型
+   rpc UpdateAreaType(UpdateAreaTypeReq) returns (Response);
+   // 删除货位类型
+   rpc DeleteAreaType(AreaType) returns (Response);
+
+
   //对应区域设置货位组
   rpc AddRacklots(RacklotsReq) returns(Response);
+  rpc DeleteRacklots(RacklotsReq) returns(Response);
   rpc AddChildAreas(ChildsReq) returns(Response);
-  // rpc UpdateArea(UpdateAreaReq) returns (Response);
-  // 设置区域类型
-  rpc SetAreaType(TypeReq) returns (Response);
+    //增加属性
+    rpc AddProperties(PropertiesReq) returns(Response);
+
   // 设置区域的任务容量
   rpc SetOrderCapacity(CapReq) returns (Response);
   // 设置是否允许存车
-  rpc Inbound(FlagReq) returns (Response);
+  rpc SetInbound(FlagReq) returns (Response);
   // 设置是否允许取车
-  rpc Outbound(FlagReq) returns (Response);
+  rpc SetOutbound(FlagReq) returns (Response);
   // 设置是否启用
   rpc SetValid(FlagReq) returns (Response);
   //设置父区域
   rpc SetParentArea(ParentReq) returns(Response);
 
-  //增加属性
-  rpc SetProperties(PropertiesReq) returns(Response);
 }
 
 message AreaType {
@@ -78,26 +83,19 @@ message Area {
   AreaType type = 22;
   //区域的货位列表，待仔细考虑
   repeated int32 racklots = 23;
-  // 区域允许的货位类型
-  int32 racklotType = 24;
+
   // 区域任务容量
   int32 orderCapacity = 25;
   //是否允许入库
-  bool inbound = 28;
+  bool isInbound = 28;
   //是否允许出库
-  bool outbound = 29;
-  bool valid =  32;
-  // 所属仓库Ikey
-  string warehouseIkey = 30;
-//   repeated Property props = 31;
-   // 子级区域ID
-   repeated int32 ChildAreaIDs = 27;
-   //任务ids
-   repeated int32 OrderIDs = 26;
-   //任务数量
-   uint32 OrderNum = 33;
+  bool isOutbound = 29;
+  bool isValid =  32;
 
-   map<string,string> props = 31;
+   // 子级区域ID
+   repeated int32 childAreaIDs = 27;
+
+   map<string,string> properties = 31;
 }
 
 message UpdateArea {
@@ -106,17 +104,16 @@ message UpdateArea {
   // 区域任务容量
   google.protobuf.Int32Value orderCapacity = 25;
   //是否有效
-  google.protobuf.BoolValue valid = 27;
+  google.protobuf.BoolValue isValid = 27;
   //是否允许入库
-  google.protobuf.BoolValue inbound = 28;
+  google.protobuf.BoolValue isInbound = 28;
   //是否允许出库
-  google.protobuf.BoolValue outbound = 29;
-  // 所属仓库Ikey
-  google.protobuf.StringValue warehouseIkey = 30;
+  google.protobuf.BoolValue isOutbound = 29;
+
   //区域的货位列表，待仔细考虑
   repeated int32 racklots = 23;
 
-  map<string,string> props = 31;
+  map<string,string> properties = 31;
 }
 
 message UpdateAreaReq {
@@ -137,13 +134,12 @@ message AreaFilter {
   repeated AreaFilter and = 1;
   repeated AreaFilter or = 2;
   repeated int32 idIn = 3;                                 
-	repeated int32 childIDIn =4;                        
+	repeated int32 childAreaIDIn =4;                        
   repeated int32 racklotIDIn = 5;          
-  google.protobuf.BoolValue inBound = 6;             
-	google.protobuf.BoolValue outBound = 7;             
+  google.protobuf.BoolValue isInbound = 6;             
+	google.protobuf.BoolValue isOutbound = 7;             
   google.protobuf.BoolValue isValid = 8;     
-  google.protobuf.Int32Value parentID = 9;   
-  google.protobuf.StringValue warehouseIkey  = 10; 
+  google.protobuf.Int32Value parentAreaID = 9;   
   AreaTypeFilter typeFilter  = 11;
   AreaPropertiesFilter  propertiesFilter = 12;     
 }
@@ -223,10 +219,10 @@ message Property{
 
 message ParentReq {
   int32 id = 1;
-  int32 parentID = 2;
+  int32 parentAreaID = 2;
 }
 
 message ChildsReq {
   int32 id = 1;
-  repeated int32 childIDs = 2;
+  repeated int32 childAreaIDs = 2;
 }

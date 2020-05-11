@@ -160,6 +160,20 @@ func DeleteByArea(db *gorm.DB, areaID int) (bool, error) {
 	return true, nil
 }
 
+func DeleteByAreas(db *gorm.DB, areaIDs []int) (bool, error) {
+
+	db = db.Where("area_id in (?)", areaIDs).Unscoped().Delete(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func DeleteByRacklot(db *gorm.DB, racklotID int) (bool, error) {
 
 	db = db.Where("racklot_id = ?", racklotID).Unscoped().Delete(&AreaRacklot{})
@@ -177,6 +191,20 @@ func DeleteByRacklot(db *gorm.DB, racklotID int) (bool, error) {
 func DeleteByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
 
 	db = db.Where("racklot_id in (?)", racklotIDs).Unscoped().Delete(&AreaRacklot{})
+	if err := db.Error; err != nil {
+		return false, err
+	}
+
+	if db.RowsAffected <= 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func DeleteByAreaRacklots(db *gorm.DB, areaID int, racklotIDs []int) (bool, error) {
+
+	db = db.Where("area_id = ? and racklot_id in (?)", areaID, racklotIDs).Unscoped().Delete(&AreaRacklot{})
 	if err := db.Error; err != nil {
 		return false, err
 	}
