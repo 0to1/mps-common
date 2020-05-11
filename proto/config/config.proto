@@ -8,6 +8,17 @@ service ConfigService {
 	// 获取仓库信息
 	rpc GetWarehouse(Request) returns (Warehouse);
 
+	// 增加脚本参数
+	rpc AddScriptParameter(ScriptParameter) returns (Response);
+	// 修改脚本参数
+	rpc UpdateScriptParameter(ScriptParameter) returns (Response);
+	// 删除脚本参数
+	rpc DeleteScriptParameter(IkeyRequest) returns (Response);
+	// 查询单个脚本参数
+	rpc GetScriptParameter(IkeyRequest) returns (ScriptParameter);
+	// 查询所有的脚本参数
+	rpc GetScriptParameters(Query) returns (ScriptParameters);
+
 	// 增加脚本按钮
 	rpc AddScriptButton(ScriptButton) returns (Response);
 	// 修改脚本按钮
@@ -35,12 +46,22 @@ message ScriptButton {
 	string ikey = 1;
 	string name = 2;
 	uint32 scriptId = 3;
-	string parameters = 4;
+	repeated ScriptParameter parameter = 4;
 }
 
 message ScriptButtons {
-	repeated ScriptButton button = 1;
-	uint32 totalCount = 2; 
+	uint32 totalCount = 1;
+	repeated ScriptButton button = 2;
+}
+
+message ScriptParameter {
+	string ikey = 1;
+	string name = 2;
+}
+
+message ScriptParameters {
+	uint32 totalCount = 1; 
+	repeated ScriptParameter parameter = 2;
 }
 
 message Request {}

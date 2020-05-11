@@ -38,6 +38,16 @@ type ConfigService interface {
 	UpdateWarehouse(ctx context.Context, in *Warehouse, opts ...client.CallOption) (*Response, error)
 	// 获取仓库信息
 	GetWarehouse(ctx context.Context, in *Request, opts ...client.CallOption) (*Warehouse, error)
+	// 增加脚本参数
+	AddScriptParameter(ctx context.Context, in *ScriptParameter, opts ...client.CallOption) (*Response, error)
+	// 修改脚本参数
+	UpdateScriptParameter(ctx context.Context, in *ScriptParameter, opts ...client.CallOption) (*Response, error)
+	// 删除脚本参数
+	DeleteScriptParameter(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*Response, error)
+	// 查询单个脚本参数
+	GetScriptParameter(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*ScriptParameter, error)
+	// 查询所有的脚本参数
+	GetScriptParameters(ctx context.Context, in *Query, opts ...client.CallOption) (*ScriptParameters, error)
 	// 增加脚本按钮
 	AddScriptButton(ctx context.Context, in *ScriptButton, opts ...client.CallOption) (*Response, error)
 	// 修改脚本按钮
@@ -75,6 +85,56 @@ func (c *configService) UpdateWarehouse(ctx context.Context, in *Warehouse, opts
 func (c *configService) GetWarehouse(ctx context.Context, in *Request, opts ...client.CallOption) (*Warehouse, error) {
 	req := c.c.NewRequest(c.name, "ConfigService.GetWarehouse", in)
 	out := new(Warehouse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) AddScriptParameter(ctx context.Context, in *ScriptParameter, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.AddScriptParameter", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) UpdateScriptParameter(ctx context.Context, in *ScriptParameter, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.UpdateScriptParameter", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) DeleteScriptParameter(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.DeleteScriptParameter", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) GetScriptParameter(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*ScriptParameter, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.GetScriptParameter", in)
+	out := new(ScriptParameter)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) GetScriptParameters(ctx context.Context, in *Query, opts ...client.CallOption) (*ScriptParameters, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.GetScriptParameters", in)
+	out := new(ScriptParameters)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -139,6 +199,16 @@ type ConfigServiceHandler interface {
 	UpdateWarehouse(context.Context, *Warehouse, *Response) error
 	// 获取仓库信息
 	GetWarehouse(context.Context, *Request, *Warehouse) error
+	// 增加脚本参数
+	AddScriptParameter(context.Context, *ScriptParameter, *Response) error
+	// 修改脚本参数
+	UpdateScriptParameter(context.Context, *ScriptParameter, *Response) error
+	// 删除脚本参数
+	DeleteScriptParameter(context.Context, *IkeyRequest, *Response) error
+	// 查询单个脚本参数
+	GetScriptParameter(context.Context, *IkeyRequest, *ScriptParameter) error
+	// 查询所有的脚本参数
+	GetScriptParameters(context.Context, *Query, *ScriptParameters) error
 	// 增加脚本按钮
 	AddScriptButton(context.Context, *ScriptButton, *Response) error
 	// 修改脚本按钮
@@ -155,6 +225,11 @@ func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, op
 	type configService interface {
 		UpdateWarehouse(ctx context.Context, in *Warehouse, out *Response) error
 		GetWarehouse(ctx context.Context, in *Request, out *Warehouse) error
+		AddScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error
+		UpdateScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error
+		DeleteScriptParameter(ctx context.Context, in *IkeyRequest, out *Response) error
+		GetScriptParameter(ctx context.Context, in *IkeyRequest, out *ScriptParameter) error
+		GetScriptParameters(ctx context.Context, in *Query, out *ScriptParameters) error
 		AddScriptButton(ctx context.Context, in *ScriptButton, out *Response) error
 		UpdateScriptButton(ctx context.Context, in *ScriptButton, out *Response) error
 		DeleteScriptButton(ctx context.Context, in *IkeyRequest, out *Response) error
@@ -178,6 +253,26 @@ func (h *configServiceHandler) UpdateWarehouse(ctx context.Context, in *Warehous
 
 func (h *configServiceHandler) GetWarehouse(ctx context.Context, in *Request, out *Warehouse) error {
 	return h.ConfigServiceHandler.GetWarehouse(ctx, in, out)
+}
+
+func (h *configServiceHandler) AddScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error {
+	return h.ConfigServiceHandler.AddScriptParameter(ctx, in, out)
+}
+
+func (h *configServiceHandler) UpdateScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error {
+	return h.ConfigServiceHandler.UpdateScriptParameter(ctx, in, out)
+}
+
+func (h *configServiceHandler) DeleteScriptParameter(ctx context.Context, in *IkeyRequest, out *Response) error {
+	return h.ConfigServiceHandler.DeleteScriptParameter(ctx, in, out)
+}
+
+func (h *configServiceHandler) GetScriptParameter(ctx context.Context, in *IkeyRequest, out *ScriptParameter) error {
+	return h.ConfigServiceHandler.GetScriptParameter(ctx, in, out)
+}
+
+func (h *configServiceHandler) GetScriptParameters(ctx context.Context, in *Query, out *ScriptParameters) error {
+	return h.ConfigServiceHandler.GetScriptParameters(ctx, in, out)
 }
 
 func (h *configServiceHandler) AddScriptButton(ctx context.Context, in *ScriptButton, out *Response) error {
