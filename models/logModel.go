@@ -7,8 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// LogModel ..
-type LogModel struct {
+// Log ..
+type Log struct {
 	Time     time.Time
 	Level    string
 	FuncName string
@@ -23,7 +23,7 @@ type LogModel struct {
 func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string, line int,
 	fileName string, srvName string, ip string, msg string) error {
 
-	var logDB LogModel
+	var logDB Log
 	logDB.Time = wTime
 	logDB.Level = level
 	logDB.FuncName = funcName

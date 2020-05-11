@@ -71,23 +71,23 @@ func (hook *DBHook) Levels() []logrus.Level {
 	}
 }
 
-func parseEntry(hook *DBHook, entry *logrus.Entry) (models.LogModel, error) {
-	var logModel models.LogModel
+func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
+	var logModel models.Log
 
 	body, err := entry.String()
 	if err != nil {
-		return models.LogModel{}, err
+		return models.Log{}, err
 	}
 
 	var content logContent
 
 	if err := json.Unmarshal([]byte(body), &content); err != nil {
-		return models.LogModel{}, err
+		return models.Log{}, err
 	}
 
 	t, err := time.ParseInLocation("2006-01-02 15:04:05.000", content.Time, time.Local)
 	if err != nil {
-		return models.LogModel{}, err
+		return models.Log{}, err
 	}
 
 	pc, file, line, ok := runtime.Caller(9)
