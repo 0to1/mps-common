@@ -113,7 +113,7 @@ message Racklot {
   MultipleGroup multiGroup = 8;
   string description = 10;
   // 站台是否有效，被禁用则无效，启用则有效，默认为有效
-  bool valid = 11;
+  bool isValid = 11;
   // 关联的货架ID，在货位上没有放置货架时为空
   int32 rackID = 12;
   //是否被占用
