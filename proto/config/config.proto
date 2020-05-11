@@ -46,7 +46,7 @@ message InputScriptButton {
 	string ikey = 1;
 	string name = 2;
 	uint32 scriptId = 3;
-	repeated string ikeys = 4;
+	repeated string parameterIkeys = 4;
 }
 
 message ScriptButton {
