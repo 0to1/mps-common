@@ -49,9 +49,9 @@ type ConfigService interface {
 	// 查询所有的脚本参数
 	GetScriptParameters(ctx context.Context, in *Query, opts ...client.CallOption) (*ScriptParameters, error)
 	// 增加脚本按钮
-	AddScriptButton(ctx context.Context, in *ScriptButton, opts ...client.CallOption) (*Response, error)
+	AddScriptButton(ctx context.Context, in *InputScriptButton, opts ...client.CallOption) (*Response, error)
 	// 修改脚本按钮
-	UpdateScriptButton(ctx context.Context, in *ScriptButton, opts ...client.CallOption) (*Response, error)
+	UpdateScriptButton(ctx context.Context, in *InputScriptButton, opts ...client.CallOption) (*Response, error)
 	// 删除脚本按钮
 	DeleteScriptButton(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*Response, error)
 	// 查询单个脚本按钮
@@ -142,7 +142,7 @@ func (c *configService) GetScriptParameters(ctx context.Context, in *Query, opts
 	return out, nil
 }
 
-func (c *configService) AddScriptButton(ctx context.Context, in *ScriptButton, opts ...client.CallOption) (*Response, error) {
+func (c *configService) AddScriptButton(ctx context.Context, in *InputScriptButton, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "ConfigService.AddScriptButton", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -152,7 +152,7 @@ func (c *configService) AddScriptButton(ctx context.Context, in *ScriptButton, o
 	return out, nil
 }
 
-func (c *configService) UpdateScriptButton(ctx context.Context, in *ScriptButton, opts ...client.CallOption) (*Response, error) {
+func (c *configService) UpdateScriptButton(ctx context.Context, in *InputScriptButton, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "ConfigService.UpdateScriptButton", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -210,9 +210,9 @@ type ConfigServiceHandler interface {
 	// 查询所有的脚本参数
 	GetScriptParameters(context.Context, *Query, *ScriptParameters) error
 	// 增加脚本按钮
-	AddScriptButton(context.Context, *ScriptButton, *Response) error
+	AddScriptButton(context.Context, *InputScriptButton, *Response) error
 	// 修改脚本按钮
-	UpdateScriptButton(context.Context, *ScriptButton, *Response) error
+	UpdateScriptButton(context.Context, *InputScriptButton, *Response) error
 	// 删除脚本按钮
 	DeleteScriptButton(context.Context, *IkeyRequest, *Response) error
 	// 查询单个脚本按钮
@@ -230,8 +230,8 @@ func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, op
 		DeleteScriptParameter(ctx context.Context, in *IkeyRequest, out *Response) error
 		GetScriptParameter(ctx context.Context, in *IkeyRequest, out *ScriptParameter) error
 		GetScriptParameters(ctx context.Context, in *Query, out *ScriptParameters) error
-		AddScriptButton(ctx context.Context, in *ScriptButton, out *Response) error
-		UpdateScriptButton(ctx context.Context, in *ScriptButton, out *Response) error
+		AddScriptButton(ctx context.Context, in *InputScriptButton, out *Response) error
+		UpdateScriptButton(ctx context.Context, in *InputScriptButton, out *Response) error
 		DeleteScriptButton(ctx context.Context, in *IkeyRequest, out *Response) error
 		GetScriptButton(ctx context.Context, in *IkeyRequest, out *ScriptButton) error
 		GetScriptButtons(ctx context.Context, in *Query, out *ScriptButtons) error
@@ -275,11 +275,11 @@ func (h *configServiceHandler) GetScriptParameters(ctx context.Context, in *Quer
 	return h.ConfigServiceHandler.GetScriptParameters(ctx, in, out)
 }
 
-func (h *configServiceHandler) AddScriptButton(ctx context.Context, in *ScriptButton, out *Response) error {
+func (h *configServiceHandler) AddScriptButton(ctx context.Context, in *InputScriptButton, out *Response) error {
 	return h.ConfigServiceHandler.AddScriptButton(ctx, in, out)
 }
 
-func (h *configServiceHandler) UpdateScriptButton(ctx context.Context, in *ScriptButton, out *Response) error {
+func (h *configServiceHandler) UpdateScriptButton(ctx context.Context, in *InputScriptButton, out *Response) error {
 	return h.ConfigServiceHandler.UpdateScriptButton(ctx, in, out)
 }
 
