@@ -9,12 +9,12 @@ service RackTypeService {
   rpc DeleteRackType(IDReq) returns (Response);
   rpc UpdateRackType(UpdateRackTypeReq) returns (Response);
   rpc GetRackTypes(RackTypeQuery) returns (RackTypes);
-  rpc GetOneRackType(IDReq) returns (RackType);
+  rpc GetRackType(IDReq) returns (RackType);
 
   rpc AddCellType(CellType) returns (Response);
   rpc DeleteCellType(IDReq) returns (Response);
   rpc UpdateCellType(UpdateCellTypeReq) returns (Response);
-  rpc GetOneCellType(IDReq) returns (CellType);
+  rpc GetCellType(IDReq) returns (CellType);
   rpc GetCellTypes(CellTypeQuery) returns (CellTypes);
 }
 
@@ -25,20 +25,18 @@ message RackType {
   uint32 width = 5;
   uint32 height = 6;
   uint32 layers = 7;
-
   // 拣货面(A、B两面或者只有一面)
   uint32 pickingSurface = 9;
   string description = 10;
   //储位数量
-  uint32 cellNums = 11;
-  repeated Cell cells = 12;
-  string cellOption = 13;
+  repeated RackCell cells = 12;
+  map<string,string> cellOption = 13;
 }
 
-message Cell {
+message RackCell {
   uint32 cellType = 1;
-  int32 layer = 2;
-  int32 cellCode = 3;
+  uint32 row  = 2;
+	uint32 column = 3;
 }
 
 message CellType {
@@ -47,10 +45,9 @@ message CellType {
   uint32 length = 4;
   uint32 width = 5;
   uint32 height = 6;
-  uint32 maxLoad = 7;
   string description = 8;
   bool isValid = 9;
-  string properties = 10;
+  map<string,string> properties = 10;
 }
 
 message UpdateRackTypeReq {
@@ -59,17 +56,16 @@ message UpdateRackTypeReq {
 }
 
 message UpdateRackType {
-    google.protobuf.Int32Value id = 1;                                 
+    google.protobuf.UInt32Value id = 1;                                 
     google.protobuf.StringValue name = 2;       
-    google.protobuf.Int32Value length = 4;   
-    google.protobuf.Int32Value width = 5;   
-    google.protobuf.Int32Value height = 6;   
-    google.protobuf.Int32Value layers = 7;   
-    google.protobuf.Int32Value pickingSurface = 8;   
+    google.protobuf.UInt32Value length = 4;   
+    google.protobuf.UInt32Value width = 5;   
+    google.protobuf.UInt32Value height = 6;   
+    google.protobuf.UInt32Value layers = 7;   
+    google.protobuf.UInt32Value pickingSurface = 8;   
     google.protobuf.StringValue description = 9;   
-    google.protobuf.Int32Value cellNumsers = 10;   
-    repeated Cell cells = 12;
-    google.protobuf.StringValue cellOption = 13;
+    repeated RackCell cells = 12;
+    map<string,string> cellOption = 13;
 }
 
 message UpdateCellTypeReq {
@@ -78,15 +74,14 @@ message UpdateCellTypeReq {
 }
 
 message UpdateCellType {
-    google.protobuf.Int32Value id = 1;                                 
+    google.protobuf.UInt32Value id = 1;                                 
     google.protobuf.StringValue name = 2;       
-    google.protobuf.Int32Value length = 4;   
-    google.protobuf.Int32Value width = 5;   
-    google.protobuf.Int32Value height = 6;   
-    google.protobuf.Int32Value maxLoad = 7;      
+    google.protobuf.UInt32Value length = 4;   
+    google.protobuf.UInt32Value width = 5;   
+    google.protobuf.UInt32Value height = 6;    
     google.protobuf.StringValue description = 9;   
     google.protobuf.BoolValue isValid = 10;
-    string properties = 11;
+    map<string,string> properties= 11;
 }
 
 
@@ -113,18 +108,18 @@ message RackTypeQuery {
 message RackTypeFilter {
     repeated RackTypeFilter and = 1;
     repeated RackTypeFilter or = 2;
-    repeated int32 idIn = 3;
+    repeated uint32 idIn = 3;
     repeated string nameIn = 4;
-    google.protobuf.Int32Value id = 5;  
+    google.protobuf.UInt32Value id = 5;  
     google.protobuf.StringValue name = 6;  
   }
 
   message CellTypeFilter {
     repeated CellTypeFilter and = 1;
     repeated CellTypeFilter or = 2;
-    repeated int32 idIn = 3;
+    repeated uint32 idIn = 3;
     repeated string nameIn = 4;
-    google.protobuf.Int32Value id = 5;  
+    google.protobuf.UInt32Value id = 5;  
     google.protobuf.StringValue name = 6;  
   }
 
