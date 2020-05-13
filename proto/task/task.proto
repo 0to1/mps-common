@@ -21,9 +21,9 @@ service TaskService {
   rpc BatchCancel(TaskIDs) returns (Response);
 
   // 设置任务参数
-  rpc SetParameter(LpParameter) returns (LpParameter);
+  rpc SetParameters(LpParameters) returns (Response);
   // 删除任务参数
-  rpc DeleteParameter(LpParameterKey) returns (LpParameter);
+  rpc DeleteParameters(LpParameterKeys) returns (Response);
 
   // 根据查询条件获取任务
   rpc GetTask(TaskID) returns (TaskInfo);
@@ -135,6 +135,16 @@ message LpParameter {
 message LpParameterKey {
   uint32 taskID = 1;
   string key = 2;
+}
+
+message LpParameters {
+  uint32 taskID = 1;
+  string parameters = 2;
+}
+
+message LpParameterKeys {
+  uint32 taskID = 1;
+  repeated string keys = 2;
 }
 
 message Parameters {

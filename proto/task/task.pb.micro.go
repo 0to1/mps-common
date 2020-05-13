@@ -53,9 +53,9 @@ type TaskService interface {
 	BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error)
 	BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error)
 	// 设置任务参数
-	SetParameter(ctx context.Context, in *LpParameter, opts ...client.CallOption) (*LpParameter, error)
+	SetParameters(ctx context.Context, in *LpParameters, opts ...client.CallOption) (*Response, error)
 	// 删除任务参数
-	DeleteParameter(ctx context.Context, in *LpParameterKey, opts ...client.CallOption) (*LpParameter, error)
+	DeleteParameters(ctx context.Context, in *LpParameterKeys, opts ...client.CallOption) (*Response, error)
 	// 根据查询条件获取任务
 	GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
 	// 根据查询条件获取历史任务
@@ -144,9 +144,9 @@ func (c *taskService) BatchCancel(ctx context.Context, in *TaskIDs, opts ...clie
 	return out, nil
 }
 
-func (c *taskService) SetParameter(ctx context.Context, in *LpParameter, opts ...client.CallOption) (*LpParameter, error) {
-	req := c.c.NewRequest(c.name, "TaskService.SetParameter", in)
-	out := new(LpParameter)
+func (c *taskService) SetParameters(ctx context.Context, in *LpParameters, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.SetParameters", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -154,9 +154,9 @@ func (c *taskService) SetParameter(ctx context.Context, in *LpParameter, opts ..
 	return out, nil
 }
 
-func (c *taskService) DeleteParameter(ctx context.Context, in *LpParameterKey, opts ...client.CallOption) (*LpParameter, error) {
-	req := c.c.NewRequest(c.name, "TaskService.DeleteParameter", in)
-	out := new(LpParameter)
+func (c *taskService) DeleteParameters(ctx context.Context, in *LpParameterKeys, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.DeleteParameters", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -257,9 +257,9 @@ type TaskServiceHandler interface {
 	BatchNew(context.Context, *NewTasksReq, *Response) error
 	BatchCancel(context.Context, *TaskIDs, *Response) error
 	// 设置任务参数
-	SetParameter(context.Context, *LpParameter, *LpParameter) error
+	SetParameters(context.Context, *LpParameters, *Response) error
 	// 删除任务参数
-	DeleteParameter(context.Context, *LpParameterKey, *LpParameter) error
+	DeleteParameters(context.Context, *LpParameterKeys, *Response) error
 	// 根据查询条件获取任务
 	GetTask(context.Context, *TaskID, *TaskInfo) error
 	// 根据查询条件获取历史任务
@@ -284,8 +284,8 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error
 		BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error
 		BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error
-		SetParameter(ctx context.Context, in *LpParameter, out *LpParameter) error
-		DeleteParameter(ctx context.Context, in *LpParameterKey, out *LpParameter) error
+		SetParameters(ctx context.Context, in *LpParameters, out *Response) error
+		DeleteParameters(ctx context.Context, in *LpParameterKeys, out *Response) error
 		GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error
 		GetHistoryTask(ctx context.Context, in *TaskID, out *TaskInfo) error
 		GetTasks(ctx context.Context, in *Query, out *TaskInfos) error
@@ -330,12 +330,12 @@ func (h *taskServiceHandler) BatchCancel(ctx context.Context, in *TaskIDs, out *
 	return h.TaskServiceHandler.BatchCancel(ctx, in, out)
 }
 
-func (h *taskServiceHandler) SetParameter(ctx context.Context, in *LpParameter, out *LpParameter) error {
-	return h.TaskServiceHandler.SetParameter(ctx, in, out)
+func (h *taskServiceHandler) SetParameters(ctx context.Context, in *LpParameters, out *Response) error {
+	return h.TaskServiceHandler.SetParameters(ctx, in, out)
 }
 
-func (h *taskServiceHandler) DeleteParameter(ctx context.Context, in *LpParameterKey, out *LpParameter) error {
-	return h.TaskServiceHandler.DeleteParameter(ctx, in, out)
+func (h *taskServiceHandler) DeleteParameters(ctx context.Context, in *LpParameterKeys, out *Response) error {
+	return h.TaskServiceHandler.DeleteParameters(ctx, in, out)
 }
 
 func (h *taskServiceHandler) GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
