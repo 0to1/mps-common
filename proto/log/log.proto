@@ -3,13 +3,13 @@ syntax = "proto3";
 package go.micro.srv.log;
 
 service Log {
-  rpc UpdateConfig(CfgReq) returns (Response);
-  rpc GetConfig(Request) returns (CfgReq);
+  rpc UpdateConfig(LogConfig) returns (Response);
+  rpc GetConfig(Request) returns (LogConfig);
   rpc GetLogs(Query) returns (LogContents);
   rpc WriteLog(LogContent) returns (Response);
 }
 
-message CfgReq {
+message LogConfig {
   uint32 logKeepDays = 1;
   uint32 logLevel = 2;
 }
@@ -31,7 +31,7 @@ message Response {}
 
 message Query {
   uint32 page = 1;
-  uint32 per_page = 2;
+  uint32 perPage = 2;
   LogFilter filter = 3;
 }
 

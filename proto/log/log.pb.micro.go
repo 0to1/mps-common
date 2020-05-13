@@ -34,8 +34,8 @@ var _ server.Option
 // Client API for Log service
 
 type LogService interface {
-	UpdateConfig(ctx context.Context, in *CfgReq, opts ...client.CallOption) (*Response, error)
-	GetConfig(ctx context.Context, in *Request, opts ...client.CallOption) (*CfgReq, error)
+	UpdateConfig(ctx context.Context, in *LogConfig, opts ...client.CallOption) (*Response, error)
+	GetConfig(ctx context.Context, in *Request, opts ...client.CallOption) (*LogConfig, error)
 	GetLogs(ctx context.Context, in *Query, opts ...client.CallOption) (*LogContents, error)
 	WriteLog(ctx context.Context, in *LogContent, opts ...client.CallOption) (*Response, error)
 }
@@ -52,7 +52,7 @@ func NewLogService(name string, c client.Client) LogService {
 	}
 }
 
-func (c *logService) UpdateConfig(ctx context.Context, in *CfgReq, opts ...client.CallOption) (*Response, error) {
+func (c *logService) UpdateConfig(ctx context.Context, in *LogConfig, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Log.UpdateConfig", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -62,9 +62,9 @@ func (c *logService) UpdateConfig(ctx context.Context, in *CfgReq, opts ...clien
 	return out, nil
 }
 
-func (c *logService) GetConfig(ctx context.Context, in *Request, opts ...client.CallOption) (*CfgReq, error) {
+func (c *logService) GetConfig(ctx context.Context, in *Request, opts ...client.CallOption) (*LogConfig, error) {
 	req := c.c.NewRequest(c.name, "Log.GetConfig", in)
-	out := new(CfgReq)
+	out := new(LogConfig)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -95,16 +95,16 @@ func (c *logService) WriteLog(ctx context.Context, in *LogContent, opts ...clien
 // Server API for Log service
 
 type LogHandler interface {
-	UpdateConfig(context.Context, *CfgReq, *Response) error
-	GetConfig(context.Context, *Request, *CfgReq) error
+	UpdateConfig(context.Context, *LogConfig, *Response) error
+	GetConfig(context.Context, *Request, *LogConfig) error
 	GetLogs(context.Context, *Query, *LogContents) error
 	WriteLog(context.Context, *LogContent, *Response) error
 }
 
 func RegisterLogHandler(s server.Server, hdlr LogHandler, opts ...server.HandlerOption) error {
 	type log interface {
-		UpdateConfig(ctx context.Context, in *CfgReq, out *Response) error
-		GetConfig(ctx context.Context, in *Request, out *CfgReq) error
+		UpdateConfig(ctx context.Context, in *LogConfig, out *Response) error
+		GetConfig(ctx context.Context, in *Request, out *LogConfig) error
 		GetLogs(ctx context.Context, in *Query, out *LogContents) error
 		WriteLog(ctx context.Context, in *LogContent, out *Response) error
 	}
@@ -119,11 +119,11 @@ type logHandler struct {
 	LogHandler
 }
 
-func (h *logHandler) UpdateConfig(ctx context.Context, in *CfgReq, out *Response) error {
+func (h *logHandler) UpdateConfig(ctx context.Context, in *LogConfig, out *Response) error {
 	return h.LogHandler.UpdateConfig(ctx, in, out)
 }
 
-func (h *logHandler) GetConfig(ctx context.Context, in *Request, out *CfgReq) error {
+func (h *logHandler) GetConfig(ctx context.Context, in *Request, out *LogConfig) error {
 	return h.LogHandler.GetConfig(ctx, in, out)
 }
 
