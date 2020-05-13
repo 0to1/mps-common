@@ -10,9 +10,8 @@ service Log {
 }
 
 message CfgReq {
-  uint32 logKeepTime = 1;
-  string filenameFormat = 2;
-  bool reportCaller = 3;
+  uint32 logKeepDays = 1;
+  uint32 logLevel = 2;
 }
 
 message LogContent {
