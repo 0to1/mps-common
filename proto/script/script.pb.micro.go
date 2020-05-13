@@ -12,6 +12,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -28,9 +29,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for ScriptService service
+
+func NewScriptServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for ScriptService service
 
@@ -38,8 +46,10 @@ type ScriptService interface {
 	AddScript(ctx context.Context, in *Script, opts ...client.CallOption) (*Response, error)
 	DeleteScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Response, error)
 	UpdateScript(ctx context.Context, in *UpdateScriptReq, opts ...client.CallOption) (*Response, error)
-	GetOneScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Script, error)
+	GetScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Script, error)
 	GetScripts(ctx context.Context, in *Query, opts ...client.CallOption) (*Scripts, error)
+	// 获取下一个可用的脚本ID
+	GetNextScriptID(ctx context.Context, in *Nop, opts ...client.CallOption) (*ScriptIndex, error)
 }
 
 type scriptService struct {
@@ -84,8 +94,8 @@ func (c *scriptService) UpdateScript(ctx context.Context, in *UpdateScriptReq, o
 	return out, nil
 }
 
-func (c *scriptService) GetOneScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Script, error) {
-	req := c.c.NewRequest(c.name, "ScriptService.GetOneScript", in)
+func (c *scriptService) GetScript(ctx context.Context, in *ScriptIndex, opts ...client.CallOption) (*Script, error) {
+	req := c.c.NewRequest(c.name, "ScriptService.GetScript", in)
 	out := new(Script)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -104,14 +114,26 @@ func (c *scriptService) GetScripts(ctx context.Context, in *Query, opts ...clien
 	return out, nil
 }
 
+func (c *scriptService) GetNextScriptID(ctx context.Context, in *Nop, opts ...client.CallOption) (*ScriptIndex, error) {
+	req := c.c.NewRequest(c.name, "ScriptService.GetNextScriptID", in)
+	out := new(ScriptIndex)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ScriptService service
 
 type ScriptServiceHandler interface {
 	AddScript(context.Context, *Script, *Response) error
 	DeleteScript(context.Context, *ScriptIndex, *Response) error
 	UpdateScript(context.Context, *UpdateScriptReq, *Response) error
-	GetOneScript(context.Context, *ScriptIndex, *Script) error
+	GetScript(context.Context, *ScriptIndex, *Script) error
 	GetScripts(context.Context, *Query, *Scripts) error
+	// 获取下一个可用的脚本ID
+	GetNextScriptID(context.Context, *Nop, *ScriptIndex) error
 }
 
 func RegisterScriptServiceHandler(s server.Server, hdlr ScriptServiceHandler, opts ...server.HandlerOption) error {
@@ -119,8 +141,9 @@ func RegisterScriptServiceHandler(s server.Server, hdlr ScriptServiceHandler, op
 		AddScript(ctx context.Context, in *Script, out *Response) error
 		DeleteScript(ctx context.Context, in *ScriptIndex, out *Response) error
 		UpdateScript(ctx context.Context, in *UpdateScriptReq, out *Response) error
-		GetOneScript(ctx context.Context, in *ScriptIndex, out *Script) error
+		GetScript(ctx context.Context, in *ScriptIndex, out *Script) error
 		GetScripts(ctx context.Context, in *Query, out *Scripts) error
+		GetNextScriptID(ctx context.Context, in *Nop, out *ScriptIndex) error
 	}
 	type ScriptService struct {
 		scriptService
@@ -145,10 +168,14 @@ func (h *scriptServiceHandler) UpdateScript(ctx context.Context, in *UpdateScrip
 	return h.ScriptServiceHandler.UpdateScript(ctx, in, out)
 }
 
-func (h *scriptServiceHandler) GetOneScript(ctx context.Context, in *ScriptIndex, out *Script) error {
-	return h.ScriptServiceHandler.GetOneScript(ctx, in, out)
+func (h *scriptServiceHandler) GetScript(ctx context.Context, in *ScriptIndex, out *Script) error {
+	return h.ScriptServiceHandler.GetScript(ctx, in, out)
 }
 
 func (h *scriptServiceHandler) GetScripts(ctx context.Context, in *Query, out *Scripts) error {
 	return h.ScriptServiceHandler.GetScripts(ctx, in, out)
+}
+
+func (h *scriptServiceHandler) GetNextScriptID(ctx context.Context, in *Nop, out *ScriptIndex) error {
+	return h.ScriptServiceHandler.GetNextScriptID(ctx, in, out)
 }

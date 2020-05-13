@@ -3,9 +3,6 @@ syntax = "proto3";
 // import "google/protobuf/any.proto";
 // import "google/protobuf/timestamp.proto";
 
-// import "timestamp/timestamp.proto";
-// import "any/any.proto";
-
 package go.micro.srv.task;
 import "google/protobuf/wrappers.proto";
 
@@ -17,32 +14,33 @@ service TaskService {
   // 取消任务
   rpc Cancel(TaskID) returns (Response);
 
-  rpc UpdateTask(UpdateTaskReq)returns (Response);
+  rpc UpdateTask(UpdateTaskReq) returns (Response);
 
   rpc BatchNew(NewTasksReq) returns (Response);
 
-  rpc BatchCancel(TaskIDs) returns(Response);
+  rpc BatchCancel(TaskIDs) returns (Response);
 
-  // 增加任务参数
-  rpc AddParameters(Parameters) returns (Parameters);
-  // 修改任务参数
-  rpc ModifyParameters(Parameters) returns (Parameters);
+  // 设置任务参数
+  rpc SetParameter(LpParameter) returns (LpParameter);
   // 删除任务参数
-  rpc DeleteParameters(ParameterKeys) returns (Parameters);
+  rpc DeleteParameter(LpParameterKey) returns (LpParameter);
 
   // 根据查询条件获取任务
-  rpc GetOneTask(TaskID) returns (TaskInfo);
+  rpc GetTask(TaskID) returns (TaskInfo);
   // 根据查询条件获取历史任务
-  rpc GetOneHistory(TaskID) returns (TaskInfo);
+  rpc GetHistoryTask(TaskID) returns (TaskInfo);
   // 根据查询条件获取任务
   rpc GetTasks(Query) returns (TaskInfos);
   // 根据查询条件获取历史任务
-  rpc GetHistories(Query) returns (TaskInfos);
+  rpc GetHistoryTasks(Query) returns (TaskInfos);
 
-  // 调用python脚本的函数
+  // 调用脚本的函数
   rpc Call(CallOptions) returns (CallResponse);
-  // 执行python脚本
+  // 执行脚本
   rpc Execute(ExecuteOptions) returns (ExecuteResponse);
+
+  rpc SetGP(Parameter) returns (Parameter);
+  rpc GetGP(ParameterKey) returns (Parameter);
 }
 
 message NewTaskReq {
@@ -53,86 +51,60 @@ message NewTaskReq {
   string description = 5;
 }
 
-message NewTasksReq {
-  repeated NewTaskReq tasks= 1;
-}
+message NewTasksReq { repeated NewTaskReq tasks = 1; }
 
 message Response {}
 
-message Path { string path = 1; }
-
 message TaskID { uint32 id = 1; }
 
-message TaskIDs {repeated  uint32 ids = 1;}
+message TaskIDs { repeated uint32 ids = 1; }
 
 message TaskPropertiesFilter {
-  string key  = 1;
-  string value = 2; 
+  string key = 1;
+  string value = 2;
 }
 
-
-// id_in:[Int!]
-// orderIndex:Int
-// schedulerStatus:Int
-// priority:Int
-// scriptIndex:Int
-// begin_gt:Time
-// begin_lt:Time
-// end_gt:Time
-// end_lt:Time
-// originStation:Int
-// targetStation:Int
-// agvID:Int
-// agvInitPoint:Int
-// materialIDs:Int
-// errorCode:Int
-// error:String
-
 message UpdateTaskReq {
-    uint32 id =1 ;
-    UpdateTask task = 2;
+  uint32 id = 1;
+  UpdateTask task = 2;
 }
 
 message UpdateTask {
-    google.protobuf.Int32Value orderIndex = 1;
-    google.protobuf.Int32Value priority  = 2;
-    google.protobuf.Int32Value scriptIndex = 3;
-    google.protobuf.StringValue description = 4; 
-    google.protobuf.Int32Value originStation  = 5;
-    google.protobuf.Int32Value targetStation = 6;
-    google.protobuf.Int32Value agvID  = 7;
-    google.protobuf.Int32Value agvInitPoint = 8;
-    google.protobuf.Int64Value materialID = 9;
-    google.protobuf.Int32Value errorCode = 10;
-    google.protobuf.StringValue error = 11;
-    google.protobuf.Int32Value phase = 12;
-    google.protobuf.Int32Value schedulerStatus = 13;
-  }
-  
+  google.protobuf.Int32Value orderIndex = 1;
+  google.protobuf.Int32Value priority = 2;
+  google.protobuf.Int32Value scriptIndex = 3;
+  google.protobuf.StringValue description = 4;
+  google.protobuf.Int32Value originStation = 5;
+  google.protobuf.Int32Value targetStation = 6;
+  google.protobuf.Int32Value agvID = 7;
+  google.protobuf.Int32Value agvInitPoint = 8;
+  google.protobuf.Int64Value materialID = 9;
+  google.protobuf.Int32Value errorCode = 10;
+  google.protobuf.StringValue error = 11;
+  google.protobuf.Int32Value phase = 12;
+}
 
 message TaskFilter {
   repeated TaskFilter and = 1;
-  repeated TaskFilter or = 2;                              
+  repeated TaskFilter or = 2;
   google.protobuf.Int32Value id = 3;
-  repeated int32 idIn = 4;  
-  google.protobuf.StringValue nameIn = 5;
-  repeated string name = 6;
+  repeated int32 idIn = 4;
+  google.protobuf.Int32Value priority = 8;
+  google.protobuf.StringValue beginLT = 10;
+  google.protobuf.StringValue beginGT = 11;
+  google.protobuf.StringValue endLT = 12;
+  google.protobuf.StringValue endGT = 13;
   google.protobuf.Int32Value orderIndex = 7;
-  google.protobuf.Int32Value priority  = 8;
   google.protobuf.Int32Value scriptIndex = 9;
-  google.protobuf.StringValue beginLt = 10; 
-  google.protobuf.StringValue beginGt = 11;
-  google.protobuf.StringValue endLt = 12; 
-  google.protobuf.StringValue endGt = 13;
-  google.protobuf.Int32Value originStation  = 14;
+  google.protobuf.Int32Value phase = 21;
+  google.protobuf.Int32Value originStation = 14;
   google.protobuf.Int32Value targetStation = 15;
-  google.protobuf.Int32Value agvID  = 16;
+  google.protobuf.Int32Value agvID = 16;
   google.protobuf.Int32Value agvInitPoint = 17;
   google.protobuf.Int64Value materialID = 18;
+  TaskPropertiesFilter property = 20;
   google.protobuf.Int32Value errorCode = 19;
-  google.protobuf.Int32Value phase = 21;
-  google.protobuf.Int32Value schedulerStatus = 22;
-  TaskPropertiesFilter  propertiesFilter = 20;    
+  google.protobuf.StringValue error = 22;
 }
 
 message Query {
@@ -144,14 +116,30 @@ message Query {
 }
 
 message Parameter {
-  string type = 1;  //参数类型，支持string, int, float，bool三种类型，默认为string类型
+  //参数类型，支持string, int, float，bool三种类型，默认为string类型
+  string type = 1; 
   string key = 2;
   string value = 3;
 }
 
+message ParameterKey {
+  string name = 1;
+}
+
+// 局部参数需携带任务编号
+message LpParameter {
+  uint32 taskID = 1;
+  Parameter parameter = 2;
+}
+
+message LpParameterKey {
+  uint32 taskID = 1;
+  string key = 2;
+}
+
 message Parameters {
   uint32 taskID = 1;
-  string parameters = 2;
+  repeated Parameter parameters = 2;
 }
 
 message ParameterKeys {
@@ -161,24 +149,21 @@ message ParameterKeys {
 
 message TaskInfo {
   uint32 taskID = 1;
-  uint32 orderIndex = 2;
-  uint32 schedulerStatus = 3;
-  uint32 type = 4;
-  uint32 priority = 5;
+  uint32 priority = 2;
+  string beginTime = 3;
+  string endTime = 4;
+  uint32 orderIndex = 5;
   uint32 scriptIndex = 6;
-  repeated Parameter parameters = 7;
-  string beginTime = 8;
-  string endTime = 9;
-  uint32 originStation = 10;
-  uint32 targetStation = 11;
-  uint32 agvID = 12;
-  uint32 agvInitPoint = 13;
-  int64 materialID = 14;
-  string sMsgScript = 15;
-  int32 errorCode = 16;
-  string error = 17;
-  string description = 18;
-  int32 phase = 19;
+  int32 phase = 7;
+  uint32 originStation = 8;
+  uint32 targetStation = 9;
+  uint32 agvID = 10;
+  uint32 agvInitPoint = 11;
+  int64 materialID = 12;
+  repeated Parameter parameters = 13;
+  int32 errorCode = 14;
+  string error = 15;
+  string description = 16;
 }
 
 message TaskInfos {
@@ -208,5 +193,4 @@ message ExecuteOptions {
   string description = 5;
 }
 
-message ExecuteResponse {
-}
+message ExecuteResponse {}

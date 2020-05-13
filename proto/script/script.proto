@@ -10,9 +10,13 @@ service ScriptService {
   rpc AddScript(Script) returns (Response);
   rpc DeleteScript(ScriptIndex) returns (Response);
   rpc UpdateScript(UpdateScriptReq) returns (Response);
-  rpc GetOneScript(ScriptIndex) returns (Script);
+  rpc GetScript(ScriptIndex) returns (Script);
   rpc GetScripts(Query) returns (Scripts);
+  // 获取下一个可用的脚本ID
+  rpc GetNextScriptID(Nop) returns (ScriptIndex);
 }
+
+message Nop {}
 
 message Script {
   uint32 id = 1;

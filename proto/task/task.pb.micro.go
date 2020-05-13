@@ -12,6 +12,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -28,9 +29,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for TaskService service
+
+func NewTaskServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for TaskService service
 
@@ -44,24 +52,24 @@ type TaskService interface {
 	UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...client.CallOption) (*Response, error)
 	BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error)
 	BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error)
-	// 增加任务参数
-	AddParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error)
-	// 修改任务参数
-	ModifyParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error)
+	// 设置任务参数
+	SetParameter(ctx context.Context, in *LpParameter, opts ...client.CallOption) (*LpParameter, error)
 	// 删除任务参数
-	DeleteParameters(ctx context.Context, in *ParameterKeys, opts ...client.CallOption) (*Parameters, error)
+	DeleteParameter(ctx context.Context, in *LpParameterKey, opts ...client.CallOption) (*LpParameter, error)
 	// 根据查询条件获取任务
-	GetOneTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
+	GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
 	// 根据查询条件获取历史任务
-	GetOneHistory(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
+	GetHistoryTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error)
 	// 根据查询条件获取任务
 	GetTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
 	// 根据查询条件获取历史任务
-	GetHistories(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
-	// 调用python脚本的函数
+	GetHistoryTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error)
+	// 调用脚本的函数
 	Call(ctx context.Context, in *CallOptions, opts ...client.CallOption) (*CallResponse, error)
-	// 执行python脚本
+	// 执行脚本
 	Execute(ctx context.Context, in *ExecuteOptions, opts ...client.CallOption) (*ExecuteResponse, error)
+	SetGP(ctx context.Context, in *Parameter, opts ...client.CallOption) (*Parameter, error)
+	GetGP(ctx context.Context, in *ParameterKey, opts ...client.CallOption) (*Parameter, error)
 }
 
 type taskService struct {
@@ -136,9 +144,9 @@ func (c *taskService) BatchCancel(ctx context.Context, in *TaskIDs, opts ...clie
 	return out, nil
 }
 
-func (c *taskService) AddParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error) {
-	req := c.c.NewRequest(c.name, "TaskService.AddParameters", in)
-	out := new(Parameters)
+func (c *taskService) SetParameter(ctx context.Context, in *LpParameter, opts ...client.CallOption) (*LpParameter, error) {
+	req := c.c.NewRequest(c.name, "TaskService.SetParameter", in)
+	out := new(LpParameter)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -146,9 +154,9 @@ func (c *taskService) AddParameters(ctx context.Context, in *Parameters, opts ..
 	return out, nil
 }
 
-func (c *taskService) ModifyParameters(ctx context.Context, in *Parameters, opts ...client.CallOption) (*Parameters, error) {
-	req := c.c.NewRequest(c.name, "TaskService.ModifyParameters", in)
-	out := new(Parameters)
+func (c *taskService) DeleteParameter(ctx context.Context, in *LpParameterKey, opts ...client.CallOption) (*LpParameter, error) {
+	req := c.c.NewRequest(c.name, "TaskService.DeleteParameter", in)
+	out := new(LpParameter)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -156,18 +164,8 @@ func (c *taskService) ModifyParameters(ctx context.Context, in *Parameters, opts
 	return out, nil
 }
 
-func (c *taskService) DeleteParameters(ctx context.Context, in *ParameterKeys, opts ...client.CallOption) (*Parameters, error) {
-	req := c.c.NewRequest(c.name, "TaskService.DeleteParameters", in)
-	out := new(Parameters)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *taskService) GetOneTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetOneTask", in)
+func (c *taskService) GetTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetTask", in)
 	out := new(TaskInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -176,8 +174,8 @@ func (c *taskService) GetOneTask(ctx context.Context, in *TaskID, opts ...client
 	return out, nil
 }
 
-func (c *taskService) GetOneHistory(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetOneHistory", in)
+func (c *taskService) GetHistoryTask(ctx context.Context, in *TaskID, opts ...client.CallOption) (*TaskInfo, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetHistoryTask", in)
 	out := new(TaskInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -196,8 +194,8 @@ func (c *taskService) GetTasks(ctx context.Context, in *Query, opts ...client.Ca
 	return out, nil
 }
 
-func (c *taskService) GetHistories(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error) {
-	req := c.c.NewRequest(c.name, "TaskService.GetHistories", in)
+func (c *taskService) GetHistoryTasks(ctx context.Context, in *Query, opts ...client.CallOption) (*TaskInfos, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetHistoryTasks", in)
 	out := new(TaskInfos)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -226,6 +224,26 @@ func (c *taskService) Execute(ctx context.Context, in *ExecuteOptions, opts ...c
 	return out, nil
 }
 
+func (c *taskService) SetGP(ctx context.Context, in *Parameter, opts ...client.CallOption) (*Parameter, error) {
+	req := c.c.NewRequest(c.name, "TaskService.SetGP", in)
+	out := new(Parameter)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) GetGP(ctx context.Context, in *ParameterKey, opts ...client.CallOption) (*Parameter, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetGP", in)
+	out := new(Parameter)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TaskService service
 
 type TaskServiceHandler interface {
@@ -238,24 +256,24 @@ type TaskServiceHandler interface {
 	UpdateTask(context.Context, *UpdateTaskReq, *Response) error
 	BatchNew(context.Context, *NewTasksReq, *Response) error
 	BatchCancel(context.Context, *TaskIDs, *Response) error
-	// 增加任务参数
-	AddParameters(context.Context, *Parameters, *Parameters) error
-	// 修改任务参数
-	ModifyParameters(context.Context, *Parameters, *Parameters) error
+	// 设置任务参数
+	SetParameter(context.Context, *LpParameter, *LpParameter) error
 	// 删除任务参数
-	DeleteParameters(context.Context, *ParameterKeys, *Parameters) error
+	DeleteParameter(context.Context, *LpParameterKey, *LpParameter) error
 	// 根据查询条件获取任务
-	GetOneTask(context.Context, *TaskID, *TaskInfo) error
+	GetTask(context.Context, *TaskID, *TaskInfo) error
 	// 根据查询条件获取历史任务
-	GetOneHistory(context.Context, *TaskID, *TaskInfo) error
+	GetHistoryTask(context.Context, *TaskID, *TaskInfo) error
 	// 根据查询条件获取任务
 	GetTasks(context.Context, *Query, *TaskInfos) error
 	// 根据查询条件获取历史任务
-	GetHistories(context.Context, *Query, *TaskInfos) error
-	// 调用python脚本的函数
+	GetHistoryTasks(context.Context, *Query, *TaskInfos) error
+	// 调用脚本的函数
 	Call(context.Context, *CallOptions, *CallResponse) error
-	// 执行python脚本
+	// 执行脚本
 	Execute(context.Context, *ExecuteOptions, *ExecuteResponse) error
+	SetGP(context.Context, *Parameter, *Parameter) error
+	GetGP(context.Context, *ParameterKey, *Parameter) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
@@ -266,15 +284,16 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error
 		BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error
 		BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error
-		AddParameters(ctx context.Context, in *Parameters, out *Parameters) error
-		ModifyParameters(ctx context.Context, in *Parameters, out *Parameters) error
-		DeleteParameters(ctx context.Context, in *ParameterKeys, out *Parameters) error
-		GetOneTask(ctx context.Context, in *TaskID, out *TaskInfo) error
-		GetOneHistory(ctx context.Context, in *TaskID, out *TaskInfo) error
+		SetParameter(ctx context.Context, in *LpParameter, out *LpParameter) error
+		DeleteParameter(ctx context.Context, in *LpParameterKey, out *LpParameter) error
+		GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error
+		GetHistoryTask(ctx context.Context, in *TaskID, out *TaskInfo) error
 		GetTasks(ctx context.Context, in *Query, out *TaskInfos) error
-		GetHistories(ctx context.Context, in *Query, out *TaskInfos) error
+		GetHistoryTasks(ctx context.Context, in *Query, out *TaskInfos) error
 		Call(ctx context.Context, in *CallOptions, out *CallResponse) error
 		Execute(ctx context.Context, in *ExecuteOptions, out *ExecuteResponse) error
+		SetGP(ctx context.Context, in *Parameter, out *Parameter) error
+		GetGP(ctx context.Context, in *ParameterKey, out *Parameter) error
 	}
 	type TaskService struct {
 		taskService
@@ -311,32 +330,28 @@ func (h *taskServiceHandler) BatchCancel(ctx context.Context, in *TaskIDs, out *
 	return h.TaskServiceHandler.BatchCancel(ctx, in, out)
 }
 
-func (h *taskServiceHandler) AddParameters(ctx context.Context, in *Parameters, out *Parameters) error {
-	return h.TaskServiceHandler.AddParameters(ctx, in, out)
+func (h *taskServiceHandler) SetParameter(ctx context.Context, in *LpParameter, out *LpParameter) error {
+	return h.TaskServiceHandler.SetParameter(ctx, in, out)
 }
 
-func (h *taskServiceHandler) ModifyParameters(ctx context.Context, in *Parameters, out *Parameters) error {
-	return h.TaskServiceHandler.ModifyParameters(ctx, in, out)
+func (h *taskServiceHandler) DeleteParameter(ctx context.Context, in *LpParameterKey, out *LpParameter) error {
+	return h.TaskServiceHandler.DeleteParameter(ctx, in, out)
 }
 
-func (h *taskServiceHandler) DeleteParameters(ctx context.Context, in *ParameterKeys, out *Parameters) error {
-	return h.TaskServiceHandler.DeleteParameters(ctx, in, out)
+func (h *taskServiceHandler) GetTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
+	return h.TaskServiceHandler.GetTask(ctx, in, out)
 }
 
-func (h *taskServiceHandler) GetOneTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
-	return h.TaskServiceHandler.GetOneTask(ctx, in, out)
-}
-
-func (h *taskServiceHandler) GetOneHistory(ctx context.Context, in *TaskID, out *TaskInfo) error {
-	return h.TaskServiceHandler.GetOneHistory(ctx, in, out)
+func (h *taskServiceHandler) GetHistoryTask(ctx context.Context, in *TaskID, out *TaskInfo) error {
+	return h.TaskServiceHandler.GetHistoryTask(ctx, in, out)
 }
 
 func (h *taskServiceHandler) GetTasks(ctx context.Context, in *Query, out *TaskInfos) error {
 	return h.TaskServiceHandler.GetTasks(ctx, in, out)
 }
 
-func (h *taskServiceHandler) GetHistories(ctx context.Context, in *Query, out *TaskInfos) error {
-	return h.TaskServiceHandler.GetHistories(ctx, in, out)
+func (h *taskServiceHandler) GetHistoryTasks(ctx context.Context, in *Query, out *TaskInfos) error {
+	return h.TaskServiceHandler.GetHistoryTasks(ctx, in, out)
 }
 
 func (h *taskServiceHandler) Call(ctx context.Context, in *CallOptions, out *CallResponse) error {
@@ -345,4 +360,12 @@ func (h *taskServiceHandler) Call(ctx context.Context, in *CallOptions, out *Cal
 
 func (h *taskServiceHandler) Execute(ctx context.Context, in *ExecuteOptions, out *ExecuteResponse) error {
 	return h.TaskServiceHandler.Execute(ctx, in, out)
+}
+
+func (h *taskServiceHandler) SetGP(ctx context.Context, in *Parameter, out *Parameter) error {
+	return h.TaskServiceHandler.SetGP(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetGP(ctx context.Context, in *ParameterKey, out *Parameter) error {
+	return h.TaskServiceHandler.GetGP(ctx, in, out)
 }
