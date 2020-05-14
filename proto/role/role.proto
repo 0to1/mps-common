@@ -8,9 +8,9 @@ service Role {
   // 删除指定角色
   rpc DeleteRole(IdReq) returns (DeleteRoleResp) {}
   // 修改角色信息
-  rpc Update(UpdateReq) returns (UpdateResp) {}
+  rpc UpdateRole(UpdateReq) returns (UpdateResp) {}
   // 根据角色ID获取角色信息
-  rpc GetRoleByID(IdReq) returns (RoleResp) {}
+  rpc GetRole(IdReq) returns (RoleResp) {}
   // 根据查询条件获取用户列表
   rpc GetRoles(Query) returns (RolesResp) {}
   // 验证用户是否具备访问权限

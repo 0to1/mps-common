@@ -11,6 +11,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -27,9 +28,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for Role service
+
+func NewRoleEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for Role service
 
@@ -39,9 +47,9 @@ type RoleService interface {
 	// 删除指定角色
 	DeleteRole(ctx context.Context, in *IdReq, opts ...client.CallOption) (*DeleteRoleResp, error)
 	// 修改角色信息
-	Update(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*UpdateResp, error)
+	UpdateRole(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*UpdateResp, error)
 	// 根据角色ID获取角色信息
-	GetRoleByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*RoleResp, error)
+	GetRole(ctx context.Context, in *IdReq, opts ...client.CallOption) (*RoleResp, error)
 	// 根据查询条件获取用户列表
 	GetRoles(ctx context.Context, in *Query, opts ...client.CallOption) (*RolesResp, error)
 	// 验证用户是否具备访问权限
@@ -80,8 +88,8 @@ func (c *roleService) DeleteRole(ctx context.Context, in *IdReq, opts ...client.
 	return out, nil
 }
 
-func (c *roleService) Update(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*UpdateResp, error) {
-	req := c.c.NewRequest(c.name, "Role.Update", in)
+func (c *roleService) UpdateRole(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*UpdateResp, error) {
+	req := c.c.NewRequest(c.name, "Role.UpdateRole", in)
 	out := new(UpdateResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -90,8 +98,8 @@ func (c *roleService) Update(ctx context.Context, in *UpdateReq, opts ...client.
 	return out, nil
 }
 
-func (c *roleService) GetRoleByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*RoleResp, error) {
-	req := c.c.NewRequest(c.name, "Role.GetRoleByID", in)
+func (c *roleService) GetRole(ctx context.Context, in *IdReq, opts ...client.CallOption) (*RoleResp, error) {
+	req := c.c.NewRequest(c.name, "Role.GetRole", in)
 	out := new(RoleResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -128,9 +136,9 @@ type RoleHandler interface {
 	// 删除指定角色
 	DeleteRole(context.Context, *IdReq, *DeleteRoleResp) error
 	// 修改角色信息
-	Update(context.Context, *UpdateReq, *UpdateResp) error
+	UpdateRole(context.Context, *UpdateReq, *UpdateResp) error
 	// 根据角色ID获取角色信息
-	GetRoleByID(context.Context, *IdReq, *RoleResp) error
+	GetRole(context.Context, *IdReq, *RoleResp) error
 	// 根据查询条件获取用户列表
 	GetRoles(context.Context, *Query, *RolesResp) error
 	// 验证用户是否具备访问权限
@@ -141,8 +149,8 @@ func RegisterRoleHandler(s server.Server, hdlr RoleHandler, opts ...server.Handl
 	type role interface {
 		AddRole(ctx context.Context, in *AddRoleReq, out *AddRoleResp) error
 		DeleteRole(ctx context.Context, in *IdReq, out *DeleteRoleResp) error
-		Update(ctx context.Context, in *UpdateReq, out *UpdateResp) error
-		GetRoleByID(ctx context.Context, in *IdReq, out *RoleResp) error
+		UpdateRole(ctx context.Context, in *UpdateReq, out *UpdateResp) error
+		GetRole(ctx context.Context, in *IdReq, out *RoleResp) error
 		GetRoles(ctx context.Context, in *Query, out *RolesResp) error
 		AuthRole(ctx context.Context, in *AuthReq, out *AuthResp) error
 	}
@@ -165,12 +173,12 @@ func (h *roleHandler) DeleteRole(ctx context.Context, in *IdReq, out *DeleteRole
 	return h.RoleHandler.DeleteRole(ctx, in, out)
 }
 
-func (h *roleHandler) Update(ctx context.Context, in *UpdateReq, out *UpdateResp) error {
-	return h.RoleHandler.Update(ctx, in, out)
+func (h *roleHandler) UpdateRole(ctx context.Context, in *UpdateReq, out *UpdateResp) error {
+	return h.RoleHandler.UpdateRole(ctx, in, out)
 }
 
-func (h *roleHandler) GetRoleByID(ctx context.Context, in *IdReq, out *RoleResp) error {
-	return h.RoleHandler.GetRoleByID(ctx, in, out)
+func (h *roleHandler) GetRole(ctx context.Context, in *IdReq, out *RoleResp) error {
+	return h.RoleHandler.GetRole(ctx, in, out)
 }
 
 func (h *roleHandler) GetRoles(ctx context.Context, in *Query, out *RolesResp) error {
