@@ -84,6 +84,7 @@ type RacklotService interface {
 	SetInbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	// 设置是否允许取车
 	SetOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
+	AddProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
 }
 
 type racklotService struct {
@@ -318,6 +319,16 @@ func (c *racklotService) SetOutbound(ctx context.Context, in *FlagReq, opts ...c
 	return out, nil
 }
 
+func (c *racklotService) AddProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.AddProperties", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RacklotService service
 
 type RacklotServiceHandler interface {
@@ -362,6 +373,7 @@ type RacklotServiceHandler interface {
 	SetInbound(context.Context, *FlagReq, *Response) error
 	// 设置是否允许取车
 	SetOutbound(context.Context, *FlagReq, *Response) error
+	AddProperties(context.Context, *PropertiesReq, *Response) error
 }
 
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
@@ -388,6 +400,7 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		ReleaseRacklots(ctx context.Context, in *RacklotIDsReq, out *Response) error
 		SetInbound(ctx context.Context, in *FlagReq, out *Response) error
 		SetOutbound(ctx context.Context, in *FlagReq, out *Response) error
+		AddProperties(ctx context.Context, in *PropertiesReq, out *Response) error
 	}
 	type RacklotService struct {
 		racklotService
@@ -486,4 +499,8 @@ func (h *racklotServiceHandler) SetInbound(ctx context.Context, in *FlagReq, out
 
 func (h *racklotServiceHandler) SetOutbound(ctx context.Context, in *FlagReq, out *Response) error {
 	return h.RacklotServiceHandler.SetOutbound(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) AddProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
+	return h.RacklotServiceHandler.AddProperties(ctx, in, out)
 }

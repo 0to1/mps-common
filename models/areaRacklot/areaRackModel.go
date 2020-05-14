@@ -88,7 +88,7 @@ func Create(db *gorm.DB, areaID int, racklotID int) (bool, error) {
 		return false, nil
 	}
 
-	if res, _ := IsExit(db, areaID, racklotID); res != true {
+	if res, _ := IsExit(db, areaID, racklotID); res != false {
 		return false, errors.New("CreateAreaRacklot Exist")
 	}
 
