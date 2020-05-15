@@ -30,7 +30,7 @@ message RackType {
   string description = 10;
   //储位数量
   repeated RackCell cells = 12;
-  map<string,string> cellOption = 13;
+  string cellOption = 13;
 }
 
 message RackCell {
@@ -65,7 +65,7 @@ message UpdateRackType {
     google.protobuf.UInt32Value pickingSurface = 8;   
     google.protobuf.StringValue description = 9;   
     repeated RackCell cells = 12;
-    map<string,string> cellOption = 13;
+    string cellOption = 13;
 }
 
 message UpdateCellTypeReq {

@@ -16,16 +16,34 @@ service User {
   // 根据token获取用户信息
   rpc GetUserByToken(TokenReq) returns (UserResp) {}
   // 根据用户ID删除指定用户
-  rpc DeleteUserByID(IdReq) returns (DeleteResp);
+  rpc DeleteUser(IdReq) returns (DeleteResp);
   // 根据用户ID获取用户信息
-  rpc GetUserByID(IdReq) returns (UserResp) {}
+  rpc GetUser(IdReq) returns (UserResp) {}
   // 根据分页，条件查询等返回用户列表
   rpc GetUsers(Query) returns (UsersResp) {}
 
-  rpc SaveConfig(ConfigReq) returns (ConfigResp){}
-  rpc DeleteConfig(ConfigReq) returns (ConfigResp){}
-  rpc GetConfig(ConfigReq) returns (ConfigResp){}
+  rpc SaveConfig(ConfigReq) returns (ConfigResp) {}
+  rpc DeleteConfig(ConfigReq) returns (ConfigResp) {}
+  rpc GetConfig(ConfigReq) returns (ConfigResp) {}
+
+  rpc Initialized(Nop) returns (InitializedResp);
+  rpc Initialize(InitializeReq) returns (InitializeResp);
 }
+
+message Nop {}
+message InitializedResp {
+  bool initialized = 1;
+}
+
+message InitializeReq {
+  string userName = 1;
+  string email = 2;
+  string phoneNumber = 3;
+  string password = 4;
+  string routes = 7;
+}
+
+message InitializeResp {}
 
 message SignupReq {
   string phoneNumber = 1;
@@ -109,6 +127,6 @@ message ConfigResp {
 }
 
 message Parameter {
-    string key = 1;
-    string value = 2;
+  string key = 1;
+  string value = 2;
 }

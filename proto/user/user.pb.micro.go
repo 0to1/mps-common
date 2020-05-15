@@ -11,6 +11,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -27,9 +28,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for User service
+
+func NewUserEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for User service
 
@@ -47,14 +55,16 @@ type UserService interface {
 	// 根据token获取用户信息
 	GetUserByToken(ctx context.Context, in *TokenReq, opts ...client.CallOption) (*UserResp, error)
 	// 根据用户ID删除指定用户
-	DeleteUserByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*DeleteResp, error)
+	DeleteUser(ctx context.Context, in *IdReq, opts ...client.CallOption) (*DeleteResp, error)
 	// 根据用户ID获取用户信息
-	GetUserByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*UserResp, error)
+	GetUser(ctx context.Context, in *IdReq, opts ...client.CallOption) (*UserResp, error)
 	// 根据分页，条件查询等返回用户列表
 	GetUsers(ctx context.Context, in *Query, opts ...client.CallOption) (*UsersResp, error)
 	SaveConfig(ctx context.Context, in *ConfigReq, opts ...client.CallOption) (*ConfigResp, error)
 	DeleteConfig(ctx context.Context, in *ConfigReq, opts ...client.CallOption) (*ConfigResp, error)
 	GetConfig(ctx context.Context, in *ConfigReq, opts ...client.CallOption) (*ConfigResp, error)
+	Initialized(ctx context.Context, in *Nop, opts ...client.CallOption) (*InitializedResp, error)
+	Initialize(ctx context.Context, in *InitializeReq, opts ...client.CallOption) (*InitializeResp, error)
 }
 
 type userService struct {
@@ -129,8 +139,8 @@ func (c *userService) GetUserByToken(ctx context.Context, in *TokenReq, opts ...
 	return out, nil
 }
 
-func (c *userService) DeleteUserByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*DeleteResp, error) {
-	req := c.c.NewRequest(c.name, "User.DeleteUserByID", in)
+func (c *userService) DeleteUser(ctx context.Context, in *IdReq, opts ...client.CallOption) (*DeleteResp, error) {
+	req := c.c.NewRequest(c.name, "User.DeleteUser", in)
 	out := new(DeleteResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -139,8 +149,8 @@ func (c *userService) DeleteUserByID(ctx context.Context, in *IdReq, opts ...cli
 	return out, nil
 }
 
-func (c *userService) GetUserByID(ctx context.Context, in *IdReq, opts ...client.CallOption) (*UserResp, error) {
-	req := c.c.NewRequest(c.name, "User.GetUserByID", in)
+func (c *userService) GetUser(ctx context.Context, in *IdReq, opts ...client.CallOption) (*UserResp, error) {
+	req := c.c.NewRequest(c.name, "User.GetUser", in)
 	out := new(UserResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -189,6 +199,26 @@ func (c *userService) GetConfig(ctx context.Context, in *ConfigReq, opts ...clie
 	return out, nil
 }
 
+func (c *userService) Initialized(ctx context.Context, in *Nop, opts ...client.CallOption) (*InitializedResp, error) {
+	req := c.c.NewRequest(c.name, "User.Initialized", in)
+	out := new(InitializedResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) Initialize(ctx context.Context, in *InitializeReq, opts ...client.CallOption) (*InitializeResp, error) {
+	req := c.c.NewRequest(c.name, "User.Initialize", in)
+	out := new(InitializeResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -205,14 +235,16 @@ type UserHandler interface {
 	// 根据token获取用户信息
 	GetUserByToken(context.Context, *TokenReq, *UserResp) error
 	// 根据用户ID删除指定用户
-	DeleteUserByID(context.Context, *IdReq, *DeleteResp) error
+	DeleteUser(context.Context, *IdReq, *DeleteResp) error
 	// 根据用户ID获取用户信息
-	GetUserByID(context.Context, *IdReq, *UserResp) error
+	GetUser(context.Context, *IdReq, *UserResp) error
 	// 根据分页，条件查询等返回用户列表
 	GetUsers(context.Context, *Query, *UsersResp) error
 	SaveConfig(context.Context, *ConfigReq, *ConfigResp) error
 	DeleteConfig(context.Context, *ConfigReq, *ConfigResp) error
 	GetConfig(context.Context, *ConfigReq, *ConfigResp) error
+	Initialized(context.Context, *Nop, *InitializedResp) error
+	Initialize(context.Context, *InitializeReq, *InitializeResp) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
@@ -223,12 +255,14 @@ func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.Handl
 		Reset(ctx context.Context, in *ResetReq, out *ResetResp) error
 		Update(ctx context.Context, in *UpdateReq, out *UserResp) error
 		GetUserByToken(ctx context.Context, in *TokenReq, out *UserResp) error
-		DeleteUserByID(ctx context.Context, in *IdReq, out *DeleteResp) error
-		GetUserByID(ctx context.Context, in *IdReq, out *UserResp) error
+		DeleteUser(ctx context.Context, in *IdReq, out *DeleteResp) error
+		GetUser(ctx context.Context, in *IdReq, out *UserResp) error
 		GetUsers(ctx context.Context, in *Query, out *UsersResp) error
 		SaveConfig(ctx context.Context, in *ConfigReq, out *ConfigResp) error
 		DeleteConfig(ctx context.Context, in *ConfigReq, out *ConfigResp) error
 		GetConfig(ctx context.Context, in *ConfigReq, out *ConfigResp) error
+		Initialized(ctx context.Context, in *Nop, out *InitializedResp) error
+		Initialize(ctx context.Context, in *InitializeReq, out *InitializeResp) error
 	}
 	type User struct {
 		user
@@ -265,12 +299,12 @@ func (h *userHandler) GetUserByToken(ctx context.Context, in *TokenReq, out *Use
 	return h.UserHandler.GetUserByToken(ctx, in, out)
 }
 
-func (h *userHandler) DeleteUserByID(ctx context.Context, in *IdReq, out *DeleteResp) error {
-	return h.UserHandler.DeleteUserByID(ctx, in, out)
+func (h *userHandler) DeleteUser(ctx context.Context, in *IdReq, out *DeleteResp) error {
+	return h.UserHandler.DeleteUser(ctx, in, out)
 }
 
-func (h *userHandler) GetUserByID(ctx context.Context, in *IdReq, out *UserResp) error {
-	return h.UserHandler.GetUserByID(ctx, in, out)
+func (h *userHandler) GetUser(ctx context.Context, in *IdReq, out *UserResp) error {
+	return h.UserHandler.GetUser(ctx, in, out)
 }
 
 func (h *userHandler) GetUsers(ctx context.Context, in *Query, out *UsersResp) error {
@@ -287,4 +321,12 @@ func (h *userHandler) DeleteConfig(ctx context.Context, in *ConfigReq, out *Conf
 
 func (h *userHandler) GetConfig(ctx context.Context, in *ConfigReq, out *ConfigResp) error {
 	return h.UserHandler.GetConfig(ctx, in, out)
+}
+
+func (h *userHandler) Initialized(ctx context.Context, in *Nop, out *InitializedResp) error {
+	return h.UserHandler.Initialized(ctx, in, out)
+}
+
+func (h *userHandler) Initialize(ctx context.Context, in *InitializeReq, out *InitializeResp) error {
+	return h.UserHandler.Initialize(ctx, in, out)
 }
