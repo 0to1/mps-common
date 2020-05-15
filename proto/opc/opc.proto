@@ -71,11 +71,11 @@ message ItemReq {
 message ItemValueReq {
 	uint32 groupID = 1;
 	uint32 itemID = 2;
-	uint32 value = 3;
+	int32 value = 3;
 }
 
 message ItemValueResp {
-	uint32 value = 1;
+	int32 value = 1;
 	bool quality = 2;
 }
 
