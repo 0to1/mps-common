@@ -85,7 +85,13 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
 		return models.Log{}, err
 	}
 
-	t, err := time.ParseInLocation("2006-01-02 15:04:05.000", content.Time, time.Local)
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		log.Println("LoadLocation error: ", err.Error())
+		return models.Log{}, err
+	}
+
+	t, err := time.ParseInLocation("2006-01-02 15:04:05.000", content.Time, loc)
 	if err != nil {
 		return models.Log{}, err
 	}
