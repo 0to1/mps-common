@@ -72,7 +72,7 @@ message RacklotType {
   string description = 3;
   uint32 length  = 4 ;
   uint32 width  = 5;
-  map<string,string> properties = 6;
+  string properties = 6;
 }
 
 message UpdateRacklotType {
@@ -81,7 +81,7 @@ message UpdateRacklotType {
     google.protobuf.StringValue description = 3;
     google.protobuf.UInt32Value length  = 4 ;
     google.protobuf.UInt32Value width  = 5;
-    map<string,string> properties = 6;
+    string properties = 6;
   }
 
 message UpdateRacklotTypeReq {

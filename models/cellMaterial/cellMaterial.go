@@ -54,7 +54,7 @@ func IsExitByCells(db *gorm.DB, cellIDs []uint32) (bool, error) {
 		return false, nil
 	}
 
-	db = db.Where("cell_id  in (?) ", cellIDs).First(&CellMaterial{})
+	db = db.Model(&CellMaterial{}).Where("cell_id  in (?) ", cellIDs).First(&CellMaterial{})
 	if err := db.Error; err != nil {
 		return false, err
 	}

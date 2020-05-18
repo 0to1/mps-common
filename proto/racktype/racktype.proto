@@ -47,7 +47,7 @@ message CellType {
   uint32 height = 6;
   string description = 8;
   bool isValid = 9;
-  map<string,string> properties = 10;
+  string properties = 10;
 }
 
 message UpdateRackTypeReq {
@@ -81,7 +81,7 @@ message UpdateCellType {
     google.protobuf.UInt32Value height = 6;    
     google.protobuf.StringValue description = 9;   
     google.protobuf.BoolValue isValid = 10;
-    map<string,string> properties= 11;
+    string properties= 11;
 }
 
 
