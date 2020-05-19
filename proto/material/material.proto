@@ -69,6 +69,8 @@ message Material {
 
   string properties  = 4;
 
+  MaterialType type = 5;
+
   // repeated Property properties = 3;
 }
 
