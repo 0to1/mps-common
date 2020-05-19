@@ -93,7 +93,7 @@ message Cell {
   //储位状态
   int32 status = 36;
 
-  map<string,string> properties= 37;
+  string properties= 37;
 }
 
 message Rack {
@@ -171,7 +171,7 @@ message UpdateCell {
   //储位状态
   google.protobuf.UInt32Value status = 17;
 
-  map<string,string> properties= 18;
+  string properties= 18;
 }
 
 message CellStatusReq {
@@ -297,5 +297,5 @@ message FlagReq {
 
   message PropertiesReq {
     uint32 id = 1;
-    map<string,string> properties= 2;
+    string properties= 2;
   }

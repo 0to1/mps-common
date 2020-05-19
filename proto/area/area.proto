@@ -95,7 +95,7 @@ message Area {
    // 子级区域ID
    repeated uint32 childAreaIDs = 27;
 
-   map<string,string> properties = 31;
+   string properties = 31;
 }
 
 message UpdateArea {
@@ -115,22 +115,22 @@ message UpdateArea {
   //区域的货位列表，待仔细考虑
   repeated uint32 racklots = 23;
 
-  map<string,string> properties = 31;
+  string properties = 31;
 }
 
 message UpdateAreaReq {
-    int32 id = 1;
+    uint32 id = 1;
     UpdateArea area = 2;
 }
 
 message UpdateAreaTypeReq {
-    int32 id = 1;
+    uint32 id = 1;
     UpdateAreaType area = 2;
 }
 
 message Response {}
 
-message AreaIDReq { int32 id = 1; }
+message AreaIDReq { uint32 id = 1; }
 
 message AreaFilter {
   repeated AreaFilter and = 1;

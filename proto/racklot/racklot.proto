@@ -130,7 +130,7 @@ message Racklot {
   bool isOutbound = 17;
 
   repeated uint32 areaIDs = 18;
-  map<string,string> properties = 19;
+  string properties = 19;
 }
 
 message UpdateRacklotReq {
@@ -161,7 +161,7 @@ message UpdateRacklot {
 
   google.protobuf.StringValue description = 30;
 
-  map<string,string> properties = 6;
+  string properties = 6;
 
 }
 
@@ -298,5 +298,5 @@ message FlagReq {
 
   message PropertiesReq {
     uint32 id = 1;
-    map<string,string> properties = 2;
+    string properties = 2;
   }
