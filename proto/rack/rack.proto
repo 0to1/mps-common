@@ -138,7 +138,8 @@ message UpdateRack {
     google.protobuf.UInt32Value height = 6;   
     google.protobuf.UInt32Value layers = 7;   
     google.protobuf.UInt32Value pickingSurface = 8;   
-    google.protobuf.StringValue description = 9;   
+    google.protobuf.StringValue description = 9; 
+    google.protobuf.BoolValue isValid = 10;    
     
 }
 
