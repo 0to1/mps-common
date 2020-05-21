@@ -62,6 +62,7 @@ message TaskIDs { repeated uint32 ids = 1; }
 message TaskParameterFilter {
   string key = 1;
   string value = 2;
+  string type = 3; 
 }
 
 message UpdateTaskReq {
