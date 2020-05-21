@@ -17,6 +17,7 @@ service MaterialService {
   rpc GetMaterialType(MaterialTypeIDReq) returns (MaterialType);
 
 
+
   // 添加物料
   rpc AddMaterial(Material) returns (Response);
   // 移除物料
@@ -30,6 +31,11 @@ service MaterialService {
 
   rpc BatchAddMaterials(Materials) returns (Response);
   rpc BatchDeleteMaterials(MaterialIDsReq) returns (Response);
+
+    // 添加物料
+    rpc BindCell(CellReq) returns (Response);
+    // 移除物料
+    rpc UnbindCell(MaterialIDReq) returns (Response);
 
   // rpc AddMaterialProperties(Material) returns(Response);
   // rpc DeleteAddMaterialProperties()
@@ -71,6 +77,8 @@ message Material {
 
   MaterialType type = 5;
 
+  uint32 cellID = 6;
+
   // repeated Property properties = 3;
 }
 
@@ -99,6 +107,12 @@ message MaterialTypeIDReq { uint32 id = 1; }
 message MaterialIDReq { 
   //物料ID
   int64 id = 1;
+ }
+
+ message CellReq { 
+  //物料ID
+  int64 materialID = 1;
+  uint32 cellID = 2;
  }
 
 message MaterialQuery {
@@ -152,4 +166,7 @@ message MaterialFilter {
   repeated int64 idIn = 3;
   PropertiesFilter properties = 4;
   google.protobuf.StringValue typeName = 5;
+  repeated string typeNameIn = 6;
+  google.protobuf.UInt32Value cellID = 7;  
+  repeated uint32 cellIDIn = 8;
 }

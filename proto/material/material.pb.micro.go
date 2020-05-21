@@ -65,6 +65,10 @@ type MaterialService interface {
 	GetMaterial(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Material, error)
 	BatchAddMaterials(ctx context.Context, in *Materials, opts ...client.CallOption) (*Response, error)
 	BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, opts ...client.CallOption) (*Response, error)
+	// 添加物料
+	BindCell(ctx context.Context, in *CellReq, opts ...client.CallOption) (*Response, error)
+	// 移除物料
+	UnbindCell(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Response, error)
 }
 
 type materialService struct {
@@ -199,6 +203,26 @@ func (c *materialService) BatchDeleteMaterials(ctx context.Context, in *Material
 	return out, nil
 }
 
+func (c *materialService) BindCell(ctx context.Context, in *CellReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.BindCell", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *materialService) UnbindCell(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.UnbindCell", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for MaterialService service
 
 type MaterialServiceHandler interface {
@@ -224,6 +248,10 @@ type MaterialServiceHandler interface {
 	GetMaterial(context.Context, *MaterialIDReq, *Material) error
 	BatchAddMaterials(context.Context, *Materials, *Response) error
 	BatchDeleteMaterials(context.Context, *MaterialIDsReq, *Response) error
+	// 添加物料
+	BindCell(context.Context, *CellReq, *Response) error
+	// 移除物料
+	UnbindCell(context.Context, *MaterialIDReq, *Response) error
 }
 
 func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler, opts ...server.HandlerOption) error {
@@ -240,6 +268,8 @@ func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler
 		GetMaterial(ctx context.Context, in *MaterialIDReq, out *Material) error
 		BatchAddMaterials(ctx context.Context, in *Materials, out *Response) error
 		BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, out *Response) error
+		BindCell(ctx context.Context, in *CellReq, out *Response) error
+		UnbindCell(ctx context.Context, in *MaterialIDReq, out *Response) error
 	}
 	type MaterialService struct {
 		materialService
@@ -298,4 +328,12 @@ func (h *materialServiceHandler) BatchAddMaterials(ctx context.Context, in *Mate
 
 func (h *materialServiceHandler) BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, out *Response) error {
 	return h.MaterialServiceHandler.BatchDeleteMaterials(ctx, in, out)
+}
+
+func (h *materialServiceHandler) BindCell(ctx context.Context, in *CellReq, out *Response) error {
+	return h.MaterialServiceHandler.BindCell(ctx, in, out)
+}
+
+func (h *materialServiceHandler) UnbindCell(ctx context.Context, in *MaterialIDReq, out *Response) error {
+	return h.MaterialServiceHandler.UnbindCell(ctx, in, out)
 }
