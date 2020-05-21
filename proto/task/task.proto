@@ -59,7 +59,7 @@ message TaskID { uint32 id = 1; }
 
 message TaskIDs { repeated uint32 ids = 1; }
 
-message TaskPropertiesFilter {
+message TaskParamterFilter {
   string key = 1;
   string value = 2;
 }
@@ -102,7 +102,7 @@ message TaskFilter {
   google.protobuf.Int32Value agvID = 16;
   google.protobuf.Int32Value agvInitPoint = 17;
   google.protobuf.Int64Value materialID = 18;
-  TaskPropertiesFilter property = 20;
+  TaskParamterFilter parameter = 20;
   google.protobuf.Int32Value errorCode = 19;
   google.protobuf.StringValue error = 22;
 }
