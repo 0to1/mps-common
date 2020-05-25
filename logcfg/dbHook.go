@@ -23,9 +23,10 @@ const (
 
 // DBHook ..
 type DBHook struct {
-	Service string
-	IP      string
-	KDB     *gorm.DB
+	Service   string
+	IP        string
+	IsConsole bool
+	KDB       *gorm.DB
 }
 
 type logContent struct {
@@ -99,7 +100,6 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
 	pc, file, line, ok := runtime.Caller(9)
 	if ok {
 		funcName := runtime.FuncForPC(pc).Name()
-		//log.Println("file: ", file, " ,line: ", line, " ,funcName: ", funcName)
 
 		if len(content.File) < 4 {
 			content.File = file
@@ -116,6 +116,10 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
 	logModel.Msg = content.Msg
 	logModel.Service = hook.Service
 	logModel.IP = hook.IP
+
+	if hook.IsConsole {
+		log.Println(content.Msg)
+	}
 
 	return logModel, nil
 }
