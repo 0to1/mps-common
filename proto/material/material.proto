@@ -144,9 +144,10 @@ message MaterialsResp {
 }
 
 
-message PropertiesFilter {
+message PropertyFilter {
   string key  = 1;
   string value = 2; 
+  string type = 4;
   bool isFuzzy = 3;
 }
 
@@ -157,14 +158,13 @@ message MaterialTypeFilter {
   repeated string nameIn = 4;
   google.protobuf.UInt32Value id = 5;  
   google.protobuf.StringValue name = 6;  
-  PropertiesFilter properties = 7;
 }
 
 message MaterialFilter {
   repeated MaterialFilter and = 1;
   repeated MaterialFilter or = 2;
   repeated int64 idIn = 3;
-  PropertiesFilter properties = 4;
+  repeated PropertyFilter properties = 4;
   google.protobuf.StringValue typeName = 5;
   repeated string typeNameIn = 6;
   google.protobuf.UInt32Value cellID = 7;  

@@ -142,8 +142,8 @@ message AreaFilter {
 	google.protobuf.BoolValue isOutbound = 7;             
   google.protobuf.BoolValue isValid = 8;     
   google.protobuf.UInt32Value parentAreaID = 9;   
-  AreaTypeFilter typeFilter  = 11;
-  AreaPropertiesFilter  propertiesFilter = 12;     
+  AreaTypeFilter type  = 11;
+  repeated AreaPropertyFilter  properties = 12;     
 }
 
 message AreaTypeFilter {
@@ -155,9 +155,10 @@ message AreaTypeFilter {
   google.protobuf.StringValue name = 6;  
 }
 
-message AreaPropertiesFilter {
+message AreaPropertyFilter {
   string key  = 1;
   string value = 2; 
+  string type = 3;
 }
 
 message AreaQuery {
@@ -211,12 +212,13 @@ message TaskReq {
 
 message PropertiesReq {
   uint32 id = 1;
-  repeated Property properties = 2;
+  string properties = 2;
 }
 
 message Property{
     string key = 1;
     string value = 2;
+    string type = 3;
 }
 
 message ParentReq {

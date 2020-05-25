@@ -240,9 +240,8 @@ message RackQuery {
          
     google.protobuf.BoolValue isValid = 8;     
     google.protobuf.BoolValue isOccupied = 9; 
-    RackTypeFilter typeFilter  = 11;
-    CellFilter cellFilter = 13;
-    PropertiesFilter  propertiesFilter = 12;     
+    RackTypeFilter type= 11;
+    CellFilter cell = 13;  
   }
 
   message CellFilter {
@@ -257,7 +256,7 @@ message RackQuery {
     google.protobuf.UInt32Value rackID = 7;     
     google.protobuf.BoolValue isValid = 8;     
     google.protobuf.BoolValue isOccupied = 9; 
-    PropertiesFilter  propertiesFilter = 14;  
+    repeated PropertyFilter  properties= 14;  
   }
   
   message RackTypeFilter {
@@ -269,9 +268,10 @@ message RackQuery {
     google.protobuf.StringValue name = 6;  
   }
 
-  message PropertiesFilter {
+  message PropertyFilter {
     string key  = 1;
     string value = 2; 
+    string type = 3;
   }
 
 
