@@ -36,6 +36,8 @@ var _ server.Option
 type ConfigService interface {
 	// 修改仓库信息
 	UpdateWarehouse(ctx context.Context, in *Warehouse, opts ...client.CallOption) (*Response, error)
+	// 切换自动
+	UpdateAuto(ctx context.Context, in *BoolReq, opts ...client.CallOption) (*Response, error)
 	// 获取仓库信息
 	GetWarehouse(ctx context.Context, in *Request, opts ...client.CallOption) (*Warehouse, error)
 	// 增加脚本参数
@@ -74,6 +76,16 @@ func NewConfigService(name string, c client.Client) ConfigService {
 
 func (c *configService) UpdateWarehouse(ctx context.Context, in *Warehouse, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "ConfigService.UpdateWarehouse", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) UpdateAuto(ctx context.Context, in *BoolReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.UpdateAuto", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -197,6 +209,8 @@ func (c *configService) GetScriptButtons(ctx context.Context, in *Query, opts ..
 type ConfigServiceHandler interface {
 	// 修改仓库信息
 	UpdateWarehouse(context.Context, *Warehouse, *Response) error
+	// 切换自动
+	UpdateAuto(context.Context, *BoolReq, *Response) error
 	// 获取仓库信息
 	GetWarehouse(context.Context, *Request, *Warehouse) error
 	// 增加脚本参数
@@ -224,6 +238,7 @@ type ConfigServiceHandler interface {
 func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, opts ...server.HandlerOption) error {
 	type configService interface {
 		UpdateWarehouse(ctx context.Context, in *Warehouse, out *Response) error
+		UpdateAuto(ctx context.Context, in *BoolReq, out *Response) error
 		GetWarehouse(ctx context.Context, in *Request, out *Warehouse) error
 		AddScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error
 		UpdateScriptParameter(ctx context.Context, in *ScriptParameter, out *Response) error
@@ -249,6 +264,10 @@ type configServiceHandler struct {
 
 func (h *configServiceHandler) UpdateWarehouse(ctx context.Context, in *Warehouse, out *Response) error {
 	return h.ConfigServiceHandler.UpdateWarehouse(ctx, in, out)
+}
+
+func (h *configServiceHandler) UpdateAuto(ctx context.Context, in *BoolReq, out *Response) error {
+	return h.ConfigServiceHandler.UpdateAuto(ctx, in, out)
 }
 
 func (h *configServiceHandler) GetWarehouse(ctx context.Context, in *Request, out *Warehouse) error {

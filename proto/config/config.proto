@@ -5,9 +5,10 @@ package go.micro.srv.config;
 service ConfigService {
 	// 修改仓库信息
 	rpc UpdateWarehouse(Warehouse) returns (Response);
+	// 切换自动
+	rpc UpdateAuto(BoolReq) returns (Response);
 	// 获取仓库信息
 	rpc GetWarehouse(Request) returns (Warehouse);
-
 	// 增加脚本参数
 	rpc AddScriptParameter(ScriptParameter) returns (Response);
 	// 修改脚本参数
@@ -31,6 +32,10 @@ service ConfigService {
 	rpc GetScriptButtons(Query) returns (ScriptButtons);
 }
 
+message BoolReq {
+	bool res = 1;
+}
+
 message Warehouse {
 	string ikey = 1;
 	string name = 2;
@@ -40,6 +45,7 @@ message Warehouse {
 	uint32 floorNumber = 6;
 	uint32 length = 7;
 	uint32 width = 8;
+	bool isAuto = 9;
 }
 
 message InputScriptButton {
