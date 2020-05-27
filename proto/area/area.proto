@@ -111,6 +111,8 @@ message UpdateArea {
   google.protobuf.BoolValue isOutbound = 29;
   // 父区域
   google.protobuf.UInt32Value parentAreaID = 2;
+  // 区域类型
+  google.protobuf.UInt32Value type = 3;
 
   //区域的货位列表，待仔细考虑
   repeated uint32 racklots = 23;

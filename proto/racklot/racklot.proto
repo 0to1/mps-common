@@ -148,10 +148,14 @@ message UpdateRacklot {
   google.protobuf.FloatValue angle = 3;
   google.protobuf.UInt32Value length = 4;
   google.protobuf.UInt32Value width = 5;
+
+  google.protobuf.UInt32Value group = 7;
+  google.protobuf.UInt32Value item =8;
   
   // 
   google.protobuf.UInt32Value racklotType = 24;
   google.protobuf.UInt32Value stationID = 25;
+  google.protobuf.UInt32Value rackID = 26;
 
   //是否有效
   google.protobuf.BoolValue isValid = 27;

@@ -61,6 +61,17 @@ message RackType {
   string name = 2;
 }
 
+message CellType {
+  uint32 id = 1;
+  string name = 2;
+  uint32 length = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  string description = 8;
+  bool isValid = 9;
+  string properties = 10;
+}
+
 message IDReq { uint32 id = 1; }
 
 message IDsReq { repeated uint32 ids = 1; }
@@ -87,7 +98,7 @@ message Cell {
   // 存放的物料对于的编号
   int64 materialID = 31;
   // cell类型id
-  uint32 type = 32;
+  CellType type = 32;
   //是否被占用
   bool isOccupied = 33;
   //储位状态
