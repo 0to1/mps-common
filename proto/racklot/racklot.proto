@@ -259,7 +259,8 @@ message MultipleGroupFilter {
     repeated uint32 idNotIn = 14;
     repeated uint32 rackIdNotIn = 15;
     repeated uint32 rackIdIn = 16;                 
-    google.protobuf.UInt32Value stationID = 4;                          
+    google.protobuf.UInt32Value stationID = 4;          
+    repeated uint32 stationIDIn = 10;                        
     google.protobuf.UInt32Value rackID = 5;          
     google.protobuf.BoolValue isInbound = 6;             
     google.protobuf.BoolValue isOutbound = 7;             
@@ -267,7 +268,7 @@ message MultipleGroupFilter {
     google.protobuf.BoolValue isOccupied = 9; 
     RacklotTypeFilter type  = 11;
     repeated PropertyFilter  properties = 12;     
-    MultipleGroupFilter groupFilter  = 13;
+    MultipleGroupFilter group  = 13;
   }
   
   message RacklotTypeFilter {
