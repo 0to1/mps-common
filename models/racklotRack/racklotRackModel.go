@@ -67,8 +67,8 @@ func IsExitByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
 
 func Create(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 
-	if racklotID == 0 && rackID == 0 {
-		return false, nil
+	if racklotID == 0 || rackID == 0 {
+		return false, errors.New("CreateRacklotRack:racklotID or rackID  is Invalid")
 	}
 
 	if r, _ := IsExit(db, racklotID, rackID); r != false {

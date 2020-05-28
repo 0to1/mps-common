@@ -67,8 +67,8 @@ func IsExitByCells(db *gorm.DB, cellIDs []uint32) (bool, error) {
 
 func Create(db *gorm.DB, cellID uint32, materialID int64) (bool, error) {
 
-	if cellID == 0 && materialID == 0 {
-		return false, nil
+	if cellID == 0 || materialID == 0 {
+		return false, errors.New("CreateCellMaterial:CellID or MaterialID  is Invalid")
 	}
 
 	if r, _ := IsExit(db, cellID, materialID); r != false {
