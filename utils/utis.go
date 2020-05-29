@@ -13,6 +13,10 @@ func Interface2String(value interface{}) string {
 		val = value.(string)
 	case int:
 		val = strconv.Itoa(value.(int))
+	case int64:
+		val = strconv.FormatInt(value.(int64), 10)
+	case uint64:
+		val = strconv.FormatUint(value.(uint64), 10)
 	case float64:
 		val = strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case bool:
