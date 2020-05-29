@@ -165,8 +165,8 @@ message MaterialFilter {
   repeated MaterialFilter or = 2;
   repeated int64 idIn = 3;
   repeated PropertyFilter properties = 4;
-  google.protobuf.StringValue typeName = 5;
-  repeated string typeNameIn = 6;
+  google.protobuf.UInt32Value typeID = 5;
+  repeated uint32 typeIDIn = 6;
   google.protobuf.UInt32Value cellID = 7;  
   repeated uint32 cellIDIn = 8;
 }
