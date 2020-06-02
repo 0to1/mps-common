@@ -37,7 +37,8 @@ func IsExit(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 		return false, nil
 	}
 
-	db = db.Where("racklot_id = ? or rack_id = ?", racklotID, rackID).First(&RacklotRack{})
+	var r RacklotRack
+	db = db.Where("racklot_id = ? or rack_id = ?", racklotID, rackID).First(&r)
 	if err := db.Error; err != nil {
 		return false, err
 	}
@@ -62,6 +63,7 @@ func IsExitByRacklots(db *gorm.DB, racklotIDs []int) (bool, error) {
 	if db.RowsAffected <= 0 {
 		return false, nil
 	}
+
 	return true, nil
 }
 
@@ -71,7 +73,12 @@ func Create(db *gorm.DB, racklotID int, rackID int) (bool, error) {
 		return false, errors.New("CreateRacklotRack:racklotID or rackID  is Invalid")
 	}
 
-	if r, _ := IsExit(db, racklotID, rackID); r != false {
+	if r, _ := Query(db, racklotID, rackID); r != nil {
+
+		if r.RackID == rackID && r.RacklotID == racklotID {
+			return true, nil
+		}
+
 		return false, errors.New("CreateRacklotRack Exist")
 	}
 
