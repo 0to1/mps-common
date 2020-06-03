@@ -83,6 +83,8 @@ message UpdateTask {
   google.protobuf.Int32Value errorCode = 10;
   google.protobuf.StringValue error = 11;
   google.protobuf.Int32Value phase = 12;
+  google.protobuf.Int32Value entranceID = 13;
+  google.protobuf.Int32Value orderType = 14;
 }
 
 message TaskFilter {
@@ -106,6 +108,8 @@ message TaskFilter {
   TaskParameterFilter parameter = 20;
   google.protobuf.Int32Value errorCode = 19;
   google.protobuf.StringValue error = 22;
+  google.protobuf.Int32Value entranceID = 23;
+  google.protobuf.Int32Value orderType = 24;
 }
 
 message Query {
@@ -175,6 +179,8 @@ message TaskInfo {
   int32 errorCode = 14;
   string error = 15;
   string description = 16;
+  uint32 entranceID = 17;
+  uint32 orderType = 18;
 }
 
 message TaskInfos {
