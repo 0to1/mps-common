@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+// import "google/protobuf/wrappers.proto";
+
+package go.micro.srv.ledscreen;
+option go_package = "proto/ledscreen;go_micro_srv_ledscreen";
+
+service Ledscreen {
+  //显示相应区域的内容
+  rpc Show(ContentReq) returns (Response) {}
+  //根据设备id，复位显示屏
+  rpc Reset(IDReq) returns (Response) {}
+  //根据设备id，校准时间
+  rpc TimeCalibration(IDReq) returns (Response) {}
+
+  // 添加设备
+  rpc AddLedScreen(LedScreen) returns (Response) {}
+  // 删除设备
+  rpc DeleteLedScreen(IDReq) returns (Response) {}
+  // 修改相应设备参数
+  rpc UpdateLedScreen(LedScreen) returns (Response) {}
+
+  //根据设备id,获取设备
+  rpc GetLedScreen(IDReq) returns (LedScreen) {}
+  //返回所有设备
+  rpc GetLedScreens(Query) returns (LedScreens) {}
+}
+
+message ContentReq {
+  // 导引屏编号
+  uint32 id = 1;
+  // 显示区域编号
+  uint32 areaIndex = 2;
+  // 待显示的内容
+  string content = 3;
+  // 是否持久化保存到LED屏
+  bool persistence = 4;
+}
+
+message Area {
+  // 区域编号
+  uint32 areaIndex = 1;
+  // 区域显示的内容
+  string content = 2;
+}
+
+message LedScreen {
+  uint32 id = 1;
+  string name = 2;
+  string ip = 3;
+  int32 port = 4;
+  // 导引屏区域，当前只包含区域内容
+  repeated Area areas = 5;
+  string reserve = 8;
+  string description = 9;
+}
+
+message IDReq { uint32 id = 1; }
+
+message Response {
+  bool isOk = 1;
+  string message = 2;
+}
+
+message LedScreens {
+  repeated LedScreen ledScreens = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
+
+message LedScreenFilter {
+  repeated LedScreenFilter and = 1;
+  repeated LedScreenFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string nameIn = 4;
+}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  LedScreenFilter filter = 5;
+}

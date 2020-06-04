@@ -30,3 +30,7 @@ proto:
 	protoc --proto_path=. --micro_out=. --go_out=. proto/script/script.proto
 
 	protoc --proto_path=. --micro_out=. --go_out=. proto/log/log.proto
+
+	protoc --proto_path=. --micro_out=. --go_out=. proto/devices/devices.proto
+
+	protoc --proto_path=. --micro_out=. --go_out=. proto/ledscreen/ledscreen.proto

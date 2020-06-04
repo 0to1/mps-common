@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package go.micro.service.devices;
+
+service DevicesService {
+	rpc GetDevice (IDReq) returns (Device);
+	rpc GetDevices (DeviceQuery) returns (Devices);
+	rpc AddDevice(DeviceRequest) returns (Response);
+	rpc DeleteDevice(IDReq) returns (Response);
+	rpc ConfigDevice(DeviceRequest) returns (Response);
+
+	rpc StartDevice (IDReq) returns (Response);
+	rpc StopDevice (IDReq) returns (Response);
+}
+
+message IDReq {
+	uint32 id = 1;
+}
+
+message Tcp {
+	string type = 1; //server或者client
+	string ip = 2;
+	int32 port = 3;
+	string clientIp = 4;
+	int32 clientPort = 5;
+}
+
+message ProtocolType {
+	uint32 id = 1;
+	string name = 2;
+	Tcp tcp = 3;
+}
+
+message DeviceType {
+	uint32 id = 1;
+	string name = 2;
+	ProtocolType protocol = 3;
+	string description = 4;
+}
+
+message DeviceRequest {
+	uint32 id = 1;
+	string name = 2;
+	DeviceType type = 3;
+	int32 group = 4;
+	uint32 spcript = 5;
+	string configJSON = 6;
+	string provider = 7;
+	string description = 8;
+}
+
+message Response {
+}
+
+message Device {
+	uint32 id = 1;
+	string name = 2;
+	DeviceType type = 3;
+	int32 group = 4;
+	uint32 spcript = 5;
+	string configJSON = 6;
+	string provider = 7;
+	int32 connectStatus = 8;
+	string description = 9;
+}
+
+message Devices {
+	repeated Device devices = 1;
+}
+
+message DeviceTypeFilter {
+	repeated DeviceTypeFilter and = 1;
+	repeated DeviceTypeFilter or = 2;
+	google.protobuf.StringValue name = 3;
+}
+
+message DeviceFilter {
+	repeated DeviceFilter and = 1;
+	repeated DeviceFilter or = 2;
+	google.protobuf.UInt32Value id = 3;
+	repeated uint32 idIn = 4;
+	google.protobuf.StringValue name = 5;
+	repeated string nameIn = 6;
+	DeviceTypeFilter type = 10;
+	google.protobuf.UInt32Value group = 7;
+	repeated uint32 groupIn = 8;
+	google.protobuf.Int32Value connectStatus = 9;
+}
+
+message DeviceQuery {
+    uint32 page = 3;
+    uint32 perPage = 4;
+    DeviceFilter filter = 5;
+}
