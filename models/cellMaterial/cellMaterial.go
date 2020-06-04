@@ -71,7 +71,12 @@ func Create(db *gorm.DB, cellID uint32, materialID int64) (bool, error) {
 		return false, errors.New("CreateCellMaterial:CellID or MaterialID  is Invalid")
 	}
 
-	if r, _ := IsExit(db, cellID, materialID); r != false {
+	if r, _ := Query(db, cellID, materialID); r != nil {
+
+		if r.CellID == cellID && r.MaterialID == materialID {
+			return true, nil
+		}
+
 		return false, errors.New("CreateCellMaterial Exist")
 	}
 
