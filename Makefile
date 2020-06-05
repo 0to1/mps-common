@@ -1,4 +1,3 @@
-
 .PHONY: proto
 proto:
 	protoc --proto_path=. --micro_out=. --go_out=. proto/user/user.proto
@@ -34,3 +33,6 @@ proto:
 	protoc --proto_path=. --micro_out=. --go_out=. proto/devices/devices.proto
 
 	protoc --proto_path=. --micro_out=. --go_out=. proto/ledscreen/ledscreen.proto
+
+	protoc --proto_path=. --micro_out=. --go_out=. proto/cameramonitor/cameramonitor.proto
+	

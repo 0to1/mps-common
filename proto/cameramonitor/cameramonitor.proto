@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+// import "google/protobuf/wrappers.proto";
+
+package go.micro.srv.cameramonitor;
+option go_package = "proto/cameramonitor;go_micro_srv_cameramonitor";
+
+service CameramonitorService {
+  // 拍照
+  rpc TakePicture(IDReq) returns (Response);
+
+  rpc AddCamera(CameraReq) returns (Response);
+  rpc DeleteCamera(IDReq) returns (Response);
+  rpc ConfigCamera(CameraReq) returns (Response);
+
+  // 获取出入口的摄像头信息
+  rpc GetCamera(IDReq) returns (Camera);
+  rpc GetCameras(Query) returns (Cameras);
+}
+
+message IDReq { uint32 id = 1; }
+
+
+message CameraFilter {
+  repeated CameraFilter and = 1;
+  repeated CameraFilter or = 2;
+  repeated uint32 idIn = 3;                             
+  repeated string ipIn = 4;
+  repeated uint32 portIn = 5;
+}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  CameraFilter filter = 7;
+}
+
+message CameraReq {
+  // 摄像头编号
+  uint32 id = 1;
+  string ip = 2;
+  uint32 port = 3;
+  string description = 4;
+}
+
+message Cameras { repeated Camera cameras = 1; }
+
+message Camera {
+  // 摄像头编号
+  uint32 id = 1;
+  string ip = 2;
+  uint32 port = 3;
+  string description = 4;
+}
+
+message Response {}
