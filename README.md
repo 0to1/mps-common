@@ -11,7 +11,7 @@ agv
 
 area
 
-cameramonitor
+camera
 
 config
 

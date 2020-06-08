@@ -2,10 +2,10 @@ syntax = "proto3";
 
 // import "google/protobuf/wrappers.proto";
 
-package go.micro.srv.cameramonitor;
-option go_package = "proto/cameramonitor;go_micro_srv_cameramonitor";
+package go.micro.srv.camera;
+option go_package = "proto/camera;go_micro_srv_camera";
 
-service CameramonitorService {
+service CameraService {
   // 拍照
   rpc SnapPicture(IDReq) returns (Response);
 

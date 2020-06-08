@@ -3,7 +3,7 @@ srv=$1
 protos="
     agv
     area
-    cameramonitor
+    camera
     config
     devices
     ledscreen
