@@ -7,7 +7,7 @@ option go_package = "proto/cameramonitor;go_micro_srv_cameramonitor";
 
 service CameramonitorService {
   // 拍照
-  rpc TakePicture(IDReq) returns (Response);
+  rpc SnapPicture(IDReq) returns (Response);
 
   rpc AddCamera(CameraReq) returns (Response);
   rpc DeleteCamera(IDReq) returns (Response);
@@ -52,7 +52,8 @@ message Camera {
   uint32 id = 1;
   string ip = 2;
   uint32 port = 3;
-  string description = 4;
+  bool connected = 4;
+  string description = 5;
 }
 
 message Response {}

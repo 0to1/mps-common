@@ -43,7 +43,7 @@ func NewCameramonitorServiceEndpoints() []*api.Endpoint {
 
 type CameramonitorService interface {
 	// 拍照
-	TakePicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	SnapPicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	AddCamera(ctx context.Context, in *CameraReq, opts ...client.CallOption) (*Response, error)
 	DeleteCamera(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	ConfigCamera(ctx context.Context, in *CameraReq, opts ...client.CallOption) (*Response, error)
@@ -64,8 +64,8 @@ func NewCameramonitorService(name string, c client.Client) CameramonitorService 
 	}
 }
 
-func (c *cameramonitorService) TakePicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "CameramonitorService.TakePicture", in)
+func (c *cameramonitorService) SnapPicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "CameramonitorService.SnapPicture", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -128,7 +128,7 @@ func (c *cameramonitorService) GetCameras(ctx context.Context, in *Query, opts .
 
 type CameramonitorServiceHandler interface {
 	// 拍照
-	TakePicture(context.Context, *IDReq, *Response) error
+	SnapPicture(context.Context, *IDReq, *Response) error
 	AddCamera(context.Context, *CameraReq, *Response) error
 	DeleteCamera(context.Context, *IDReq, *Response) error
 	ConfigCamera(context.Context, *CameraReq, *Response) error
@@ -139,7 +139,7 @@ type CameramonitorServiceHandler interface {
 
 func RegisterCameramonitorServiceHandler(s server.Server, hdlr CameramonitorServiceHandler, opts ...server.HandlerOption) error {
 	type cameramonitorService interface {
-		TakePicture(ctx context.Context, in *IDReq, out *Response) error
+		SnapPicture(ctx context.Context, in *IDReq, out *Response) error
 		AddCamera(ctx context.Context, in *CameraReq, out *Response) error
 		DeleteCamera(ctx context.Context, in *IDReq, out *Response) error
 		ConfigCamera(ctx context.Context, in *CameraReq, out *Response) error
@@ -157,8 +157,8 @@ type cameramonitorServiceHandler struct {
 	CameramonitorServiceHandler
 }
 
-func (h *cameramonitorServiceHandler) TakePicture(ctx context.Context, in *IDReq, out *Response) error {
-	return h.CameramonitorServiceHandler.TakePicture(ctx, in, out)
+func (h *cameramonitorServiceHandler) SnapPicture(ctx context.Context, in *IDReq, out *Response) error {
+	return h.CameramonitorServiceHandler.SnapPicture(ctx, in, out)
 }
 
 func (h *cameramonitorServiceHandler) AddCamera(ctx context.Context, in *CameraReq, out *Response) error {
