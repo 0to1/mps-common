@@ -1,17 +1,17 @@
 syntax = "proto3";
 
-// import "google/protobuf/wrappers.proto";
+import "google/protobuf/wrappers.proto";
 
 package go.micro.srv.camera;
 option go_package = "proto/camera;go_micro_srv_camera";
 
 service CameraService {
   // 拍照
-  rpc SnapPicture(IDReq) returns (Response);
+  rpc SnapPicture(SnapPictureReq) returns (Response);
 
   rpc AddCamera(CameraReq) returns (Response);
   rpc DeleteCamera(IDReq) returns (Response);
-  rpc ConfigCamera(CameraReq) returns (Response);
+  rpc ConfigCamera(ConfigCameraReq) returns (Response);
 
   // 获取出入口的摄像头信息
   rpc GetCamera(IDReq) returns (Camera);
@@ -20,13 +20,23 @@ service CameraService {
 
 message IDReq { uint32 id = 1; }
 
+message SnapPictureReq {
+  uint32 id = 1;
+  // 标签名称，用于保存照片时附加到照片名称上，可以不传该参数
+  google.protobuf.StringValue tagName = 2;
+  // 指定相机通道，后续通过配置绑定到相机后，可以不用该字段
+  google.protobuf.UInt32Value channel = 3;
+}
 
 message CameraFilter {
   repeated CameraFilter and = 1;
   repeated CameraFilter or = 2;
-  repeated uint32 idIn = 3;                             
-  repeated string ipIn = 4;
-  repeated uint32 portIn = 5;
+  repeated uint32 idIn = 3;
+  google.protobuf.StringValue name = 4;
+  repeated string nameIn = 5;
+  repeated string ipIn = 6;
+  repeated uint32 portIn = 7;
+  repeated uint32 channelIn = 8;
 }
 
 message Query {
@@ -40,20 +50,43 @@ message Query {
 message CameraReq {
   // 摄像头编号
   uint32 id = 1;
-  string ip = 2;
-  uint32 port = 3;
-  string description = 4;
+  string name = 2;
+  string ip = 3;
+  uint32 port = 4;
+  // 摄像头通道
+  uint32 channel = 5;
+  // 相机登陆用户名
+  string username = 6;
+  // 相机登陆密码
+  string password = 7;
+  string description = 8;
 }
 
-message Cameras { repeated Camera cameras = 1; }
+message ConfigCameraReq {
+  // 摄像头编号
+  uint32 id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue ip = 3;
+  google.protobuf.UInt32Value port = 4;
+  google.protobuf.UInt32Value channel = 5;
+  google.protobuf.StringValue description = 6;
+}
+
+message Cameras {
+  repeated Camera cameras = 1;
+  uint32 totalpages = 2;
+  uint32 totals = 3;
+}
 
 message Camera {
   // 摄像头编号
   uint32 id = 1;
-  string ip = 2;
-  uint32 port = 3;
-  bool connected = 4;
-  string description = 5;
+  string name = 2;
+  string ip = 3;
+  uint32 port = 4;
+  uint32 channel = 5;
+  bool connected = 6;
+  string description = 7;
 }
 
 message Response {}

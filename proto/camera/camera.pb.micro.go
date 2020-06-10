@@ -6,6 +6,7 @@ package go_micro_srv_camera
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -43,10 +44,10 @@ func NewCameraServiceEndpoints() []*api.Endpoint {
 
 type CameraService interface {
 	// 拍照
-	SnapPicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	SnapPicture(ctx context.Context, in *SnapPictureReq, opts ...client.CallOption) (*Response, error)
 	AddCamera(ctx context.Context, in *CameraReq, opts ...client.CallOption) (*Response, error)
 	DeleteCamera(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
-	ConfigCamera(ctx context.Context, in *CameraReq, opts ...client.CallOption) (*Response, error)
+	ConfigCamera(ctx context.Context, in *ConfigCameraReq, opts ...client.CallOption) (*Response, error)
 	// 获取出入口的摄像头信息
 	GetCamera(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Camera, error)
 	GetCameras(ctx context.Context, in *Query, opts ...client.CallOption) (*Cameras, error)
@@ -64,7 +65,7 @@ func NewCameraService(name string, c client.Client) CameraService {
 	}
 }
 
-func (c *cameraService) SnapPicture(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+func (c *cameraService) SnapPicture(ctx context.Context, in *SnapPictureReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "CameraService.SnapPicture", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -94,7 +95,7 @@ func (c *cameraService) DeleteCamera(ctx context.Context, in *IDReq, opts ...cli
 	return out, nil
 }
 
-func (c *cameraService) ConfigCamera(ctx context.Context, in *CameraReq, opts ...client.CallOption) (*Response, error) {
+func (c *cameraService) ConfigCamera(ctx context.Context, in *ConfigCameraReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "CameraService.ConfigCamera", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -128,10 +129,10 @@ func (c *cameraService) GetCameras(ctx context.Context, in *Query, opts ...clien
 
 type CameraServiceHandler interface {
 	// 拍照
-	SnapPicture(context.Context, *IDReq, *Response) error
+	SnapPicture(context.Context, *SnapPictureReq, *Response) error
 	AddCamera(context.Context, *CameraReq, *Response) error
 	DeleteCamera(context.Context, *IDReq, *Response) error
-	ConfigCamera(context.Context, *CameraReq, *Response) error
+	ConfigCamera(context.Context, *ConfigCameraReq, *Response) error
 	// 获取出入口的摄像头信息
 	GetCamera(context.Context, *IDReq, *Camera) error
 	GetCameras(context.Context, *Query, *Cameras) error
@@ -139,10 +140,10 @@ type CameraServiceHandler interface {
 
 func RegisterCameraServiceHandler(s server.Server, hdlr CameraServiceHandler, opts ...server.HandlerOption) error {
 	type cameraService interface {
-		SnapPicture(ctx context.Context, in *IDReq, out *Response) error
+		SnapPicture(ctx context.Context, in *SnapPictureReq, out *Response) error
 		AddCamera(ctx context.Context, in *CameraReq, out *Response) error
 		DeleteCamera(ctx context.Context, in *IDReq, out *Response) error
-		ConfigCamera(ctx context.Context, in *CameraReq, out *Response) error
+		ConfigCamera(ctx context.Context, in *ConfigCameraReq, out *Response) error
 		GetCamera(ctx context.Context, in *IDReq, out *Camera) error
 		GetCameras(ctx context.Context, in *Query, out *Cameras) error
 	}
@@ -157,7 +158,7 @@ type cameraServiceHandler struct {
 	CameraServiceHandler
 }
 
-func (h *cameraServiceHandler) SnapPicture(ctx context.Context, in *IDReq, out *Response) error {
+func (h *cameraServiceHandler) SnapPicture(ctx context.Context, in *SnapPictureReq, out *Response) error {
 	return h.CameraServiceHandler.SnapPicture(ctx, in, out)
 }
 
@@ -169,7 +170,7 @@ func (h *cameraServiceHandler) DeleteCamera(ctx context.Context, in *IDReq, out 
 	return h.CameraServiceHandler.DeleteCamera(ctx, in, out)
 }
 
-func (h *cameraServiceHandler) ConfigCamera(ctx context.Context, in *CameraReq, out *Response) error {
+func (h *cameraServiceHandler) ConfigCamera(ctx context.Context, in *ConfigCameraReq, out *Response) error {
 	return h.CameraServiceHandler.ConfigCamera(ctx, in, out)
 }
 
