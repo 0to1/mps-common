@@ -21,6 +21,9 @@ service Route{
 
     //隐藏路径//
     rpc HideRoute(GetRouteRequest) returns (Response){}
+
+    //获取路径信息
+    rpc GetRoute(GetRouteRequest) returns (GetRouteResponse){}
 }
 
 message MapFile{

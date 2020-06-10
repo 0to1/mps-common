@@ -46,6 +46,8 @@ type RouteService interface {
 	ShowRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*Response, error)
 	//隐藏路径//
 	HideRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*Response, error)
+	//获取路径信息
+	GetRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error)
 }
 
 type routeService struct {
@@ -120,6 +122,16 @@ func (c *routeService) HideRoute(ctx context.Context, in *GetRouteRequest, opts 
 	return out, nil
 }
 
+func (c *routeService) GetRoute(ctx context.Context, in *GetRouteRequest, opts ...client.CallOption) (*GetRouteResponse, error) {
+	req := c.c.NewRequest(c.name, "Route.GetRoute", in)
+	out := new(GetRouteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Route service
 
 type RouteHandler interface {
@@ -135,6 +147,8 @@ type RouteHandler interface {
 	ShowRoute(context.Context, *GetRouteRequest, *Response) error
 	//隐藏路径//
 	HideRoute(context.Context, *GetRouteRequest, *Response) error
+	//获取路径信息
+	GetRoute(context.Context, *GetRouteRequest, *GetRouteResponse) error
 }
 
 func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.HandlerOption) error {
@@ -145,6 +159,7 @@ func RegisterRouteHandler(s server.Server, hdlr RouteHandler, opts ...server.Han
 		SortStationList(ctx context.Context, in *StationsRequest, out *GetStationListResponse) error
 		ShowRoute(ctx context.Context, in *GetRouteRequest, out *Response) error
 		HideRoute(ctx context.Context, in *GetRouteRequest, out *Response) error
+		GetRoute(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error
 	}
 	type Route struct {
 		route
@@ -179,4 +194,8 @@ func (h *routeHandler) ShowRoute(ctx context.Context, in *GetRouteRequest, out *
 
 func (h *routeHandler) HideRoute(ctx context.Context, in *GetRouteRequest, out *Response) error {
 	return h.RouteHandler.HideRoute(ctx, in, out)
+}
+
+func (h *routeHandler) GetRoute(ctx context.Context, in *GetRouteRequest, out *GetRouteResponse) error {
+	return h.RouteHandler.GetRoute(ctx, in, out)
 }
