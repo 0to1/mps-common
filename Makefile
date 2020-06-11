@@ -35,4 +35,6 @@ proto:
 	protoc --proto_path=. --micro_out=. --go_out=. proto/ledscreen/ledscreen.proto
 
 	protoc --proto_path=. --micro_out=. --go_out=. proto/camera/camera.proto
+
+	protoc --proto_path=. --micro_out=. --go_out=. proto/report/report.proto
 	

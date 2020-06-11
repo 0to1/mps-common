@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+// import "google/protobuf/any.proto";
+// import "google/protobuf/timestamp.proto";
+
+package go.micro.srv.report;
+// import "google/protobuf/wrappers.proto";
+
+service ReportService {
+  rpc GetTaskReport(TaskReportReq)returns(TaskReportItems);
+  rpc GetAgvTaskReport(AgvTaskReportReq)returns(AgvTaskReportItems);
+}
+
+message TaskReportReq {
+    string startTime = 1;
+    string endTime = 2;
+    string code = 3;
+    uint32 type = 4;
+  }
+  
+  message TaskReportItem {
+    string name = 1;
+    uint32 count = 2;
+  }
+  
+  message TaskReportItems {
+    repeated TaskReportItem item = 1;
+    uint32 TotalCount = 2; 
+  }
+  
+  message AgvTaskReportReq {
+    string startTime = 1;
+    string endTime = 2;
+    string code = 3;
+    repeated uint32 agvIDs = 4;
+  }
+  
+  message AgvTaskReportItem {
+    uint32 agvID = 1;
+    repeated TaskReportItem items = 2; 
+    uint32 TotalCount = 3; 
+  }
+  
+  message AgvTaskReportItems {
+    repeated AgvTaskReportItem items = 1;
+    uint32 TotalCount = 2; 
+  }
