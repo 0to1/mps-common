@@ -56,8 +56,10 @@ func Config(opts ...Option) error {
 	logf, err := rotatelogs.New(
 		path.Join(dir, LogFileFormat),
 		rotatelogs.WithLinkName(path.Join(dir, RecentLogFile)),
-		rotatelogs.WithMaxAge(24*time.Hour*30 /*day*/),
+		//rotatelogs.WithMaxAge(24*time.Hour*30 /*day*/),
+		rotatelogs.WithMaxAge(-1),
 		rotatelogs.WithRotationTime(1*time.Hour),
+		rotatelogs.WithRotationCount(10),
 	)
 
 	if err != nil {
