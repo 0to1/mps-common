@@ -83,7 +83,7 @@ func (m *TaskReportReq) GetType() uint32 {
 	return 0
 }
 
-type TaskReportItem struct {
+type ReportItem struct {
 	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Count                uint32   `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -91,86 +91,141 @@ type TaskReportItem struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TaskReportItem) Reset()         { *m = TaskReportItem{} }
-func (m *TaskReportItem) String() string { return proto.CompactTextString(m) }
-func (*TaskReportItem) ProtoMessage()    {}
-func (*TaskReportItem) Descriptor() ([]byte, []int) {
+func (m *ReportItem) Reset()         { *m = ReportItem{} }
+func (m *ReportItem) String() string { return proto.CompactTextString(m) }
+func (*ReportItem) ProtoMessage()    {}
+func (*ReportItem) Descriptor() ([]byte, []int) {
 	return fileDescriptor_db08199be84e208e, []int{1}
 }
 
-func (m *TaskReportItem) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_TaskReportItem.Unmarshal(m, b)
+func (m *ReportItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportItem.Unmarshal(m, b)
 }
-func (m *TaskReportItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_TaskReportItem.Marshal(b, m, deterministic)
+func (m *ReportItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportItem.Marshal(b, m, deterministic)
 }
-func (m *TaskReportItem) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TaskReportItem.Merge(m, src)
+func (m *ReportItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportItem.Merge(m, src)
 }
-func (m *TaskReportItem) XXX_Size() int {
-	return xxx_messageInfo_TaskReportItem.Size(m)
+func (m *ReportItem) XXX_Size() int {
+	return xxx_messageInfo_ReportItem.Size(m)
 }
-func (m *TaskReportItem) XXX_DiscardUnknown() {
-	xxx_messageInfo_TaskReportItem.DiscardUnknown(m)
+func (m *ReportItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportItem.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_TaskReportItem proto.InternalMessageInfo
+var xxx_messageInfo_ReportItem proto.InternalMessageInfo
 
-func (m *TaskReportItem) GetName() string {
+func (m *ReportItem) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *TaskReportItem) GetCount() uint32 {
+func (m *ReportItem) GetCount() uint32 {
 	if m != nil {
 		return m.Count
 	}
 	return 0
 }
 
-type TaskReportItems struct {
-	Item                 []*TaskReportItem `protobuf:"bytes,1,rep,name=item,proto3" json:"item,omitempty"`
-	TotalCount           uint32            `protobuf:"varint,2,opt,name=TotalCount,proto3" json:"TotalCount,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
+type AgvReportItem struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Count                uint32   `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	AgvID                uint32   `protobuf:"varint,3,opt,name=agvID,proto3" json:"agvID,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TaskReportItems) Reset()         { *m = TaskReportItems{} }
-func (m *TaskReportItems) String() string { return proto.CompactTextString(m) }
-func (*TaskReportItems) ProtoMessage()    {}
-func (*TaskReportItems) Descriptor() ([]byte, []int) {
+func (m *AgvReportItem) Reset()         { *m = AgvReportItem{} }
+func (m *AgvReportItem) String() string { return proto.CompactTextString(m) }
+func (*AgvReportItem) ProtoMessage()    {}
+func (*AgvReportItem) Descriptor() ([]byte, []int) {
 	return fileDescriptor_db08199be84e208e, []int{2}
 }
 
-func (m *TaskReportItems) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_TaskReportItems.Unmarshal(m, b)
+func (m *AgvReportItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AgvReportItem.Unmarshal(m, b)
 }
-func (m *TaskReportItems) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_TaskReportItems.Marshal(b, m, deterministic)
+func (m *AgvReportItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AgvReportItem.Marshal(b, m, deterministic)
 }
-func (m *TaskReportItems) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TaskReportItems.Merge(m, src)
+func (m *AgvReportItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AgvReportItem.Merge(m, src)
 }
-func (m *TaskReportItems) XXX_Size() int {
-	return xxx_messageInfo_TaskReportItems.Size(m)
+func (m *AgvReportItem) XXX_Size() int {
+	return xxx_messageInfo_AgvReportItem.Size(m)
 }
-func (m *TaskReportItems) XXX_DiscardUnknown() {
-	xxx_messageInfo_TaskReportItems.DiscardUnknown(m)
+func (m *AgvReportItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_AgvReportItem.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_TaskReportItems proto.InternalMessageInfo
+var xxx_messageInfo_AgvReportItem proto.InternalMessageInfo
 
-func (m *TaskReportItems) GetItem() []*TaskReportItem {
+func (m *AgvReportItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *AgvReportItem) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
+func (m *AgvReportItem) GetAgvID() uint32 {
+	if m != nil {
+		return m.AgvID
+	}
+	return 0
+}
+
+type ReportItems struct {
+	Item                 []*ReportItem `protobuf:"bytes,1,rep,name=item,proto3" json:"item,omitempty"`
+	TotalCount           uint32        `protobuf:"varint,2,opt,name=TotalCount,proto3" json:"TotalCount,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *ReportItems) Reset()         { *m = ReportItems{} }
+func (m *ReportItems) String() string { return proto.CompactTextString(m) }
+func (*ReportItems) ProtoMessage()    {}
+func (*ReportItems) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{3}
+}
+
+func (m *ReportItems) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportItems.Unmarshal(m, b)
+}
+func (m *ReportItems) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportItems.Marshal(b, m, deterministic)
+}
+func (m *ReportItems) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportItems.Merge(m, src)
+}
+func (m *ReportItems) XXX_Size() int {
+	return xxx_messageInfo_ReportItems.Size(m)
+}
+func (m *ReportItems) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportItems.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReportItems proto.InternalMessageInfo
+
+func (m *ReportItems) GetItem() []*ReportItem {
 	if m != nil {
 		return m.Item
 	}
 	return nil
 }
 
-func (m *TaskReportItems) GetTotalCount() uint32 {
+func (m *ReportItems) GetTotalCount() uint32 {
 	if m != nil {
 		return m.TotalCount
 	}
@@ -191,7 +246,7 @@ func (m *AgvTaskReportReq) Reset()         { *m = AgvTaskReportReq{} }
 func (m *AgvTaskReportReq) String() string { return proto.CompactTextString(m) }
 func (*AgvTaskReportReq) ProtoMessage()    {}
 func (*AgvTaskReportReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{3}
+	return fileDescriptor_db08199be84e208e, []int{4}
 }
 
 func (m *AgvTaskReportReq) XXX_Unmarshal(b []byte) error {
@@ -240,67 +295,12 @@ func (m *AgvTaskReportReq) GetAgvIDs() []uint32 {
 	return nil
 }
 
-type AgvTaskReportItem struct {
-	AgvID                uint32            `protobuf:"varint,1,opt,name=agvID,proto3" json:"agvID,omitempty"`
-	Items                []*TaskReportItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
-	TotalCount           uint32            `protobuf:"varint,3,opt,name=TotalCount,proto3" json:"TotalCount,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
-}
-
-func (m *AgvTaskReportItem) Reset()         { *m = AgvTaskReportItem{} }
-func (m *AgvTaskReportItem) String() string { return proto.CompactTextString(m) }
-func (*AgvTaskReportItem) ProtoMessage()    {}
-func (*AgvTaskReportItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{4}
-}
-
-func (m *AgvTaskReportItem) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_AgvTaskReportItem.Unmarshal(m, b)
-}
-func (m *AgvTaskReportItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_AgvTaskReportItem.Marshal(b, m, deterministic)
-}
-func (m *AgvTaskReportItem) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AgvTaskReportItem.Merge(m, src)
-}
-func (m *AgvTaskReportItem) XXX_Size() int {
-	return xxx_messageInfo_AgvTaskReportItem.Size(m)
-}
-func (m *AgvTaskReportItem) XXX_DiscardUnknown() {
-	xxx_messageInfo_AgvTaskReportItem.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_AgvTaskReportItem proto.InternalMessageInfo
-
-func (m *AgvTaskReportItem) GetAgvID() uint32 {
-	if m != nil {
-		return m.AgvID
-	}
-	return 0
-}
-
-func (m *AgvTaskReportItem) GetItems() []*TaskReportItem {
-	if m != nil {
-		return m.Items
-	}
-	return nil
-}
-
-func (m *AgvTaskReportItem) GetTotalCount() uint32 {
-	if m != nil {
-		return m.TotalCount
-	}
-	return 0
-}
-
 type AgvTaskReportItems struct {
-	Items                []*AgvTaskReportItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	TotalCount           uint32               `protobuf:"varint,2,opt,name=TotalCount,proto3" json:"TotalCount,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+	Items                []*AgvReportItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	TotalCount           uint32           `protobuf:"varint,2,opt,name=TotalCount,proto3" json:"TotalCount,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
 func (m *AgvTaskReportItems) Reset()         { *m = AgvTaskReportItems{} }
@@ -328,7 +328,7 @@ func (m *AgvTaskReportItems) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_AgvTaskReportItems proto.InternalMessageInfo
 
-func (m *AgvTaskReportItems) GetItems() []*AgvTaskReportItem {
+func (m *AgvTaskReportItems) GetItems() []*AgvReportItem {
 	if m != nil {
 		return m.Items
 	}
@@ -342,39 +342,104 @@ func (m *AgvTaskReportItems) GetTotalCount() uint32 {
 	return 0
 }
 
+type MaterialReportReq struct {
+	StartTime            string   `protobuf:"bytes,1,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime              string   `protobuf:"bytes,2,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Code                 string   `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Type                 uint32   `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MaterialReportReq) Reset()         { *m = MaterialReportReq{} }
+func (m *MaterialReportReq) String() string { return proto.CompactTextString(m) }
+func (*MaterialReportReq) ProtoMessage()    {}
+func (*MaterialReportReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{6}
+}
+
+func (m *MaterialReportReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialReportReq.Unmarshal(m, b)
+}
+func (m *MaterialReportReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialReportReq.Marshal(b, m, deterministic)
+}
+func (m *MaterialReportReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialReportReq.Merge(m, src)
+}
+func (m *MaterialReportReq) XXX_Size() int {
+	return xxx_messageInfo_MaterialReportReq.Size(m)
+}
+func (m *MaterialReportReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialReportReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialReportReq proto.InternalMessageInfo
+
+func (m *MaterialReportReq) GetStartTime() string {
+	if m != nil {
+		return m.StartTime
+	}
+	return ""
+}
+
+func (m *MaterialReportReq) GetEndTime() string {
+	if m != nil {
+		return m.EndTime
+	}
+	return ""
+}
+
+func (m *MaterialReportReq) GetCode() string {
+	if m != nil {
+		return m.Code
+	}
+	return ""
+}
+
+func (m *MaterialReportReq) GetType() uint32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*TaskReportReq)(nil), "go.micro.srv.report.TaskReportReq")
-	proto.RegisterType((*TaskReportItem)(nil), "go.micro.srv.report.TaskReportItem")
-	proto.RegisterType((*TaskReportItems)(nil), "go.micro.srv.report.TaskReportItems")
+	proto.RegisterType((*ReportItem)(nil), "go.micro.srv.report.ReportItem")
+	proto.RegisterType((*AgvReportItem)(nil), "go.micro.srv.report.AgvReportItem")
+	proto.RegisterType((*ReportItems)(nil), "go.micro.srv.report.ReportItems")
 	proto.RegisterType((*AgvTaskReportReq)(nil), "go.micro.srv.report.AgvTaskReportReq")
-	proto.RegisterType((*AgvTaskReportItem)(nil), "go.micro.srv.report.AgvTaskReportItem")
 	proto.RegisterType((*AgvTaskReportItems)(nil), "go.micro.srv.report.AgvTaskReportItems")
+	proto.RegisterType((*MaterialReportReq)(nil), "go.micro.srv.report.MaterialReportReq")
 }
 
 func init() { proto.RegisterFile("proto/report/report.proto", fileDescriptor_db08199be84e208e) }
 
 var fileDescriptor_db08199be84e208e = []byte{
-	// 352 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x93, 0x4f, 0x4b, 0xc3, 0x40,
-	0x10, 0xc5, 0x49, 0x93, 0x56, 0x3a, 0x12, 0xad, 0x63, 0x91, 0x55, 0x44, 0x42, 0xfc, 0x97, 0x53,
-	0x84, 0x7a, 0x10, 0xc5, 0x8b, 0x28, 0x94, 0x5e, 0xd7, 0x5e, 0x3c, 0xa6, 0xe9, 0x52, 0xa2, 0xa6,
-	0xdb, 0xee, 0xae, 0x01, 0xef, 0x7e, 0x3e, 0x3f, 0x93, 0x64, 0xd2, 0xda, 0xc6, 0x14, 0xda, 0x8b,
-	0xa7, 0xec, 0xbc, 0xc9, 0xcb, 0x6f, 0xdf, 0x83, 0xc0, 0xe1, 0x44, 0x49, 0x23, 0xaf, 0x94, 0x98,
-	0x48, 0x65, 0x66, 0x8f, 0x90, 0x34, 0xdc, 0x1f, 0xc9, 0x30, 0x4d, 0x62, 0x25, 0x43, 0xad, 0xb2,
-	0xb0, 0x58, 0xf9, 0x12, 0xdc, 0x7e, 0xa4, 0xdf, 0x38, 0x4d, 0x5c, 0x4c, 0xf1, 0x18, 0x9a, 0xda,
-	0x44, 0xca, 0xf4, 0x93, 0x54, 0x30, 0xcb, 0xb3, 0x82, 0x26, 0x5f, 0x08, 0xc8, 0x60, 0x4b, 0x8c,
-	0x87, 0xb4, 0xab, 0xd1, 0x6e, 0x3e, 0x22, 0x82, 0x13, 0xcb, 0xa1, 0x60, 0x36, 0xc9, 0x74, 0xce,
-	0x35, 0xf3, 0x39, 0x11, 0xcc, 0xf1, 0xac, 0xc0, 0xe5, 0x74, 0xf6, 0xef, 0x60, 0x67, 0x01, 0xec,
-	0x19, 0x91, 0xe6, 0x6f, 0x8d, 0xa3, 0x5f, 0x18, 0x9d, 0xb1, 0x0d, 0xf5, 0x58, 0x7e, 0x8c, 0x0d,
-	0x51, 0x5c, 0x5e, 0x0c, 0xfe, 0x2b, 0xec, 0x96, 0xbd, 0x1a, 0x6f, 0xc0, 0x49, 0x8c, 0x48, 0x99,
-	0xe5, 0xd9, 0xc1, 0x76, 0xe7, 0x34, 0x5c, 0x91, 0x31, 0x2c, 0x7b, 0x38, 0x19, 0xf0, 0x04, 0xa0,
-	0x2f, 0x4d, 0xf4, 0xfe, 0xb8, 0x84, 0x59, 0x52, 0xfc, 0x0c, 0x5a, 0x0f, 0xa3, 0xec, 0xff, 0xba,
-	0x39, 0x80, 0x46, 0x34, 0xca, 0x7a, 0x4f, 0x9a, 0x39, 0x9e, 0x1d, 0xb8, 0x7c, 0x36, 0xf9, 0x5f,
-	0x16, 0xec, 0x95, 0xc0, 0xd4, 0x51, 0x1b, 0xea, 0xb4, 0x27, 0xaa, 0xcb, 0x8b, 0x01, 0x6f, 0xa1,
-	0x9e, 0x67, 0xd1, 0xac, 0xb6, 0x79, 0xfa, 0xc2, 0xf1, 0x27, 0xbe, 0x5d, 0x89, 0xaf, 0x00, 0x2b,
-	0xb7, 0xd0, 0x78, 0x3f, 0x07, 0x16, 0x75, 0x5f, 0xac, 0x04, 0x56, 0x7c, 0xab, 0x99, 0x95, 0xca,
-	0x3b, 0xdf, 0x16, 0xb8, 0x85, 0xeb, 0x59, 0xa8, 0x2c, 0x89, 0x05, 0xbe, 0x80, 0xdb, 0x15, 0x66,
-	0xf1, 0x35, 0xf4, 0xd7, 0x44, 0xe4, 0x62, 0x7a, 0x74, 0xb6, 0x41, 0x0d, 0x1a, 0x07, 0xd0, 0xea,
-	0x0a, 0x53, 0xba, 0x2b, 0x9e, 0xaf, 0xcf, 0x93, 0x03, 0x2e, 0x37, 0x8b, 0xad, 0x07, 0x0d, 0xfa,
-	0xf1, 0xae, 0x7f, 0x02, 0x00, 0x00, 0xff, 0xff, 0xd5, 0xf8, 0x07, 0x11, 0x95, 0x03, 0x00, 0x00,
+	// 368 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x54, 0x51, 0x4b, 0xeb, 0x30,
+	0x14, 0xa6, 0x5b, 0xb7, 0xcb, 0xce, 0x08, 0x6c, 0xb9, 0x97, 0x4b, 0xef, 0x45, 0xb4, 0x14, 0xd4,
+	0x3e, 0x55, 0xd8, 0x40, 0x7c, 0x1d, 0x0a, 0x63, 0x0f, 0x22, 0xc4, 0xf9, 0xe8, 0x43, 0xd6, 0x1d,
+	0x4a, 0x71, 0x6d, 0x66, 0x12, 0x0b, 0xfe, 0x24, 0xff, 0xa5, 0x34, 0x99, 0x76, 0xc5, 0x4a, 0x41,
+	0xd0, 0xa7, 0x9d, 0xef, 0x3b, 0xe7, 0xe4, 0xcb, 0xf7, 0x65, 0x14, 0xfe, 0x6d, 0xa5, 0xd0, 0xe2,
+	0x4c, 0xe2, 0x56, 0x48, 0xbd, 0xfb, 0x89, 0x0c, 0x47, 0x7f, 0x27, 0x22, 0xca, 0xd2, 0x58, 0x8a,
+	0x48, 0xc9, 0x22, 0xb2, 0xad, 0x40, 0x00, 0x59, 0x72, 0xf5, 0xc0, 0x0c, 0x62, 0xf8, 0x48, 0x0f,
+	0x60, 0xa0, 0x34, 0x97, 0x7a, 0x99, 0x66, 0xe8, 0x39, 0xbe, 0x13, 0x0e, 0x58, 0x45, 0x50, 0x0f,
+	0x7e, 0x61, 0xbe, 0x36, 0xbd, 0x8e, 0xe9, 0xbd, 0x41, 0x4a, 0xc1, 0x8d, 0xc5, 0x1a, 0xbd, 0xae,
+	0xa1, 0x4d, 0x5d, 0x72, 0xfa, 0x79, 0x8b, 0x9e, 0xeb, 0x3b, 0x21, 0x61, 0xa6, 0x0e, 0xce, 0x01,
+	0xac, 0xd8, 0x42, 0x63, 0x56, 0x4e, 0xe4, 0xfc, 0x5d, 0xc8, 0xd4, 0xf4, 0x0f, 0xf4, 0x62, 0xf1,
+	0x94, 0x6b, 0xa3, 0x40, 0x98, 0x05, 0xc1, 0x0d, 0x90, 0x59, 0x52, 0x7c, 0x65, 0xb5, 0x64, 0x79,
+	0x52, 0x2c, 0xae, 0xcc, 0xdd, 0x08, 0xb3, 0x20, 0x58, 0xc1, 0xb0, 0x3a, 0x4d, 0xd1, 0x29, 0xb8,
+	0xa9, 0xc6, 0xcc, 0x73, 0xfc, 0x6e, 0x38, 0x9c, 0x1c, 0x45, 0x0d, 0x61, 0x45, 0xd5, 0x3c, 0x33,
+	0xc3, 0xf4, 0x10, 0x60, 0x29, 0x34, 0xdf, 0x5c, 0xee, 0x89, 0xee, 0x31, 0x41, 0x01, 0xa3, 0x59,
+	0x52, 0x7c, 0x5f, 0xc0, 0x7f, 0xa1, 0x6f, 0xcc, 0x28, 0xcf, 0xf5, 0xbb, 0x21, 0x61, 0x3b, 0x14,
+	0xe4, 0x40, 0x6b, 0xba, 0xd6, 0xe2, 0x05, 0xf4, 0xca, 0x5b, 0xab, 0x9d, 0xc7, 0xa0, 0xd1, 0x63,
+	0x2d, 0x64, 0x66, 0x17, 0x5a, 0x7d, 0x2a, 0x18, 0x5f, 0x73, 0x8d, 0x32, 0xe5, 0x9b, 0x1f, 0xfb,
+	0x27, 0x4d, 0x5e, 0x3a, 0x40, 0xac, 0xda, 0x2d, 0xca, 0x22, 0x8d, 0x91, 0xde, 0x01, 0x99, 0xa3,
+	0xae, 0x6c, 0xd3, 0x66, 0x8b, 0xb5, 0xf7, 0xf8, 0xef, 0xb7, 0x3c, 0xb5, 0xa2, 0x2b, 0x18, 0xcd,
+	0x51, 0xd7, 0x02, 0xa5, 0xc7, 0x9f, 0x85, 0x57, 0x3f, 0xfc, 0xb4, 0x7d, 0xcc, 0x6a, 0xdc, 0xc3,
+	0x78, 0x8e, 0xba, 0x1e, 0x22, 0x3d, 0x69, 0xdc, 0xfe, 0x90, 0x74, 0xbb, 0x85, 0x55, 0xdf, 0x7c,
+	0x02, 0xa6, 0xaf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x90, 0xff, 0xd5, 0x4b, 0x1f, 0x04, 0x00, 0x00,
 }

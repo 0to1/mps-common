@@ -42,8 +42,9 @@ func NewReportServiceEndpoints() []*api.Endpoint {
 // Client API for ReportService service
 
 type ReportService interface {
-	GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*TaskReportItems, error)
+	GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*ReportItems, error)
 	GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, opts ...client.CallOption) (*AgvTaskReportItems, error)
+	GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*ReportItems, error)
 }
 
 type reportService struct {
@@ -58,9 +59,9 @@ func NewReportService(name string, c client.Client) ReportService {
 	}
 }
 
-func (c *reportService) GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*TaskReportItems, error) {
+func (c *reportService) GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*ReportItems, error) {
 	req := c.c.NewRequest(c.name, "ReportService.GetTaskReport", in)
-	out := new(TaskReportItems)
+	out := new(ReportItems)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -78,17 +79,29 @@ func (c *reportService) GetAgvTaskReport(ctx context.Context, in *AgvTaskReportR
 	return out, nil
 }
 
+func (c *reportService) GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*ReportItems, error) {
+	req := c.c.NewRequest(c.name, "ReportService.GetMaterialReport", in)
+	out := new(ReportItems)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ReportService service
 
 type ReportServiceHandler interface {
-	GetTaskReport(context.Context, *TaskReportReq, *TaskReportItems) error
+	GetTaskReport(context.Context, *TaskReportReq, *ReportItems) error
 	GetAgvTaskReport(context.Context, *AgvTaskReportReq, *AgvTaskReportItems) error
+	GetMaterialReport(context.Context, *MaterialReportReq, *ReportItems) error
 }
 
 func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, opts ...server.HandlerOption) error {
 	type reportService interface {
-		GetTaskReport(ctx context.Context, in *TaskReportReq, out *TaskReportItems) error
+		GetTaskReport(ctx context.Context, in *TaskReportReq, out *ReportItems) error
 		GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, out *AgvTaskReportItems) error
+		GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error
 	}
 	type ReportService struct {
 		reportService
@@ -101,10 +114,14 @@ type reportServiceHandler struct {
 	ReportServiceHandler
 }
 
-func (h *reportServiceHandler) GetTaskReport(ctx context.Context, in *TaskReportReq, out *TaskReportItems) error {
+func (h *reportServiceHandler) GetTaskReport(ctx context.Context, in *TaskReportReq, out *ReportItems) error {
 	return h.ReportServiceHandler.GetTaskReport(ctx, in, out)
 }
 
 func (h *reportServiceHandler) GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, out *AgvTaskReportItems) error {
 	return h.ReportServiceHandler.GetAgvTaskReport(ctx, in, out)
+}
+
+func (h *reportServiceHandler) GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error {
+	return h.ReportServiceHandler.GetMaterialReport(ctx, in, out)
 }
