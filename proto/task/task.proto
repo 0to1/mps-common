@@ -39,8 +39,9 @@ service TaskService {
   // 执行脚本
   rpc Execute(ExecuteOptions) returns (ExecuteResponse);
 
-  rpc SetGP(Parameter) returns (Parameter);
-  rpc GetGP(ParameterKey) returns (Parameter);
+  rpc SetGP(GpParameter) returns (Response);
+  rpc DelGP(GPKey) returns (Response);
+  rpc GetGP(GPKey) returns (GpParameter);
   rpc GetGPs(GPQuery) returns (GpParameters);
 }
 
@@ -49,9 +50,20 @@ message GPQuery {
   uint32 perPage = 2;
 }
 
+message GPKey {
+  string key = 1;
+}
+
+message GpParameter {
+  string type = 1; 
+  string key = 2;
+  string value = 3;
+  string description = 4;
+}
+
 message GpParameters {
   uint32 totalCount = 1;
-  repeated Parameter params = 2;
+  repeated GpParameter params = 2;
 }
 
 message NewTaskReq {
