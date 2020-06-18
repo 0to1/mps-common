@@ -41,6 +41,17 @@ service TaskService {
 
   rpc SetGP(Parameter) returns (Parameter);
   rpc GetGP(ParameterKey) returns (Parameter);
+  rpc GetGPs(GPQuery) returns (GpParameters);
+}
+
+message GPQuery {
+  uint32 page = 1;
+  uint32 perPage = 2;
+}
+
+message GpParameters {
+  uint32 totalCount = 1;
+  repeated Parameter params = 2;
 }
 
 message NewTaskReq {

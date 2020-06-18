@@ -62,6 +62,7 @@ type TaskService interface {
 	Execute(ctx context.Context, in *ExecuteOptions, opts ...client.CallOption) (*ExecuteResponse, error)
 	SetGP(ctx context.Context, in *Parameter, opts ...client.CallOption) (*Parameter, error)
 	GetGP(ctx context.Context, in *ParameterKey, opts ...client.CallOption) (*Parameter, error)
+	GetGPs(ctx context.Context, in *GPQuery, opts ...client.CallOption) (*GpParameters, error)
 }
 
 type taskService struct {
@@ -236,6 +237,16 @@ func (c *taskService) GetGP(ctx context.Context, in *ParameterKey, opts ...clien
 	return out, nil
 }
 
+func (c *taskService) GetGPs(ctx context.Context, in *GPQuery, opts ...client.CallOption) (*GpParameters, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetGPs", in)
+	out := new(GpParameters)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TaskService service
 
 type TaskServiceHandler interface {
@@ -266,6 +277,7 @@ type TaskServiceHandler interface {
 	Execute(context.Context, *ExecuteOptions, *ExecuteResponse) error
 	SetGP(context.Context, *Parameter, *Parameter) error
 	GetGP(context.Context, *ParameterKey, *Parameter) error
+	GetGPs(context.Context, *GPQuery, *GpParameters) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
@@ -286,6 +298,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		Execute(ctx context.Context, in *ExecuteOptions, out *ExecuteResponse) error
 		SetGP(ctx context.Context, in *Parameter, out *Parameter) error
 		GetGP(ctx context.Context, in *ParameterKey, out *Parameter) error
+		GetGPs(ctx context.Context, in *GPQuery, out *GpParameters) error
 	}
 	type TaskService struct {
 		taskService
@@ -360,4 +373,8 @@ func (h *taskServiceHandler) SetGP(ctx context.Context, in *Parameter, out *Para
 
 func (h *taskServiceHandler) GetGP(ctx context.Context, in *ParameterKey, out *Parameter) error {
 	return h.TaskServiceHandler.GetGP(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetGPs(ctx context.Context, in *GPQuery, out *GpParameters) error {
+	return h.TaskServiceHandler.GetGPs(ctx, in, out)
 }
