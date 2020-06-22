@@ -25,14 +25,16 @@ message TaskReportReq {
   }
 
   message AgvReportItem {
-    string name = 1;
-    uint32 count = 2;
+    repeated ReportItem items = 1;
     uint32 agvID = 3;
   }
   
   message ReportItems {
     repeated ReportItem item = 1;
-    uint32 TotalCount = 2; 
+    uint32 totalCount = 2; 
+    uint32 max = 3 ;
+    uint32 min = 4;
+    double avg = 5;
   }
   
   message AgvTaskReportReq {
@@ -44,7 +46,10 @@ message TaskReportReq {
   
   message AgvTaskReportItems {
     repeated AgvReportItem items = 1;
-    uint32 TotalCount = 2; 
+    uint32 totalCount = 2; 
+    uint32 max = 3 ;
+    uint32 min = 4;
+    double avg  = 5;
   }
 
   message MaterialReportReq {
