@@ -137,6 +137,8 @@ message TaskFilter {
   google.protobuf.Int32Value rackID = 25;
   google.protobuf.Int32Value greaterThenPhase = 26;
   google.protobuf.Int32Value lessThenPhase = 27;
+  repeated int32 orderTypeIn = 28;
+  repeated int32 phaseIn = 29;
 }
 
 message Query {
