@@ -30,12 +30,13 @@ type DBHook struct {
 }
 
 type logContent struct {
-	Time  string
-	Level string
-	Func  string
-	File  string
-	Line  int
-	Msg   string
+	Time   string
+	TaskID uint32
+	Level  string
+	Func   string
+	File   string
+	Line   int
+	Msg    string
 }
 
 // Fire ..
@@ -108,6 +109,7 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
 	logModel.FileName = content.File
 	logModel.Line = content.Line
 	logModel.Msg = content.Msg
+	logModel.TaskID = content.TaskID
 	logModel.Service = hook.Service
 	logModel.IP = hook.IP
 

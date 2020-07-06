@@ -23,6 +23,7 @@ message LogContent {
   string service = 6;
   string ipAddr = 7;
   string msg = 8;
+  uint32 taskID = 9;
 }
 
 message Request {}
@@ -47,6 +48,7 @@ message LogFilter {
   repeated string serviceIn = 9;
   repeated string ipIn = 10;
   repeated string msgIn = 11; 
+  uint32 taskID = 12;
 }
 
 message LogContents { 

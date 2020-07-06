@@ -10,6 +10,7 @@ import (
 // Log ..
 type Log struct {
 	Time     time.Time
+	TaskID   uint32
 	Level    string
 	FuncName string
 	FileName string
@@ -21,7 +22,7 @@ type Log struct {
 
 // AddLog ..
 func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string, line int,
-	fileName string, srvName string, ip string, msg string) error {
+	fileName string, srvName string, ip string, msg string, taskID uint32) error {
 
 	var logDB Log
 	logDB.Time = wTime
@@ -32,6 +33,7 @@ func AddLog(db *gorm.DB, wTime time.Time, level string, funcName string, line in
 	logDB.IP = ip
 	logDB.Msg = msg
 	logDB.Line = line
+	logDB.TaskID = taskID
 
 	err := db.Save(&logDB).Error
 
