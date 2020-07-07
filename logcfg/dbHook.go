@@ -114,7 +114,7 @@ func parseEntry(hook *DBHook, entry *logrus.Entry) (models.Log, error) {
 	logModel.IP = hook.IP
 
 	if hook.IsConsole {
-		log.Println(content.Msg)
+		log.Println(logModel.Msg, "[", logModel.FileName, " ", logModel.FuncName, " ", logModel.Line, "]")
 	}
 
 	return logModel, nil
