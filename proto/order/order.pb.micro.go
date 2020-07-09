@@ -38,6 +38,7 @@ type OrderService interface {
 	CancelTask(ctx context.Context, in *CancelReq, opts ...client.CallOption) (*Response, error)
 	//修改参数
 	UpdateTask(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*Response, error)
+	SendQAMessage(ctx context.Context, in *QAMessage, opts ...client.CallOption) (*Response, error)
 	SendQBMessage(ctx context.Context, in *QBMessage, opts ...client.CallOption) (*Response, error)
 	SendMMessage(ctx context.Context, in *MMessage, opts ...client.CallOption) (*Response, error)
 	HostIsConnected(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
@@ -67,6 +68,16 @@ func (c *orderService) CancelTask(ctx context.Context, in *CancelReq, opts ...cl
 
 func (c *orderService) UpdateTask(ctx context.Context, in *UpdateReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Order.UpdateTask", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderService) SendQAMessage(ctx context.Context, in *QAMessage, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Order.SendQAMessage", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -112,6 +123,7 @@ type OrderHandler interface {
 	CancelTask(context.Context, *CancelReq, *Response) error
 	//修改参数
 	UpdateTask(context.Context, *UpdateReq, *Response) error
+	SendQAMessage(context.Context, *QAMessage, *Response) error
 	SendQBMessage(context.Context, *QBMessage, *Response) error
 	SendMMessage(context.Context, *MMessage, *Response) error
 	HostIsConnected(context.Context, *Request, *Response) error
@@ -121,6 +133,7 @@ func RegisterOrderHandler(s server.Server, hdlr OrderHandler, opts ...server.Han
 	type order interface {
 		CancelTask(ctx context.Context, in *CancelReq, out *Response) error
 		UpdateTask(ctx context.Context, in *UpdateReq, out *Response) error
+		SendQAMessage(ctx context.Context, in *QAMessage, out *Response) error
 		SendQBMessage(ctx context.Context, in *QBMessage, out *Response) error
 		SendMMessage(ctx context.Context, in *MMessage, out *Response) error
 		HostIsConnected(ctx context.Context, in *Request, out *Response) error
@@ -142,6 +155,10 @@ func (h *orderHandler) CancelTask(ctx context.Context, in *CancelReq, out *Respo
 
 func (h *orderHandler) UpdateTask(ctx context.Context, in *UpdateReq, out *Response) error {
 	return h.OrderHandler.UpdateTask(ctx, in, out)
+}
+
+func (h *orderHandler) SendQAMessage(ctx context.Context, in *QAMessage, out *Response) error {
+	return h.OrderHandler.SendQAMessage(ctx, in, out)
 }
 
 func (h *orderHandler) SendQBMessage(ctx context.Context, in *QBMessage, out *Response) error {

@@ -9,6 +9,7 @@ service Order {
   //修改参数
   rpc UpdateTask(UpdateReq) returns (Response);
 
+  rpc SendQAMessage(QAMessage) returns (Response);
   rpc SendQBMessage(QBMessage) returns (Response);
   rpc SendMMessage(MMessage) returns (Response);
   rpc HostIsConnected(Request) returns(Response);
@@ -46,6 +47,12 @@ message QBMessage {
   uint32 code = 3;
   uint32 ikey = 4;
   repeated uint32 params = 5;
+}
+
+message QAMessage {
+  uint32 tsID = 1;
+  uint32 priority = 2;
+  repeated uint32 params = 3;
 }
 
 message MMessage {
