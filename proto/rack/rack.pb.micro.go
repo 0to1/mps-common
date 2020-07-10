@@ -12,6 +12,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -28,9 +29,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for RackService service
+
+func NewRackServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for RackService service
 
@@ -75,6 +83,8 @@ type RackService interface {
 	AddCellProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
 	// 更新Cell 储位状态
 	SetCellStatus(ctx context.Context, in *CellStatusReq, opts ...client.CallOption) (*Response, error)
+	GetRackReport(ctx context.Context, in *RackReportReq, opts ...client.CallOption) (*RackReport, error)
+	GetCellReport(ctx context.Context, in *CellReportReq, opts ...client.CallOption) (*CellReport, error)
 }
 
 type rackService struct {
@@ -369,6 +379,26 @@ func (c *rackService) SetCellStatus(ctx context.Context, in *CellStatusReq, opts
 	return out, nil
 }
 
+func (c *rackService) GetRackReport(ctx context.Context, in *RackReportReq, opts ...client.CallOption) (*RackReport, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetRackReport", in)
+	out := new(RackReport)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) GetCellReport(ctx context.Context, in *CellReportReq, opts ...client.CallOption) (*CellReport, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetCellReport", in)
+	out := new(CellReport)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RackService service
 
 type RackServiceHandler interface {
@@ -412,6 +442,8 @@ type RackServiceHandler interface {
 	AddCellProperties(context.Context, *PropertiesReq, *Response) error
 	// 更新Cell 储位状态
 	SetCellStatus(context.Context, *CellStatusReq, *Response) error
+	GetRackReport(context.Context, *RackReportReq, *RackReport) error
+	GetCellReport(context.Context, *CellReportReq, *CellReport) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
@@ -444,6 +476,8 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		ReleaseCell(ctx context.Context, in *IDReq, out *Response) error
 		AddCellProperties(ctx context.Context, in *PropertiesReq, out *Response) error
 		SetCellStatus(ctx context.Context, in *CellStatusReq, out *Response) error
+		GetRackReport(ctx context.Context, in *RackReportReq, out *RackReport) error
+		GetCellReport(ctx context.Context, in *CellReportReq, out *CellReport) error
 	}
 	type RackService struct {
 		rackService
@@ -566,4 +600,12 @@ func (h *rackServiceHandler) AddCellProperties(ctx context.Context, in *Properti
 
 func (h *rackServiceHandler) SetCellStatus(ctx context.Context, in *CellStatusReq, out *Response) error {
 	return h.RackServiceHandler.SetCellStatus(ctx, in, out)
+}
+
+func (h *rackServiceHandler) GetRackReport(ctx context.Context, in *RackReportReq, out *RackReport) error {
+	return h.RackServiceHandler.GetRackReport(ctx, in, out)
+}
+
+func (h *rackServiceHandler) GetCellReport(ctx context.Context, in *CellReportReq, out *CellReport) error {
+	return h.RackServiceHandler.GetCellReport(ctx, in, out)
 }

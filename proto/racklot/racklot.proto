@@ -59,10 +59,24 @@ service RacklotService {
     rpc SetOutbound(FlagReq) returns (Response);
 
     rpc AddProperties(PropertiesReq)returns (Response);
+
+    rpc GetRacklotReport(RacklotReportReq)returns(RacklotReport);
 }
 
 message IDReq {
   uint32 id = 1;
+}
+
+message RacklotReportReq {
+
+}
+
+message RacklotReport {
+  uint32 total = 1;
+  uint32 rackTotal = 2;
+  uint32 noRackTotal = 3;
+  uint32 validTotal = 4;
+  uint32 invalidTotal = 5;
 }
 
 // RacklotType 货位类型

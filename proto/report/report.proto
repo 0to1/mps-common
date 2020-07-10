@@ -27,6 +27,11 @@ message TaskReportReq {
   message AgvReportItem {
     repeated ReportItem items = 1;
     uint32 agvID = 3;
+    uint32 maxTime = 6;
+    uint32 maxTimeID = 7;
+    uint32 minTime = 8;
+    uint32 minTimeID = 9;
+    double avgTime = 10;
   }
   
   message ReportItems {
@@ -35,6 +40,11 @@ message TaskReportReq {
     uint32 max = 3 ;
     uint32 min = 4;
     double avg = 5;
+    uint32 maxTime = 6;
+    uint32 maxTimeID = 7;
+    uint32 minTime = 8;
+    uint32 minTimeID = 9;
+    double avgTime = 10;
   }
   
   message AgvTaskReportReq {

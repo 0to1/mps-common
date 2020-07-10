@@ -12,6 +12,7 @@ import (
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -28,9 +29,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for RacklotService service
+
+func NewRacklotServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for RacklotService service
 
@@ -77,6 +85,7 @@ type RacklotService interface {
 	// 设置是否允许取车
 	SetOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	AddProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
+	GetRacklotReport(ctx context.Context, in *RacklotReportReq, opts ...client.CallOption) (*RacklotReport, error)
 }
 
 type racklotService struct {
@@ -321,6 +330,16 @@ func (c *racklotService) AddProperties(ctx context.Context, in *PropertiesReq, o
 	return out, nil
 }
 
+func (c *racklotService) GetRacklotReport(ctx context.Context, in *RacklotReportReq, opts ...client.CallOption) (*RacklotReport, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetRacklotReport", in)
+	out := new(RacklotReport)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RacklotService service
 
 type RacklotServiceHandler interface {
@@ -366,6 +385,7 @@ type RacklotServiceHandler interface {
 	// 设置是否允许取车
 	SetOutbound(context.Context, *FlagReq, *Response) error
 	AddProperties(context.Context, *PropertiesReq, *Response) error
+	GetRacklotReport(context.Context, *RacklotReportReq, *RacklotReport) error
 }
 
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
@@ -393,6 +413,7 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		SetInbound(ctx context.Context, in *FlagReq, out *Response) error
 		SetOutbound(ctx context.Context, in *FlagReq, out *Response) error
 		AddProperties(ctx context.Context, in *PropertiesReq, out *Response) error
+		GetRacklotReport(ctx context.Context, in *RacklotReportReq, out *RacklotReport) error
 	}
 	type RacklotService struct {
 		racklotService
@@ -495,4 +516,8 @@ func (h *racklotServiceHandler) SetOutbound(ctx context.Context, in *FlagReq, ou
 
 func (h *racklotServiceHandler) AddProperties(ctx context.Context, in *PropertiesReq, out *Response) error {
 	return h.RacklotServiceHandler.AddProperties(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) GetRacklotReport(ctx context.Context, in *RacklotReportReq, out *RacklotReport) error {
+	return h.RacklotServiceHandler.GetRacklotReport(ctx, in, out)
 }

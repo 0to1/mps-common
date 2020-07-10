@@ -54,6 +54,29 @@ service RackService {
     rpc AddCellProperties(PropertiesReq) returns(Response);
   // 更新Cell 储位状态
   rpc SetCellStatus(CellStatusReq) returns (Response);
+
+  rpc GetRackReport(RackReportReq)returns(RackReport);
+
+  rpc GetCellReport(CellReportReq)returns(CellReport);
+}
+
+message CellReportReq {
+
+}
+
+message CellReport {
+  uint32 total = 1;
+  uint32 materialTotal = 2;
+  uint32 noMaterialTotal = 3;
+  uint32 validTotal = 4;
+  uint32 invalidTotal = 5;
+}
+
+message RackReportReq {
+}
+
+message RackReport {
+  uint32 total = 1;
 }
 
 message RackType {
