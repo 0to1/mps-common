@@ -1,6 +1,7 @@
 package materialRecord
 
 import (
+	"log"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -61,4 +62,27 @@ func Leave(db *gorm.DB, materialID int64) error {
 		return err
 	}
 	return nil
+}
+
+// GetRecord ..
+func GetRecord(db *gorm.DB, limit uint32, offset uint32) ([]MaterialInCellRecord, error) {
+	var records []MaterialInCellRecord
+	err := db.Model(&MaterialInCellRecord{}).Order("arrive_time").Limit(limit).Offset(offset).Find(&records).Error
+	if err != nil {
+		log.Println("GetRecord error: ", err.Error())
+		return nil, err
+	}
+	return records, nil
+}
+
+// GetRecordByDate ..
+func GetRecordByDate(db *gorm.DB, startTime string, endTime string) ([]MaterialInCellRecord, error) {
+	var records []MaterialInCellRecord
+	err := db.Model(&MaterialInCellRecord{}).Where("arrive_time > ? and arrive_time < ?", startTime, endTime).
+		Order("arrive_time").Find(&records).Error
+	if err != nil {
+		log.Println("GetRecord error: ", err.Error())
+		return nil, err
+	}
+	return records, nil
 }

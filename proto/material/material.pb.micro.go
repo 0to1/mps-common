@@ -12,7 +12,6 @@ import (
 
 import (
 	context "context"
-	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -29,16 +28,9 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
-
-// Api Endpoints for MaterialService service
-
-func NewMaterialServiceEndpoints() []*api.Endpoint {
-	return []*api.Endpoint{}
-}
 
 // Client API for MaterialService service
 
@@ -53,6 +45,8 @@ type MaterialService interface {
 	GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, opts ...client.CallOption) (*MaterialTypesResp, error)
 	// 根据ID获取指定的物料类型
 	GetMaterialType(ctx context.Context, in *MaterialTypeIDReq, opts ...client.CallOption) (*MaterialType, error)
+	// 获取出入库记录
+	GetRecord(ctx context.Context, in *RecordQuery, opts ...client.CallOption) (*MaterialRecords, error)
 	// 添加物料
 	AddMaterial(ctx context.Context, in *Material, opts ...client.CallOption) (*Response, error)
 	// 移除物料
@@ -126,6 +120,16 @@ func (c *materialService) GetMaterialTypes(ctx context.Context, in *MaterialType
 func (c *materialService) GetMaterialType(ctx context.Context, in *MaterialTypeIDReq, opts ...client.CallOption) (*MaterialType, error) {
 	req := c.c.NewRequest(c.name, "MaterialService.GetMaterialType", in)
 	out := new(MaterialType)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *materialService) GetRecord(ctx context.Context, in *RecordQuery, opts ...client.CallOption) (*MaterialRecords, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.GetRecord", in)
+	out := new(MaterialRecords)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -236,6 +240,8 @@ type MaterialServiceHandler interface {
 	GetMaterialTypes(context.Context, *MaterialTypeQuery, *MaterialTypesResp) error
 	// 根据ID获取指定的物料类型
 	GetMaterialType(context.Context, *MaterialTypeIDReq, *MaterialType) error
+	// 获取出入库记录
+	GetRecord(context.Context, *RecordQuery, *MaterialRecords) error
 	// 添加物料
 	AddMaterial(context.Context, *Material, *Response) error
 	// 移除物料
@@ -261,6 +267,7 @@ func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler
 		UpdateMaterialType(ctx context.Context, in *UpdateMaterialTypeReq, out *Response) error
 		GetMaterialTypes(ctx context.Context, in *MaterialTypeQuery, out *MaterialTypesResp) error
 		GetMaterialType(ctx context.Context, in *MaterialTypeIDReq, out *MaterialType) error
+		GetRecord(ctx context.Context, in *RecordQuery, out *MaterialRecords) error
 		AddMaterial(ctx context.Context, in *Material, out *Response) error
 		DeleteMaterial(ctx context.Context, in *MaterialIDReq, out *Response) error
 		UpdateMaterial(ctx context.Context, in *UpdateMaterialReq, out *Response) error
@@ -300,6 +307,10 @@ func (h *materialServiceHandler) GetMaterialTypes(ctx context.Context, in *Mater
 
 func (h *materialServiceHandler) GetMaterialType(ctx context.Context, in *MaterialTypeIDReq, out *MaterialType) error {
 	return h.MaterialServiceHandler.GetMaterialType(ctx, in, out)
+}
+
+func (h *materialServiceHandler) GetRecord(ctx context.Context, in *RecordQuery, out *MaterialRecords) error {
+	return h.MaterialServiceHandler.GetRecord(ctx, in, out)
 }
 
 func (h *materialServiceHandler) AddMaterial(ctx context.Context, in *Material, out *Response) error {

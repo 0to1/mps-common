@@ -16,7 +16,8 @@ service MaterialService {
   // 根据ID获取指定的物料类型
   rpc GetMaterialType(MaterialTypeIDReq) returns (MaterialType);
 
-
+  // 获取出入库记录
+  rpc GetRecord(RecordQuery) returns (MaterialRecords);
 
   // 添加物料
   rpc AddMaterial(Material) returns (Response);
@@ -121,6 +122,24 @@ message MaterialQuery {
   uint32 page = 3;
   uint32 perPage = 4;
   MaterialFilter filter = 5;
+}
+
+message RecordQuery {
+  uint32 page = 1;
+  uint32 perPage = 2;
+  google.protobuf.StringValue startTime = 3;
+  google.protobuf.StringValue endTime = 4;
+}
+
+message MaterialRecord {
+  Material material = 1;
+  string startTime = 2;
+  string endTime  = 3;
+}
+
+message MaterialRecords {
+  repeated MaterialRecord records = 1;
+  uint32 totalCount = 2;
 }
 
 message MaterialTypeQuery {
