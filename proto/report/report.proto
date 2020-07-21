@@ -10,6 +10,7 @@ service ReportService {
   rpc GetTaskReport(TaskReportReq)returns(ReportItems);
   rpc GetAgvTaskReport(AgvTaskReportReq)returns(AgvTaskReportItems);
   rpc GetMaterialReport(MaterialReportReq)returns(ReportItems);
+  rpc GetTaskTimeReport(TaskTimeReportReq)returns(TimeReportItems);
 }
 
 message TaskReportReq {
@@ -67,4 +68,27 @@ message TaskReportReq {
     string endTime = 2;
     string code = 3;
     uint32 type = 4;
+  }
+
+  message TaskTimeReportReq {
+    string startTime = 1;
+    string endTime = 2;
+  }
+
+  message TimeReportItems {
+    repeated AgvTimeReportItem items = 1;
+    uint32 maxTime = 6;
+    uint32 maxTimeID = 7;
+    uint32 minTime = 8;
+    uint32 minTimeID = 9;
+    double avgTime = 10;
+  }
+
+  message AgvTimeReportItem {
+    uint32 agvID = 3;
+    uint32 maxTime = 6;
+    uint32 maxTimeID = 7;
+    uint32 minTime = 8;
+    uint32 minTimeID = 9;
+    double avgTime = 10;
   }

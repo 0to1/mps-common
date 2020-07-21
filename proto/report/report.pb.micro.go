@@ -45,6 +45,7 @@ type ReportService interface {
 	GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*ReportItems, error)
 	GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, opts ...client.CallOption) (*AgvTaskReportItems, error)
 	GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*ReportItems, error)
+	GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, opts ...client.CallOption) (*TimeReportItems, error)
 }
 
 type reportService struct {
@@ -89,12 +90,23 @@ func (c *reportService) GetMaterialReport(ctx context.Context, in *MaterialRepor
 	return out, nil
 }
 
+func (c *reportService) GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, opts ...client.CallOption) (*TimeReportItems, error) {
+	req := c.c.NewRequest(c.name, "ReportService.GetTaskTimeReport", in)
+	out := new(TimeReportItems)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ReportService service
 
 type ReportServiceHandler interface {
 	GetTaskReport(context.Context, *TaskReportReq, *ReportItems) error
 	GetAgvTaskReport(context.Context, *AgvTaskReportReq, *AgvTaskReportItems) error
 	GetMaterialReport(context.Context, *MaterialReportReq, *ReportItems) error
+	GetTaskTimeReport(context.Context, *TaskTimeReportReq, *TimeReportItems) error
 }
 
 func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, opts ...server.HandlerOption) error {
@@ -102,6 +114,7 @@ func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, op
 		GetTaskReport(ctx context.Context, in *TaskReportReq, out *ReportItems) error
 		GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, out *AgvTaskReportItems) error
 		GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error
+		GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, out *TimeReportItems) error
 	}
 	type ReportService struct {
 		reportService
@@ -124,4 +137,8 @@ func (h *reportServiceHandler) GetAgvTaskReport(ctx context.Context, in *AgvTask
 
 func (h *reportServiceHandler) GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error {
 	return h.ReportServiceHandler.GetMaterialReport(ctx, in, out)
+}
+
+func (h *reportServiceHandler) GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, out *TimeReportItems) error {
+	return h.ReportServiceHandler.GetTaskTimeReport(ctx, in, out)
 }
