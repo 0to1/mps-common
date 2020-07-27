@@ -188,4 +188,5 @@ message MaterialFilter {
   repeated uint32 typeIDIn = 6;
   google.protobuf.UInt32Value cellID = 7;  
   repeated uint32 cellIDIn = 8;
+  repeated uint32 cellIDNotIn = 9;
 }
