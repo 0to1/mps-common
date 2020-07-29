@@ -270,7 +270,8 @@ message RackQuery {
     repeated uint32 idIn = 3;
     repeated uint32 racklotIdIn = 14;                                   
 
-    google.protobuf.UInt32Value racklotID = 5;          
+    google.protobuf.UInt32Value racklotID = 5;
+    google.protobuf.BoolValue hasBindRacklot = 15;    
          
     google.protobuf.BoolValue isValid = 8;     
     google.protobuf.BoolValue isOccupied = 9; 
