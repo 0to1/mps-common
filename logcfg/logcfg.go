@@ -58,8 +58,9 @@ func Config(opts ...Option) error {
 		rotatelogs.WithLinkName(path.Join(dir, RecentLogFile)),
 		//rotatelogs.WithMaxAge(24*time.Hour*30 /*day*/),
 		rotatelogs.WithMaxAge(-1),
-		rotatelogs.WithRotationTime(1*time.Hour),
-		rotatelogs.WithRotationCount(10),
+		//rotatelogs.WithRotationTime(1*time.Hour),
+		rotatelogs.WithRotationTime(5*time.Minute), //5min一个文件
+		rotatelogs.WithRotationCount(1000),         //保留1000个文件
 	)
 
 	if err != nil {
