@@ -42,9 +42,9 @@ func NewReportServiceEndpoints() []*api.Endpoint {
 // Client API for ReportService service
 
 type ReportService interface {
-	GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*ReportItems, error)
+	GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*TaskReportItems, error)
 	GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, opts ...client.CallOption) (*AgvTaskReportItems, error)
-	GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*ReportItems, error)
+	GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*MaterialReportItems, error)
 	GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, opts ...client.CallOption) (*TimeReportItems, error)
 }
 
@@ -60,9 +60,9 @@ func NewReportService(name string, c client.Client) ReportService {
 	}
 }
 
-func (c *reportService) GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*ReportItems, error) {
+func (c *reportService) GetTaskReport(ctx context.Context, in *TaskReportReq, opts ...client.CallOption) (*TaskReportItems, error) {
 	req := c.c.NewRequest(c.name, "ReportService.GetTaskReport", in)
-	out := new(ReportItems)
+	out := new(TaskReportItems)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -80,9 +80,9 @@ func (c *reportService) GetAgvTaskReport(ctx context.Context, in *AgvTaskReportR
 	return out, nil
 }
 
-func (c *reportService) GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*ReportItems, error) {
+func (c *reportService) GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*MaterialReportItems, error) {
 	req := c.c.NewRequest(c.name, "ReportService.GetMaterialReport", in)
-	out := new(ReportItems)
+	out := new(MaterialReportItems)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -103,17 +103,17 @@ func (c *reportService) GetTaskTimeReport(ctx context.Context, in *TaskTimeRepor
 // Server API for ReportService service
 
 type ReportServiceHandler interface {
-	GetTaskReport(context.Context, *TaskReportReq, *ReportItems) error
+	GetTaskReport(context.Context, *TaskReportReq, *TaskReportItems) error
 	GetAgvTaskReport(context.Context, *AgvTaskReportReq, *AgvTaskReportItems) error
-	GetMaterialReport(context.Context, *MaterialReportReq, *ReportItems) error
+	GetMaterialReport(context.Context, *MaterialReportReq, *MaterialReportItems) error
 	GetTaskTimeReport(context.Context, *TaskTimeReportReq, *TimeReportItems) error
 }
 
 func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, opts ...server.HandlerOption) error {
 	type reportService interface {
-		GetTaskReport(ctx context.Context, in *TaskReportReq, out *ReportItems) error
+		GetTaskReport(ctx context.Context, in *TaskReportReq, out *TaskReportItems) error
 		GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, out *AgvTaskReportItems) error
-		GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error
+		GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *MaterialReportItems) error
 		GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, out *TimeReportItems) error
 	}
 	type ReportService struct {
@@ -127,7 +127,7 @@ type reportServiceHandler struct {
 	ReportServiceHandler
 }
 
-func (h *reportServiceHandler) GetTaskReport(ctx context.Context, in *TaskReportReq, out *ReportItems) error {
+func (h *reportServiceHandler) GetTaskReport(ctx context.Context, in *TaskReportReq, out *TaskReportItems) error {
 	return h.ReportServiceHandler.GetTaskReport(ctx, in, out)
 }
 
@@ -135,7 +135,7 @@ func (h *reportServiceHandler) GetAgvTaskReport(ctx context.Context, in *AgvTask
 	return h.ReportServiceHandler.GetAgvTaskReport(ctx, in, out)
 }
 
-func (h *reportServiceHandler) GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *ReportItems) error {
+func (h *reportServiceHandler) GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *MaterialReportItems) error {
 	return h.ReportServiceHandler.GetMaterialReport(ctx, in, out)
 }
 

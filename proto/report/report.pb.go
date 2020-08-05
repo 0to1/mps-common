@@ -20,6 +20,187 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type Task struct {
+	TaskID               uint32   `protobuf:"varint,1,opt,name=taskID,proto3" json:"taskID,omitempty"`
+	AgvID                uint32   `protobuf:"varint,2,opt,name=agvID,proto3" json:"agvID,omitempty"`
+	BeginTime            string   `protobuf:"bytes,3,opt,name=beginTime,proto3" json:"beginTime,omitempty"`
+	EndTime              string   `protobuf:"bytes,4,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	DelayTime            uint32   `protobuf:"varint,5,opt,name=delayTime,proto3" json:"delayTime,omitempty"`
+	WorkTime             uint32   `protobuf:"varint,6,opt,name=workTime,proto3" json:"workTime,omitempty"`
+	BlockTime            uint32   `protobuf:"varint,7,opt,name=blockTime,proto3" json:"blockTime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Task) Reset()         { *m = Task{} }
+func (m *Task) String() string { return proto.CompactTextString(m) }
+func (*Task) ProtoMessage()    {}
+func (*Task) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{0}
+}
+
+func (m *Task) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Task.Unmarshal(m, b)
+}
+func (m *Task) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Task.Marshal(b, m, deterministic)
+}
+func (m *Task) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Task.Merge(m, src)
+}
+func (m *Task) XXX_Size() int {
+	return xxx_messageInfo_Task.Size(m)
+}
+func (m *Task) XXX_DiscardUnknown() {
+	xxx_messageInfo_Task.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Task proto.InternalMessageInfo
+
+func (m *Task) GetTaskID() uint32 {
+	if m != nil {
+		return m.TaskID
+	}
+	return 0
+}
+
+func (m *Task) GetAgvID() uint32 {
+	if m != nil {
+		return m.AgvID
+	}
+	return 0
+}
+
+func (m *Task) GetBeginTime() string {
+	if m != nil {
+		return m.BeginTime
+	}
+	return ""
+}
+
+func (m *Task) GetEndTime() string {
+	if m != nil {
+		return m.EndTime
+	}
+	return ""
+}
+
+func (m *Task) GetDelayTime() uint32 {
+	if m != nil {
+		return m.DelayTime
+	}
+	return 0
+}
+
+func (m *Task) GetWorkTime() uint32 {
+	if m != nil {
+		return m.WorkTime
+	}
+	return 0
+}
+
+func (m *Task) GetBlockTime() uint32 {
+	if m != nil {
+		return m.BlockTime
+	}
+	return 0
+}
+
+type Material struct {
+	MaterialID           int64    `protobuf:"varint,1,opt,name=materialID,proto3" json:"materialID,omitempty"`
+	BeginTime            string   `protobuf:"bytes,3,opt,name=beginTime,proto3" json:"beginTime,omitempty"`
+	EndTime              string   `protobuf:"bytes,4,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Properties           string   `protobuf:"bytes,5,opt,name=properties,proto3" json:"properties,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Material) Reset()         { *m = Material{} }
+func (m *Material) String() string { return proto.CompactTextString(m) }
+func (*Material) ProtoMessage()    {}
+func (*Material) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{1}
+}
+
+func (m *Material) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Material.Unmarshal(m, b)
+}
+func (m *Material) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Material.Marshal(b, m, deterministic)
+}
+func (m *Material) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Material.Merge(m, src)
+}
+func (m *Material) XXX_Size() int {
+	return xxx_messageInfo_Material.Size(m)
+}
+func (m *Material) XXX_DiscardUnknown() {
+	xxx_messageInfo_Material.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Material proto.InternalMessageInfo
+
+func (m *Material) GetMaterialID() int64 {
+	if m != nil {
+		return m.MaterialID
+	}
+	return 0
+}
+
+func (m *Material) GetBeginTime() string {
+	if m != nil {
+		return m.BeginTime
+	}
+	return ""
+}
+
+func (m *Material) GetEndTime() string {
+	if m != nil {
+		return m.EndTime
+	}
+	return ""
+}
+
+func (m *Material) GetProperties() string {
+	if m != nil {
+		return m.Properties
+	}
+	return ""
+}
+
+type Agv struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Agv) Reset()         { *m = Agv{} }
+func (m *Agv) String() string { return proto.CompactTextString(m) }
+func (*Agv) ProtoMessage()    {}
+func (*Agv) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{2}
+}
+
+func (m *Agv) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Agv.Unmarshal(m, b)
+}
+func (m *Agv) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Agv.Marshal(b, m, deterministic)
+}
+func (m *Agv) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Agv.Merge(m, src)
+}
+func (m *Agv) XXX_Size() int {
+	return xxx_messageInfo_Agv.Size(m)
+}
+func (m *Agv) XXX_DiscardUnknown() {
+	xxx_messageInfo_Agv.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Agv proto.InternalMessageInfo
+
 type TaskReportReq struct {
 	StartTime            string   `protobuf:"bytes,1,opt,name=startTime,proto3" json:"startTime,omitempty"`
 	EndTime              string   `protobuf:"bytes,2,opt,name=endTime,proto3" json:"endTime,omitempty"`
@@ -34,7 +215,7 @@ func (m *TaskReportReq) Reset()         { *m = TaskReportReq{} }
 func (m *TaskReportReq) String() string { return proto.CompactTextString(m) }
 func (*TaskReportReq) ProtoMessage()    {}
 func (*TaskReportReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{0}
+	return fileDescriptor_db08199be84e208e, []int{3}
 }
 
 func (m *TaskReportReq) XXX_Unmarshal(b []byte) error {
@@ -95,7 +276,7 @@ func (m *ReportItem) Reset()         { *m = ReportItem{} }
 func (m *ReportItem) String() string { return proto.CompactTextString(m) }
 func (*ReportItem) ProtoMessage()    {}
 func (*ReportItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{1}
+	return fileDescriptor_db08199be84e208e, []int{4}
 }
 
 func (m *ReportItem) XXX_Unmarshal(b []byte) error {
@@ -147,7 +328,7 @@ func (m *AgvReportItem) Reset()         { *m = AgvReportItem{} }
 func (m *AgvReportItem) String() string { return proto.CompactTextString(m) }
 func (*AgvReportItem) ProtoMessage()    {}
 func (*AgvReportItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{2}
+	return fileDescriptor_db08199be84e208e, []int{5}
 }
 
 func (m *AgvReportItem) XXX_Unmarshal(b []byte) error {
@@ -217,8 +398,9 @@ func (m *AgvReportItem) GetAvgTime() float64 {
 	return 0
 }
 
-type ReportItems struct {
+type TaskReportItems struct {
 	Item                 []*ReportItem `protobuf:"bytes,1,rep,name=item,proto3" json:"item,omitempty"`
+	Tasks                []*Task       `protobuf:"bytes,11,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	TotalCount           uint32        `protobuf:"varint,2,opt,name=totalCount,proto3" json:"totalCount,omitempty"`
 	Max                  uint32        `protobuf:"varint,3,opt,name=max,proto3" json:"max,omitempty"`
 	Min                  uint32        `protobuf:"varint,4,opt,name=min,proto3" json:"min,omitempty"`
@@ -233,97 +415,183 @@ type ReportItems struct {
 	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *ReportItems) Reset()         { *m = ReportItems{} }
-func (m *ReportItems) String() string { return proto.CompactTextString(m) }
-func (*ReportItems) ProtoMessage()    {}
-func (*ReportItems) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{3}
+func (m *TaskReportItems) Reset()         { *m = TaskReportItems{} }
+func (m *TaskReportItems) String() string { return proto.CompactTextString(m) }
+func (*TaskReportItems) ProtoMessage()    {}
+func (*TaskReportItems) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{6}
 }
 
-func (m *ReportItems) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ReportItems.Unmarshal(m, b)
+func (m *TaskReportItems) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TaskReportItems.Unmarshal(m, b)
 }
-func (m *ReportItems) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ReportItems.Marshal(b, m, deterministic)
+func (m *TaskReportItems) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TaskReportItems.Marshal(b, m, deterministic)
 }
-func (m *ReportItems) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ReportItems.Merge(m, src)
+func (m *TaskReportItems) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TaskReportItems.Merge(m, src)
 }
-func (m *ReportItems) XXX_Size() int {
-	return xxx_messageInfo_ReportItems.Size(m)
+func (m *TaskReportItems) XXX_Size() int {
+	return xxx_messageInfo_TaskReportItems.Size(m)
 }
-func (m *ReportItems) XXX_DiscardUnknown() {
-	xxx_messageInfo_ReportItems.DiscardUnknown(m)
+func (m *TaskReportItems) XXX_DiscardUnknown() {
+	xxx_messageInfo_TaskReportItems.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ReportItems proto.InternalMessageInfo
+var xxx_messageInfo_TaskReportItems proto.InternalMessageInfo
 
-func (m *ReportItems) GetItem() []*ReportItem {
+func (m *TaskReportItems) GetItem() []*ReportItem {
 	if m != nil {
 		return m.Item
 	}
 	return nil
 }
 
-func (m *ReportItems) GetTotalCount() uint32 {
+func (m *TaskReportItems) GetTasks() []*Task {
+	if m != nil {
+		return m.Tasks
+	}
+	return nil
+}
+
+func (m *TaskReportItems) GetTotalCount() uint32 {
 	if m != nil {
 		return m.TotalCount
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMax() uint32 {
+func (m *TaskReportItems) GetMax() uint32 {
 	if m != nil {
 		return m.Max
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMin() uint32 {
+func (m *TaskReportItems) GetMin() uint32 {
 	if m != nil {
 		return m.Min
 	}
 	return 0
 }
 
-func (m *ReportItems) GetAvg() float64 {
+func (m *TaskReportItems) GetAvg() float64 {
 	if m != nil {
 		return m.Avg
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMaxTime() uint32 {
+func (m *TaskReportItems) GetMaxTime() uint32 {
 	if m != nil {
 		return m.MaxTime
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMaxTimeID() uint32 {
+func (m *TaskReportItems) GetMaxTimeID() uint32 {
 	if m != nil {
 		return m.MaxTimeID
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMinTime() uint32 {
+func (m *TaskReportItems) GetMinTime() uint32 {
 	if m != nil {
 		return m.MinTime
 	}
 	return 0
 }
 
-func (m *ReportItems) GetMinTimeID() uint32 {
+func (m *TaskReportItems) GetMinTimeID() uint32 {
 	if m != nil {
 		return m.MinTimeID
 	}
 	return 0
 }
 
-func (m *ReportItems) GetAvgTime() float64 {
+func (m *TaskReportItems) GetAvgTime() float64 {
 	if m != nil {
 		return m.AvgTime
+	}
+	return 0
+}
+
+type MaterialReportItems struct {
+	Item                 []*ReportItem `protobuf:"bytes,1,rep,name=item,proto3" json:"item,omitempty"`
+	Materials            []*Material   `protobuf:"bytes,11,rep,name=materials,proto3" json:"materials,omitempty"`
+	TotalCount           uint32        `protobuf:"varint,2,opt,name=totalCount,proto3" json:"totalCount,omitempty"`
+	Max                  uint32        `protobuf:"varint,3,opt,name=max,proto3" json:"max,omitempty"`
+	Min                  uint32        `protobuf:"varint,4,opt,name=min,proto3" json:"min,omitempty"`
+	Avg                  float64       `protobuf:"fixed64,5,opt,name=avg,proto3" json:"avg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *MaterialReportItems) Reset()         { *m = MaterialReportItems{} }
+func (m *MaterialReportItems) String() string { return proto.CompactTextString(m) }
+func (*MaterialReportItems) ProtoMessage()    {}
+func (*MaterialReportItems) Descriptor() ([]byte, []int) {
+	return fileDescriptor_db08199be84e208e, []int{7}
+}
+
+func (m *MaterialReportItems) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MaterialReportItems.Unmarshal(m, b)
+}
+func (m *MaterialReportItems) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MaterialReportItems.Marshal(b, m, deterministic)
+}
+func (m *MaterialReportItems) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MaterialReportItems.Merge(m, src)
+}
+func (m *MaterialReportItems) XXX_Size() int {
+	return xxx_messageInfo_MaterialReportItems.Size(m)
+}
+func (m *MaterialReportItems) XXX_DiscardUnknown() {
+	xxx_messageInfo_MaterialReportItems.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MaterialReportItems proto.InternalMessageInfo
+
+func (m *MaterialReportItems) GetItem() []*ReportItem {
+	if m != nil {
+		return m.Item
+	}
+	return nil
+}
+
+func (m *MaterialReportItems) GetMaterials() []*Material {
+	if m != nil {
+		return m.Materials
+	}
+	return nil
+}
+
+func (m *MaterialReportItems) GetTotalCount() uint32 {
+	if m != nil {
+		return m.TotalCount
+	}
+	return 0
+}
+
+func (m *MaterialReportItems) GetMax() uint32 {
+	if m != nil {
+		return m.Max
+	}
+	return 0
+}
+
+func (m *MaterialReportItems) GetMin() uint32 {
+	if m != nil {
+		return m.Min
+	}
+	return 0
+}
+
+func (m *MaterialReportItems) GetAvg() float64 {
+	if m != nil {
+		return m.Avg
 	}
 	return 0
 }
@@ -342,7 +610,7 @@ func (m *AgvTaskReportReq) Reset()         { *m = AgvTaskReportReq{} }
 func (m *AgvTaskReportReq) String() string { return proto.CompactTextString(m) }
 func (*AgvTaskReportReq) ProtoMessage()    {}
 func (*AgvTaskReportReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{4}
+	return fileDescriptor_db08199be84e208e, []int{8}
 }
 
 func (m *AgvTaskReportReq) XXX_Unmarshal(b []byte) error {
@@ -406,7 +674,7 @@ func (m *AgvTaskReportItems) Reset()         { *m = AgvTaskReportItems{} }
 func (m *AgvTaskReportItems) String() string { return proto.CompactTextString(m) }
 func (*AgvTaskReportItems) ProtoMessage()    {}
 func (*AgvTaskReportItems) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{5}
+	return fileDescriptor_db08199be84e208e, []int{9}
 }
 
 func (m *AgvTaskReportItems) XXX_Unmarshal(b []byte) error {
@@ -476,7 +744,7 @@ func (m *MaterialReportReq) Reset()         { *m = MaterialReportReq{} }
 func (m *MaterialReportReq) String() string { return proto.CompactTextString(m) }
 func (*MaterialReportReq) ProtoMessage()    {}
 func (*MaterialReportReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{6}
+	return fileDescriptor_db08199be84e208e, []int{10}
 }
 
 func (m *MaterialReportReq) XXX_Unmarshal(b []byte) error {
@@ -537,7 +805,7 @@ func (m *TaskTimeReportReq) Reset()         { *m = TaskTimeReportReq{} }
 func (m *TaskTimeReportReq) String() string { return proto.CompactTextString(m) }
 func (*TaskTimeReportReq) ProtoMessage()    {}
 func (*TaskTimeReportReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{7}
+	return fileDescriptor_db08199be84e208e, []int{11}
 }
 
 func (m *TaskTimeReportReq) XXX_Unmarshal(b []byte) error {
@@ -588,7 +856,7 @@ func (m *TimeReportItems) Reset()         { *m = TimeReportItems{} }
 func (m *TimeReportItems) String() string { return proto.CompactTextString(m) }
 func (*TimeReportItems) ProtoMessage()    {}
 func (*TimeReportItems) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{8}
+	return fileDescriptor_db08199be84e208e, []int{12}
 }
 
 func (m *TimeReportItems) XXX_Unmarshal(b []byte) error {
@@ -667,7 +935,7 @@ func (m *AgvTimeReportItem) Reset()         { *m = AgvTimeReportItem{} }
 func (m *AgvTimeReportItem) String() string { return proto.CompactTextString(m) }
 func (*AgvTimeReportItem) ProtoMessage()    {}
 func (*AgvTimeReportItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_db08199be84e208e, []int{9}
+	return fileDescriptor_db08199be84e208e, []int{13}
 }
 
 func (m *AgvTimeReportItem) XXX_Unmarshal(b []byte) error {
@@ -731,10 +999,14 @@ func (m *AgvTimeReportItem) GetAvgTime() float64 {
 }
 
 func init() {
+	proto.RegisterType((*Task)(nil), "go.micro.srv.report.Task")
+	proto.RegisterType((*Material)(nil), "go.micro.srv.report.Material")
+	proto.RegisterType((*Agv)(nil), "go.micro.srv.report.Agv")
 	proto.RegisterType((*TaskReportReq)(nil), "go.micro.srv.report.TaskReportReq")
 	proto.RegisterType((*ReportItem)(nil), "go.micro.srv.report.ReportItem")
 	proto.RegisterType((*AgvReportItem)(nil), "go.micro.srv.report.AgvReportItem")
-	proto.RegisterType((*ReportItems)(nil), "go.micro.srv.report.ReportItems")
+	proto.RegisterType((*TaskReportItems)(nil), "go.micro.srv.report.TaskReportItems")
+	proto.RegisterType((*MaterialReportItems)(nil), "go.micro.srv.report.MaterialReportItems")
 	proto.RegisterType((*AgvTaskReportReq)(nil), "go.micro.srv.report.AgvTaskReportReq")
 	proto.RegisterType((*AgvTaskReportItems)(nil), "go.micro.srv.report.AgvTaskReportItems")
 	proto.RegisterType((*MaterialReportReq)(nil), "go.micro.srv.report.MaterialReportReq")
@@ -746,38 +1018,48 @@ func init() {
 func init() { proto.RegisterFile("proto/report/report.proto", fileDescriptor_db08199be84e208e) }
 
 var fileDescriptor_db08199be84e208e = []byte{
-	// 524 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0xdd, 0x8a, 0xd3, 0x40,
-	0x14, 0x66, 0x36, 0x6d, 0xd7, 0x9e, 0x25, 0xd8, 0x8e, 0x22, 0xe3, 0x22, 0x1a, 0x82, 0x3f, 0xb9,
-	0x8a, 0xb0, 0x8b, 0xe2, 0x85, 0x37, 0x8b, 0x85, 0x52, 0xc4, 0x9b, 0x71, 0xbd, 0xf4, 0x62, 0xb6,
-	0x3b, 0x84, 0xe0, 0x26, 0x53, 0x93, 0x71, 0x58, 0xdf, 0xc1, 0xa7, 0x10, 0xdf, 0xc0, 0xa7, 0xf1,
-	0x05, 0x7c, 0x0e, 0x99, 0x33, 0x89, 0xe9, 0xd0, 0x94, 0x5d, 0x90, 0x95, 0x5e, 0xf5, 0x9c, 0x6f,
-	0xce, 0x77, 0xfe, 0x4f, 0x0a, 0xf7, 0x57, 0x95, 0xd2, 0xea, 0x79, 0x25, 0x57, 0xaa, 0xd2, 0xcd,
-	0x4f, 0x8a, 0x18, 0xbd, 0x93, 0xa9, 0xb4, 0xc8, 0x97, 0x95, 0x4a, 0xeb, 0xca, 0xa4, 0xee, 0x29,
-	0x56, 0x10, 0x9e, 0x8a, 0xfa, 0x13, 0x47, 0x8d, 0xcb, 0xcf, 0xf4, 0x01, 0x8c, 0x6b, 0x2d, 0x2a,
-	0x7d, 0x9a, 0x17, 0x92, 0x91, 0x88, 0x24, 0x63, 0xde, 0x01, 0x94, 0xc1, 0xbe, 0x2c, 0xcf, 0xf1,
-	0x6d, 0x0f, 0xdf, 0x5a, 0x95, 0x52, 0x18, 0x2c, 0xd5, 0xb9, 0x64, 0x01, 0xc2, 0x28, 0x5b, 0x4c,
-	0x7f, 0x5d, 0x49, 0x36, 0x88, 0x48, 0x12, 0x72, 0x94, 0xe3, 0x97, 0x00, 0x2e, 0xd8, 0x42, 0xcb,
-	0xc2, 0x5a, 0x94, 0xe2, 0x6f, 0x20, 0x94, 0xe9, 0x5d, 0x18, 0x2e, 0xd5, 0x97, 0x52, 0x63, 0x84,
-	0x90, 0x3b, 0x25, 0xfe, 0x4d, 0x20, 0x3c, 0xc9, 0xcc, 0x1a, 0xf7, 0x05, 0x0c, 0x73, 0x2d, 0x8b,
-	0x9a, 0x91, 0x28, 0x48, 0x0e, 0x8e, 0x1e, 0xa5, 0x3d, 0xf5, 0xa5, 0x9d, 0x3d, 0x77, 0xd6, 0xd6,
-	0xbd, 0xc8, 0xcc, 0x62, 0x86, 0x99, 0x86, 0xdc, 0x29, 0xb6, 0xb0, 0x42, 0x5c, 0x62, 0x61, 0x23,
-	0xc4, 0x5b, 0xd5, 0x36, 0xa4, 0x11, 0x17, 0x33, 0xb6, 0x8f, 0x6f, 0x1d, 0x80, 0xbc, 0xbc, 0x44,
-	0xde, 0xad, 0x86, 0xe7, 0x54, 0xe4, 0x39, 0x71, 0x31, 0x63, 0xe3, 0x86, 0xd7, 0x02, 0x96, 0x27,
-	0x4c, 0x86, 0x3c, 0x88, 0x48, 0x42, 0x78, 0xab, 0xc6, 0xdf, 0xf7, 0xe0, 0xa0, 0xcb, 0xba, 0xa6,
-	0xc7, 0x30, 0xb0, 0x89, 0x5f, 0xb7, 0x4a, 0x34, 0xa6, 0x0f, 0x01, 0xb4, 0xd2, 0xe2, 0xe2, 0xcd,
-	0x5a, 0x23, 0xd7, 0x10, 0x3a, 0x81, 0xa0, 0x10, 0x97, 0x4d, 0x0b, 0xac, 0x88, 0x48, 0x5e, 0x36,
-	0xa3, 0xb2, 0xa2, 0x45, 0x84, 0xc9, 0xd8, 0x10, 0xd3, 0xb3, 0xe2, 0x0e, 0x35, 0xc9, 0xc0, 0xe4,
-	0x24, 0x33, 0x37, 0xb7, 0xb9, 0xf7, 0x60, 0x84, 0x7b, 0x51, 0xb3, 0x41, 0x14, 0x24, 0x21, 0x6f,
-	0xb4, 0xf8, 0x07, 0x01, 0xea, 0x05, 0x76, 0x33, 0x7a, 0xe5, 0xaf, 0x62, 0xdc, 0x3b, 0x24, 0x6f,
-	0x7b, 0xdb, 0x6d, 0xbc, 0x91, 0x41, 0xc5, 0x35, 0x4c, 0xdf, 0x09, 0x2d, 0xab, 0x5c, 0x5c, 0xfc,
-	0xbf, 0xcb, 0x7e, 0x0b, 0x53, 0xdb, 0x17, 0xcb, 0xf9, 0xe7, 0xa0, 0xf1, 0x2f, 0x02, 0xb7, 0x3b,
-	0x4f, 0xae, 0xcb, 0xaf, 0xfd, 0x2e, 0x3f, 0xdd, 0xd6, 0x65, 0x9f, 0xd7, 0x76, 0x7a, 0x77, 0x96,
-	0xf7, 0x27, 0x81, 0xe9, 0x46, 0x9a, 0xbb, 0xfe, 0x5d, 0x3a, 0xfa, 0x16, 0x40, 0xe8, 0xd2, 0x7d,
-	0x2f, 0x2b, 0x93, 0x2f, 0x25, 0xfd, 0x00, 0xe1, 0x5c, 0xea, 0xee, 0x16, 0x68, 0xff, 0xde, 0x7b,
-	0x57, 0x7a, 0x18, 0x5d, 0xf1, 0x01, 0xab, 0xe9, 0x19, 0x4c, 0xe6, 0x52, 0x7b, 0x57, 0x46, 0x9f,
-	0x6c, 0x9d, 0xb5, 0xe7, 0xfc, 0xd9, 0xd5, 0x66, 0x2e, 0xc6, 0x47, 0x98, 0xce, 0xa5, 0xf6, 0x6f,
-	0x84, 0xf6, 0x2f, 0xd4, 0xc6, 0x21, 0x5d, 0xa3, 0x04, 0x81, 0xee, 0xfd, 0x6b, 0xd8, 0xe2, 0x7e,
-	0xe3, 0x64, 0x0e, 0x1f, 0xf7, 0xdb, 0xf9, 0xc7, 0x70, 0x36, 0xc2, 0x3f, 0xf5, 0xe3, 0x3f, 0x01,
-	0x00, 0x00, 0xff, 0xff, 0xd4, 0xb4, 0x99, 0x59, 0xf1, 0x07, 0x00, 0x00,
+	// 679 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x56, 0x4f, 0x6e, 0xd3, 0x4e,
+	0x14, 0xd6, 0xd4, 0x49, 0xda, 0xbc, 0x2a, 0x6a, 0x33, 0xfd, 0xa9, 0x72, 0xab, 0x1f, 0x25, 0x1a,
+	0x41, 0xc9, 0xca, 0x95, 0x5a, 0x81, 0x90, 0x60, 0x53, 0x11, 0xa9, 0xb2, 0x10, 0x1b, 0xd3, 0x0d,
+	0xcb, 0x69, 0x3a, 0xb2, 0xac, 0xc6, 0x99, 0x60, 0x0f, 0xa6, 0xdd, 0x72, 0x0a, 0x0e, 0xc0, 0x0d,
+	0xb8, 0x02, 0x77, 0x40, 0x2c, 0xd8, 0x72, 0x0e, 0x34, 0x6f, 0x3c, 0xb6, 0x47, 0x4d, 0x68, 0x45,
+	0x55, 0x94, 0x55, 0xde, 0xdf, 0xf9, 0x9e, 0xbf, 0x37, 0xdf, 0x28, 0xb0, 0x33, 0xcb, 0xa4, 0x92,
+	0x07, 0x99, 0x98, 0xc9, 0x4c, 0x95, 0x3f, 0x01, 0xc6, 0xe8, 0x56, 0x2c, 0x83, 0x34, 0x19, 0x67,
+	0x32, 0xc8, 0xb3, 0x22, 0x30, 0x29, 0xf6, 0x8d, 0x40, 0xeb, 0x94, 0xe7, 0x17, 0x74, 0x1b, 0x3a,
+	0x8a, 0xe7, 0x17, 0xe1, 0xc8, 0x27, 0x03, 0x32, 0xec, 0x45, 0xa5, 0x47, 0xff, 0x83, 0x36, 0x8f,
+	0x8b, 0x70, 0xe4, 0xaf, 0x60, 0xd8, 0x38, 0xf4, 0x7f, 0xe8, 0x9e, 0x89, 0x38, 0x99, 0x9e, 0x26,
+	0xa9, 0xf0, 0xbd, 0x01, 0x19, 0x76, 0xa3, 0x3a, 0x40, 0x7d, 0x58, 0x15, 0xd3, 0x73, 0xcc, 0xb5,
+	0x30, 0x67, 0x5d, 0xdd, 0x77, 0x2e, 0x26, 0xfc, 0x0a, 0x73, 0x6d, 0x3c, 0xb1, 0x0e, 0xd0, 0x5d,
+	0x58, 0xfb, 0x28, 0xb3, 0x0b, 0x4c, 0x76, 0x30, 0x59, 0xf9, 0x88, 0x38, 0x91, 0x63, 0x93, 0x5c,
+	0x35, 0x9d, 0x55, 0x80, 0x7d, 0x22, 0xb0, 0xf6, 0x86, 0x2b, 0x91, 0x25, 0x7c, 0x42, 0xf7, 0x00,
+	0xd2, 0xd2, 0x2e, 0x3f, 0xc7, 0x8b, 0x1a, 0x91, 0xbf, 0x1e, 0x7e, 0x0f, 0x60, 0x96, 0xc9, 0x99,
+	0xc8, 0x54, 0x22, 0x72, 0x9c, 0xbe, 0x1b, 0x35, 0x22, 0xac, 0x0d, 0xde, 0x71, 0x5c, 0x30, 0x09,
+	0x3d, 0xcd, 0x68, 0x84, 0x04, 0x47, 0xe2, 0xbd, 0xc6, 0xcb, 0x15, 0xcf, 0x14, 0x9e, 0x49, 0x0c,
+	0x5e, 0x15, 0x68, 0xe2, 0xad, 0xb8, 0x78, 0x14, 0x5a, 0x63, 0x79, 0x6e, 0x47, 0x44, 0x5b, 0xc7,
+	0xd4, 0xd5, 0xcc, 0x8c, 0xd6, 0x8b, 0xd0, 0x66, 0xcf, 0x00, 0x0c, 0x58, 0xa8, 0x44, 0xaa, 0x2b,
+	0xa6, 0xbc, 0x02, 0x42, 0x5b, 0x2f, 0x71, 0x2c, 0x3f, 0x4c, 0x95, 0x5d, 0x22, 0x3a, 0xec, 0x17,
+	0x81, 0xde, 0x71, 0x5c, 0x34, 0x7a, 0x9f, 0x42, 0x3b, 0x51, 0x22, 0xcd, 0x7d, 0x32, 0xf0, 0x86,
+	0xeb, 0x87, 0x0f, 0x83, 0x39, 0x57, 0x26, 0xa8, 0xeb, 0x23, 0x53, 0x5d, 0xdf, 0x11, 0xaf, 0x79,
+	0x47, 0x7c, 0x58, 0x4d, 0xf9, 0x65, 0x63, 0x99, 0xd6, 0xd5, 0x84, 0x94, 0x66, 0x38, 0xb2, 0xbb,
+	0xac, 0x02, 0xd8, 0x57, 0x2e, 0x67, 0xad, 0xec, 0x2b, 0x57, 0xa3, 0xfb, 0x8c, 0x19, 0x8e, 0xfc,
+	0x6e, 0xd9, 0x67, 0x03, 0xba, 0x8f, 0x17, 0x31, 0xf6, 0xc1, 0x80, 0x0c, 0x49, 0x64, 0x5d, 0xf6,
+	0x7d, 0x05, 0x36, 0xea, 0x95, 0x84, 0x38, 0xf3, 0x11, 0xb4, 0xf4, 0xf0, 0xb7, 0xfd, 0x52, 0x2c,
+	0xa6, 0x07, 0xd0, 0xd6, 0xb2, 0xc8, 0xfd, 0x75, 0xec, 0xda, 0x99, 0xdb, 0x85, 0x48, 0xa6, 0x4e,
+	0x5f, 0x19, 0x25, 0x15, 0x9f, 0xbc, 0x6a, 0xb0, 0xdf, 0x88, 0xd0, 0x4d, 0xf0, 0x52, 0x7e, 0x59,
+	0xf2, 0xa6, 0x4d, 0x8c, 0x24, 0xd3, 0x72, 0xbf, 0xda, 0xd4, 0x11, 0x5e, 0xc4, 0x78, 0xdf, 0x48,
+	0xa4, 0xcd, 0x25, 0x62, 0xf6, 0x27, 0x81, 0x2d, 0xab, 0xbb, 0x3b, 0xb3, 0xfb, 0x42, 0x0f, 0x6f,
+	0xce, 0xb2, 0x0c, 0x3f, 0x98, 0xdb, 0x59, 0x21, 0xd6, 0xf5, 0xf7, 0xc3, 0x34, 0x2b, 0x60, 0xf3,
+	0x38, 0x2e, 0xee, 0x4f, 0xce, 0xdb, 0xd0, 0x41, 0xb1, 0xe4, 0x7e, 0x6b, 0xe0, 0xe9, 0x57, 0xd7,
+	0x78, 0xec, 0x0b, 0x01, 0xea, 0x00, 0x1b, 0x5a, 0x9f, 0xbb, 0xfa, 0x64, 0x73, 0xd9, 0x71, 0x24,
+	0x6d, 0x25, 0x7a, 0x3f, 0xf4, 0xe4, 0xd0, 0x77, 0xb7, 0xff, 0x2f, 0x9e, 0xbb, 0xd7, 0xd0, 0xd7,
+	0xbc, 0xe8, 0x9e, 0x3b, 0x83, 0xb2, 0x1f, 0x04, 0x36, 0xea, 0x93, 0x0c, 0xcb, 0x2f, 0x5d, 0x96,
+	0xf7, 0x17, 0xb1, 0xec, 0xf6, 0x59, 0xa6, 0x97, 0x47, 0x9c, 0x5f, 0x09, 0xf4, 0xaf, 0x8d, 0xb9,
+	0xec, 0x8f, 0xf5, 0xe1, 0x67, 0x0f, 0x7a, 0x66, 0xdc, 0xb7, 0x22, 0x2b, 0x92, 0xb1, 0xa0, 0xef,
+	0xa0, 0x77, 0x22, 0x54, 0xad, 0x05, 0xca, 0x16, 0xbf, 0xbb, 0xf6, 0x42, 0xec, 0x3e, 0xba, 0xa1,
+	0xc6, 0xac, 0xfa, 0x0c, 0x36, 0x4f, 0x84, 0x72, 0x94, 0x46, 0x1f, 0x2f, 0xdc, 0xb7, 0x03, 0xf0,
+	0xe4, 0xe6, 0x32, 0x83, 0x21, 0xa0, 0x7f, 0x22, 0x94, 0xab, 0x13, 0xba, 0xff, 0xe7, 0x87, 0xad,
+	0x42, 0x19, 0xde, 0xa2, 0xce, 0xc0, 0x70, 0x84, 0x71, 0x95, 0xb1, 0x00, 0xe6, 0x9a, 0x7c, 0x16,
+	0xb1, 0xe5, 0x0a, 0xe3, 0xac, 0x83, 0x7f, 0x24, 0x8f, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0xf2,
+	0xe2, 0x3b, 0xe1, 0x65, 0x0a, 0x00, 0x00,
 }

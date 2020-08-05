@@ -7,10 +7,31 @@ package go.micro.srv.report;
 // import "google/protobuf/wrappers.proto";
 
 service ReportService {
-  rpc GetTaskReport(TaskReportReq)returns(ReportItems);
+  rpc GetTaskReport(TaskReportReq)returns(TaskReportItems);
   rpc GetAgvTaskReport(AgvTaskReportReq)returns(AgvTaskReportItems);
-  rpc GetMaterialReport(MaterialReportReq)returns(ReportItems);
+  rpc GetMaterialReport(MaterialReportReq)returns(MaterialReportItems);
   rpc GetTaskTimeReport(TaskTimeReportReq)returns(TimeReportItems);
+}
+
+message Task {
+  uint32 taskID = 1;
+  uint32 agvID = 2;
+  string beginTime = 3;
+  string endTime = 4;
+  uint32 delayTime = 5;
+  uint32 workTime = 6;
+  uint32 blockTime =7;
+}
+
+message Material {
+int64 materialID = 1;
+string beginTime = 3;
+string endTime = 4;
+string properties = 5;
+}
+
+message Agv {
+
 }
 
 message TaskReportReq {
@@ -35,8 +56,9 @@ message TaskReportReq {
     double avgTime = 10;
   }
   
-  message ReportItems {
+  message TaskReportItems {
     repeated ReportItem item = 1;
+    repeated Task tasks = 11;
     uint32 totalCount = 2; 
     uint32 max = 3 ;
     uint32 min = 4;
@@ -46,6 +68,15 @@ message TaskReportReq {
     uint32 minTime = 8;
     uint32 minTimeID = 9;
     double avgTime = 10;
+  }
+
+  message MaterialReportItems {
+    repeated ReportItem item = 1;
+    repeated Material materials = 11;
+    uint32 totalCount = 2; 
+    uint32 max = 3 ;
+    uint32 min = 4;
+    double avg = 5;
   }
   
   message AgvTaskReportReq {
