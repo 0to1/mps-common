@@ -251,21 +251,6 @@ message RacklotQuery {
     RacklotTypeFilter filter = 7;
   }
 
-//   id_in:[Int!]
-//   rackID:Int
-//   isValid:Boolean
-//   isOccupied:Boolean
-//   stationID:Int
-//   multipleGroup:MultipleGroupFilter
-//   type:RacklotTypeFilter
-//   propertiesFilter:PropertiesFilter
-//   isFetch:Boolean
-//   isDeliv:Boolean
-message MultipleGroupFilter {
-    google.protobuf.UInt32Value group = 1;
-    google.protobuf.UInt32Value item =2;
-}
-
   message RacklotFilter {
     repeated RacklotFilter and = 1;
     repeated RacklotFilter or = 2;
@@ -282,8 +267,9 @@ message MultipleGroupFilter {
     google.protobuf.BoolValue isOccupied = 9; 
     RacklotTypeFilter type  = 11;
     repeated PropertyFilter  properties = 12;     
-    MultipleGroupFilter group  = 13;
     google.protobuf.BoolValue isHasRack = 17;   
+    google.protobuf.UInt32Value multiGroup = 18;
+    google.protobuf.UInt32Value multiNumber =19;
   }
   
   message RacklotTypeFilter {
