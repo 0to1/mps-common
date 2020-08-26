@@ -6,11 +6,13 @@ package go_micro_srv_lpr
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -27,29 +29,39 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for Lpr service
+// Api Endpoints for LprService service
+
+func NewLprServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
+
+// Client API for LprService service
 
 type LprService interface {
-	//
-	Stream(ctx context.Context, opts ...client.CallOption) (Lpr_StreamService, error)
-	//返回所有视频流数据
-	ServerStream(ctx context.Context, in *Request, opts ...client.CallOption) (Lpr_ServerStreamService, error)
-	//根据出入口编号 关闭视频
-	CloseStream(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	//根据出入口编号 返回车牌识别结果
-	GetLpr(ctx context.Context, in *Request, opts ...client.CallOption) (*LprResp, error)
-	//根据出入口编号 开启视频
-	StartStream(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	//返回所有出入口数据
-	GetLprs(ctx context.Context, in *Query, opts ...client.CallOption) (*LprResps, error)
-	//设置出入口配置信息
-	SetLpr(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	//设置所有出入口配置信息
-	SetLprs(ctx context.Context, in *Requests, opts ...client.CallOption) (*Response, error)
+	//设置车牌识别摄像头
+	AddLpr(ctx context.Context, in *LprRequest, opts ...client.CallOption) (*Response, error)
+	//批量添加
+	AddLprs(ctx context.Context, in *LprRequests, opts ...client.CallOption) (*Response, error)
+	DeleteLpr(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	ConfigLpr(ctx context.Context, in *LprRequest, opts ...client.CallOption) (*Response, error)
+	GetLprs(ctx context.Context, in *Query, opts ...client.CallOption) (*Lprs, error)
+	//返回单个摄像头的图片流数据
+	LprStream(ctx context.Context, opts ...client.CallOption) (LprService_LprStreamService, error)
+	//返回所有图片流数据
+	LprsStream(ctx context.Context, in *LprRequest, opts ...client.CallOption) (LprService_LprsStreamService, error)
+	//根据出入口id编号 开启视频
+	Start(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	//根据出入口id编号 关闭视频
+	Close(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
+	//根据出入口id编号 返回车牌识别结果
+	GetLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error)
+	//根据条件查询车牌识别结果
+	GetLicenses(ctx context.Context, in *Query, opts ...client.CallOption) (*Licenses, error)
 }
 
 type lprService struct {
@@ -64,50 +76,100 @@ func NewLprService(name string, c client.Client) LprService {
 	}
 }
 
-func (c *lprService) Stream(ctx context.Context, opts ...client.CallOption) (Lpr_StreamService, error) {
-	req := c.c.NewRequest(c.name, "Lpr.Stream", &Request{})
+func (c *lprService) AddLpr(ctx context.Context, in *LprRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.AddLpr", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) AddLprs(ctx context.Context, in *LprRequests, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.AddLprs", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) DeleteLpr(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.DeleteLpr", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) ConfigLpr(ctx context.Context, in *LprRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.ConfigLpr", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) GetLprs(ctx context.Context, in *Query, opts ...client.CallOption) (*Lprs, error) {
+	req := c.c.NewRequest(c.name, "LprService.GetLprs", in)
+	out := new(Lprs)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) LprStream(ctx context.Context, opts ...client.CallOption) (LprService_LprStreamService, error) {
+	req := c.c.NewRequest(c.name, "LprService.LprStream", &LprRequest{})
 	stream, err := c.c.Stream(ctx, req, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &lprServiceStream{stream}, nil
+	return &lprServiceLprStream{stream}, nil
 }
 
-type Lpr_StreamService interface {
+type LprService_LprStreamService interface {
 	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
-	Send(*Request) error
-	Recv() (*Response, error)
+	Send(*LprRequest) error
+	Recv() (*LprStreamResponse, error)
 }
 
-type lprServiceStream struct {
+type lprServiceLprStream struct {
 	stream client.Stream
 }
 
-func (x *lprServiceStream) Close() error {
+func (x *lprServiceLprStream) Close() error {
 	return x.stream.Close()
 }
 
-func (x *lprServiceStream) Context() context.Context {
+func (x *lprServiceLprStream) Context() context.Context {
 	return x.stream.Context()
 }
 
-func (x *lprServiceStream) SendMsg(m interface{}) error {
+func (x *lprServiceLprStream) SendMsg(m interface{}) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprServiceStream) RecvMsg(m interface{}) error {
+func (x *lprServiceLprStream) RecvMsg(m interface{}) error {
 	return x.stream.Recv(m)
 }
 
-func (x *lprServiceStream) Send(m *Request) error {
+func (x *lprServiceLprStream) Send(m *LprRequest) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprServiceStream) Recv() (*Response, error) {
-	m := new(Response)
+func (x *lprServiceLprStream) Recv() (*LprStreamResponse, error) {
+	m := new(LprStreamResponse)
 	err := x.stream.Recv(m)
 	if err != nil {
 		return nil, err
@@ -115,8 +177,8 @@ func (x *lprServiceStream) Recv() (*Response, error) {
 	return m, nil
 }
 
-func (c *lprService) ServerStream(ctx context.Context, in *Request, opts ...client.CallOption) (Lpr_ServerStreamService, error) {
-	req := c.c.NewRequest(c.name, "Lpr.ServerStream", &Request{})
+func (c *lprService) LprsStream(ctx context.Context, in *LprRequest, opts ...client.CallOption) (LprService_LprsStreamService, error) {
+	req := c.c.NewRequest(c.name, "LprService.LprsStream", &LprRequest{})
 	stream, err := c.c.Stream(ctx, req, opts...)
 	if err != nil {
 		return nil, err
@@ -124,39 +186,39 @@ func (c *lprService) ServerStream(ctx context.Context, in *Request, opts ...clie
 	if err := stream.Send(in); err != nil {
 		return nil, err
 	}
-	return &lprServiceServerStream{stream}, nil
+	return &lprServiceLprsStream{stream}, nil
 }
 
-type Lpr_ServerStreamService interface {
+type LprService_LprsStreamService interface {
 	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
-	Recv() (*StreamResponse, error)
+	Recv() (*LprStreamResponse, error)
 }
 
-type lprServiceServerStream struct {
+type lprServiceLprsStream struct {
 	stream client.Stream
 }
 
-func (x *lprServiceServerStream) Close() error {
+func (x *lprServiceLprsStream) Close() error {
 	return x.stream.Close()
 }
 
-func (x *lprServiceServerStream) Context() context.Context {
+func (x *lprServiceLprsStream) Context() context.Context {
 	return x.stream.Context()
 }
 
-func (x *lprServiceServerStream) SendMsg(m interface{}) error {
+func (x *lprServiceLprsStream) SendMsg(m interface{}) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprServiceServerStream) RecvMsg(m interface{}) error {
+func (x *lprServiceLprsStream) RecvMsg(m interface{}) error {
 	return x.stream.Recv(m)
 }
 
-func (x *lprServiceServerStream) Recv() (*StreamResponse, error) {
-	m := new(StreamResponse)
+func (x *lprServiceLprsStream) Recv() (*LprStreamResponse, error) {
+	m := new(LprStreamResponse)
 	err := x.stream.Recv(m)
 	if err != nil {
 		return nil, err
@@ -164,8 +226,8 @@ func (x *lprServiceServerStream) Recv() (*StreamResponse, error) {
 	return m, nil
 }
 
-func (c *lprService) CloseStream(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Lpr.CloseStream", in)
+func (c *lprService) Start(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.Start", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -174,18 +236,8 @@ func (c *lprService) CloseStream(ctx context.Context, in *Request, opts ...clien
 	return out, nil
 }
 
-func (c *lprService) GetLpr(ctx context.Context, in *Request, opts ...client.CallOption) (*LprResp, error) {
-	req := c.c.NewRequest(c.name, "Lpr.GetLpr", in)
-	out := new(LprResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *lprService) StartStream(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Lpr.StartStream", in)
+func (c *lprService) Close(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "LprService.Close", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -194,9 +246,9 @@ func (c *lprService) StartStream(ctx context.Context, in *Request, opts ...clien
 	return out, nil
 }
 
-func (c *lprService) GetLprs(ctx context.Context, in *Query, opts ...client.CallOption) (*LprResps, error) {
-	req := c.c.NewRequest(c.name, "Lpr.GetLprs", in)
-	out := new(LprResps)
+func (c *lprService) GetLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error) {
+	req := c.c.NewRequest(c.name, "LprService.GetLicense", in)
+	out := new(License)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -204,9 +256,9 @@ func (c *lprService) GetLprs(ctx context.Context, in *Query, opts ...client.Call
 	return out, nil
 }
 
-func (c *lprService) SetLpr(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Lpr.SetLpr", in)
-	out := new(Response)
+func (c *lprService) GetLicenses(ctx context.Context, in *Query, opts ...client.CallOption) (*Licenses, error) {
+	req := c.c.NewRequest(c.name, "LprService.GetLicenses", in)
+	out := new(Licenses)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -214,164 +266,172 @@ func (c *lprService) SetLpr(ctx context.Context, in *Request, opts ...client.Cal
 	return out, nil
 }
 
-func (c *lprService) SetLprs(ctx context.Context, in *Requests, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Lpr.SetLprs", in)
-	out := new(Response)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
+// Server API for LprService service
+
+type LprServiceHandler interface {
+	//设置车牌识别摄像头
+	AddLpr(context.Context, *LprRequest, *Response) error
+	//批量添加
+	AddLprs(context.Context, *LprRequests, *Response) error
+	DeleteLpr(context.Context, *IDReq, *Response) error
+	ConfigLpr(context.Context, *LprRequest, *Response) error
+	GetLprs(context.Context, *Query, *Lprs) error
+	//返回单个摄像头的图片流数据
+	LprStream(context.Context, LprService_LprStreamStream) error
+	//返回所有图片流数据
+	LprsStream(context.Context, *LprRequest, LprService_LprsStreamStream) error
+	//根据出入口id编号 开启视频
+	Start(context.Context, *IDReq, *Response) error
+	//根据出入口id编号 关闭视频
+	Close(context.Context, *IDReq, *Response) error
+	//根据出入口id编号 返回车牌识别结果
+	GetLicense(context.Context, *IDReq, *License) error
+	//根据条件查询车牌识别结果
+	GetLicenses(context.Context, *Query, *Licenses) error
+}
+
+func RegisterLprServiceHandler(s server.Server, hdlr LprServiceHandler, opts ...server.HandlerOption) error {
+	type lprService interface {
+		AddLpr(ctx context.Context, in *LprRequest, out *Response) error
+		AddLprs(ctx context.Context, in *LprRequests, out *Response) error
+		DeleteLpr(ctx context.Context, in *IDReq, out *Response) error
+		ConfigLpr(ctx context.Context, in *LprRequest, out *Response) error
+		GetLprs(ctx context.Context, in *Query, out *Lprs) error
+		LprStream(ctx context.Context, stream server.Stream) error
+		LprsStream(ctx context.Context, stream server.Stream) error
+		Start(ctx context.Context, in *IDReq, out *Response) error
+		Close(ctx context.Context, in *IDReq, out *Response) error
+		GetLicense(ctx context.Context, in *IDReq, out *License) error
+		GetLicenses(ctx context.Context, in *Query, out *Licenses) error
 	}
-	return out, nil
-}
-
-// Server API for Lpr service
-
-type LprHandler interface {
-	//
-	Stream(context.Context, Lpr_StreamStream) error
-	//返回所有视频流数据
-	ServerStream(context.Context, *Request, Lpr_ServerStreamStream) error
-	//根据出入口编号 关闭视频
-	CloseStream(context.Context, *Request, *Response) error
-	//根据出入口编号 返回车牌识别结果
-	GetLpr(context.Context, *Request, *LprResp) error
-	//根据出入口编号 开启视频
-	StartStream(context.Context, *Request, *Response) error
-	//返回所有出入口数据
-	GetLprs(context.Context, *Query, *LprResps) error
-	//设置出入口配置信息
-	SetLpr(context.Context, *Request, *Response) error
-	//设置所有出入口配置信息
-	SetLprs(context.Context, *Requests, *Response) error
-}
-
-func RegisterLprHandler(s server.Server, hdlr LprHandler, opts ...server.HandlerOption) error {
-	type lpr interface {
-		Stream(ctx context.Context, stream server.Stream) error
-		ServerStream(ctx context.Context, stream server.Stream) error
-		CloseStream(ctx context.Context, in *Request, out *Response) error
-		GetLpr(ctx context.Context, in *Request, out *LprResp) error
-		StartStream(ctx context.Context, in *Request, out *Response) error
-		GetLprs(ctx context.Context, in *Query, out *LprResps) error
-		SetLpr(ctx context.Context, in *Request, out *Response) error
-		SetLprs(ctx context.Context, in *Requests, out *Response) error
+	type LprService struct {
+		lprService
 	}
-	type Lpr struct {
-		lpr
-	}
-	h := &lprHandler{hdlr}
-	return s.Handle(s.NewHandler(&Lpr{h}, opts...))
+	h := &lprServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&LprService{h}, opts...))
 }
 
-type lprHandler struct {
-	LprHandler
+type lprServiceHandler struct {
+	LprServiceHandler
 }
 
-func (h *lprHandler) Stream(ctx context.Context, stream server.Stream) error {
-	return h.LprHandler.Stream(ctx, &lprStreamStream{stream})
+func (h *lprServiceHandler) AddLpr(ctx context.Context, in *LprRequest, out *Response) error {
+	return h.LprServiceHandler.AddLpr(ctx, in, out)
 }
 
-type Lpr_StreamStream interface {
+func (h *lprServiceHandler) AddLprs(ctx context.Context, in *LprRequests, out *Response) error {
+	return h.LprServiceHandler.AddLprs(ctx, in, out)
+}
+
+func (h *lprServiceHandler) DeleteLpr(ctx context.Context, in *IDReq, out *Response) error {
+	return h.LprServiceHandler.DeleteLpr(ctx, in, out)
+}
+
+func (h *lprServiceHandler) ConfigLpr(ctx context.Context, in *LprRequest, out *Response) error {
+	return h.LprServiceHandler.ConfigLpr(ctx, in, out)
+}
+
+func (h *lprServiceHandler) GetLprs(ctx context.Context, in *Query, out *Lprs) error {
+	return h.LprServiceHandler.GetLprs(ctx, in, out)
+}
+
+func (h *lprServiceHandler) LprStream(ctx context.Context, stream server.Stream) error {
+	return h.LprServiceHandler.LprStream(ctx, &lprServiceLprStreamStream{stream})
+}
+
+type LprService_LprStreamStream interface {
 	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
-	Send(*Response) error
-	Recv() (*Request, error)
+	Send(*LprStreamResponse) error
+	Recv() (*LprRequest, error)
 }
 
-type lprStreamStream struct {
+type lprServiceLprStreamStream struct {
 	stream server.Stream
 }
 
-func (x *lprStreamStream) Close() error {
+func (x *lprServiceLprStreamStream) Close() error {
 	return x.stream.Close()
 }
 
-func (x *lprStreamStream) Context() context.Context {
+func (x *lprServiceLprStreamStream) Context() context.Context {
 	return x.stream.Context()
 }
 
-func (x *lprStreamStream) SendMsg(m interface{}) error {
+func (x *lprServiceLprStreamStream) SendMsg(m interface{}) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprStreamStream) RecvMsg(m interface{}) error {
+func (x *lprServiceLprStreamStream) RecvMsg(m interface{}) error {
 	return x.stream.Recv(m)
 }
 
-func (x *lprStreamStream) Send(m *Response) error {
+func (x *lprServiceLprStreamStream) Send(m *LprStreamResponse) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprStreamStream) Recv() (*Request, error) {
-	m := new(Request)
+func (x *lprServiceLprStreamStream) Recv() (*LprRequest, error) {
+	m := new(LprRequest)
 	if err := x.stream.Recv(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (h *lprHandler) ServerStream(ctx context.Context, stream server.Stream) error {
-	m := new(Request)
+func (h *lprServiceHandler) LprsStream(ctx context.Context, stream server.Stream) error {
+	m := new(LprRequest)
 	if err := stream.Recv(m); err != nil {
 		return err
 	}
-	return h.LprHandler.ServerStream(ctx, m, &lprServerStreamStream{stream})
+	return h.LprServiceHandler.LprsStream(ctx, m, &lprServiceLprsStreamStream{stream})
 }
 
-type Lpr_ServerStreamStream interface {
+type LprService_LprsStreamStream interface {
 	Context() context.Context
 	SendMsg(interface{}) error
 	RecvMsg(interface{}) error
 	Close() error
-	Send(*StreamResponse) error
+	Send(*LprStreamResponse) error
 }
 
-type lprServerStreamStream struct {
+type lprServiceLprsStreamStream struct {
 	stream server.Stream
 }
 
-func (x *lprServerStreamStream) Close() error {
+func (x *lprServiceLprsStreamStream) Close() error {
 	return x.stream.Close()
 }
 
-func (x *lprServerStreamStream) Context() context.Context {
+func (x *lprServiceLprsStreamStream) Context() context.Context {
 	return x.stream.Context()
 }
 
-func (x *lprServerStreamStream) SendMsg(m interface{}) error {
+func (x *lprServiceLprsStreamStream) SendMsg(m interface{}) error {
 	return x.stream.Send(m)
 }
 
-func (x *lprServerStreamStream) RecvMsg(m interface{}) error {
+func (x *lprServiceLprsStreamStream) RecvMsg(m interface{}) error {
 	return x.stream.Recv(m)
 }
 
-func (x *lprServerStreamStream) Send(m *StreamResponse) error {
+func (x *lprServiceLprsStreamStream) Send(m *LprStreamResponse) error {
 	return x.stream.Send(m)
 }
 
-func (h *lprHandler) CloseStream(ctx context.Context, in *Request, out *Response) error {
-	return h.LprHandler.CloseStream(ctx, in, out)
+func (h *lprServiceHandler) Start(ctx context.Context, in *IDReq, out *Response) error {
+	return h.LprServiceHandler.Start(ctx, in, out)
 }
 
-func (h *lprHandler) GetLpr(ctx context.Context, in *Request, out *LprResp) error {
-	return h.LprHandler.GetLpr(ctx, in, out)
+func (h *lprServiceHandler) Close(ctx context.Context, in *IDReq, out *Response) error {
+	return h.LprServiceHandler.Close(ctx, in, out)
 }
 
-func (h *lprHandler) StartStream(ctx context.Context, in *Request, out *Response) error {
-	return h.LprHandler.StartStream(ctx, in, out)
+func (h *lprServiceHandler) GetLicense(ctx context.Context, in *IDReq, out *License) error {
+	return h.LprServiceHandler.GetLicense(ctx, in, out)
 }
 
-func (h *lprHandler) GetLprs(ctx context.Context, in *Query, out *LprResps) error {
-	return h.LprHandler.GetLprs(ctx, in, out)
-}
-
-func (h *lprHandler) SetLpr(ctx context.Context, in *Request, out *Response) error {
-	return h.LprHandler.SetLpr(ctx, in, out)
-}
-
-func (h *lprHandler) SetLprs(ctx context.Context, in *Requests, out *Response) error {
-	return h.LprHandler.SetLprs(ctx, in, out)
+func (h *lprServiceHandler) GetLicenses(ctx context.Context, in *Query, out *Licenses) error {
+	return h.LprServiceHandler.GetLicenses(ctx, in, out)
 }

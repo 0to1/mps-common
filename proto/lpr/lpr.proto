@@ -2,58 +2,85 @@ syntax = "proto3";
 
 package go.micro.srv.lpr;
 
-service Lpr {
-	//
-	rpc Stream(stream Request) returns (stream Response) {}
-	//返回所有视频流数据
-	rpc ServerStream(Request) returns (stream StreamResponse) {}
-	//根据出入口编号 关闭视频
-	rpc CloseStream(Request) returns(Response){}
-	//根据出入口编号 返回车牌识别结果
-	rpc GetLpr(Request) returns (LprResp) {}
-	//根据出入口编号 开启视频
-	rpc StartStream(Request) returns (Response){}
-	//返回所有出入口数据
-	rpc GetLprs(Query) returns (LprResps){} 
-	//设置出入口配置信息
-	rpc SetLpr(Request) returns (Response){}
-	//设置所有出入口配置信息
-	rpc SetLprs(Requests) returns (Response){}
+import "google/protobuf/wrappers.proto";
+
+option go_package = "proto/lpr;go_micro_srv_lpr";
+
+service LprService {
+  //设置车牌识别摄像头
+  rpc AddLpr(LprRequest) returns (Response);
+  //批量添加
+  rpc AddLprs(LprRequests) returns (Response);
+  rpc DeleteLpr(IDReq) returns (Response);
+  rpc ConfigLpr(LprRequest) returns (Response);
+  rpc GetLprs(Query) returns (Lprs);
+
+  //返回单个摄像头的图片流数据
+  rpc LprStream(stream LprRequest) returns (stream LprStreamResponse);
+  //返回所有图片流数据
+  rpc LprsStream(LprRequest) returns (stream LprStreamResponse);
+  //根据出入口id编号 开启视频
+  rpc Start(IDReq) returns (Response);
+  //根据出入口id编号 关闭视频
+  rpc Close(IDReq) returns (Response);
+  //根据出入口id编号 返回车牌识别结果
+  rpc GetLicense(IDReq) returns (License);
+  //根据条件查询车牌识别结果
+  rpc GetLicenses(Query) returns (Licenses);
 }
 
-message Request {
-	int32 id = 1;
-	string ip = 2;
+message IDReq { int32 id = 1; }
+
+message LprRequest {
+  int32 id = 1;
+  string name = 2;
+  string ip = 3;
+  int32 port = 4;
 }
 
-message Requests {
-	repeated Request lprs = 1;
+message LprRequests { repeated LprRequest lprs = 1; }
+
+message Lpr {
+  int32 id = 1;
+  string name = 2;
+  string ip = 3;
+  int32 port = 4;
 }
 
-message Response {
-	int32 id = 1;
+message Lprs { repeated Lpr lprs = 1; }
+
+message Response { int32 id = 1; }
+
+message LprStreamResponse {
+  int32 id = 1;
+  string images = 2;
 }
 
-message StreamResponse {
-	int32 id = 1;
-	string images = 2;
+message LprFilter {
+  repeated LprFilter and = 1;
+  repeated LprFilter or = 2;
+  repeated uint32 idIn = 3;
+  google.protobuf.StringValue name = 4;
+  repeated string nameIn = 5;
+  repeated string ipIn = 6;
+  repeated uint32 portIn = 7;
 }
 
 message Query {
-	uint32 limit = 1;
-	uint32 offset = 2;
-	uint32 page = 3;
-	uint32 per_page = 4;
-	string queryString = 5;
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  LprFilter filter = 7;
 }
 
-message LprResp {
-	int32 id = 1;
-	string ip  = 2;
-	string license = 3;	//车牌识别结果
+message License {
+  int32 id = 1;
+  string license = 2; //车牌识别结果
 }
 
-message LprResps {
-	repeated LprResp Lprs = 1;
-	uint32 totalpages = 2;
+message Licenses {
+  repeated License lprs = 1;
+  uint32 totalpages = 2;
+  uint32 totals = 3;
 }
