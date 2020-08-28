@@ -43,9 +43,9 @@ func String2Interface(value string, vtype string) (interface{}, error) {
 		val, _ = strconv.Atoi(value)
 	case "int64":
 		val, _ = strconv.ParseInt(value, 10, 64)
-	case "uint64":
+	case "uint64", "uint", "uint32":
 		val, _ = strconv.ParseUint(value, 10, 64)
-	case "float64":
+	case "float64", "float", "float32":
 		val, err = strconv.ParseFloat(value, 64)
 	case "bool":
 		val, err = strconv.ParseBool(value)
