@@ -6,6 +6,7 @@ package go_micro_srv_ledscreen
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
@@ -53,7 +54,7 @@ type LedscreenService interface {
 	// 删除设备
 	DeleteLedScreen(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	// 修改相应设备参数
-	UpdateLedScreen(ctx context.Context, in *LedScreen, opts ...client.CallOption) (*Response, error)
+	UpdateLedScreen(ctx context.Context, in *UpdateLedScreenReq, opts ...client.CallOption) (*Response, error)
 	//根据设备id,获取设备
 	GetLedScreen(ctx context.Context, in *IDReq, opts ...client.CallOption) (*LedScreen, error)
 	//返回所有设备
@@ -122,7 +123,7 @@ func (c *ledscreenService) DeleteLedScreen(ctx context.Context, in *IDReq, opts 
 	return out, nil
 }
 
-func (c *ledscreenService) UpdateLedScreen(ctx context.Context, in *LedScreen, opts ...client.CallOption) (*Response, error) {
+func (c *ledscreenService) UpdateLedScreen(ctx context.Context, in *UpdateLedScreenReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Ledscreen.UpdateLedScreen", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -166,7 +167,7 @@ type LedscreenHandler interface {
 	// 删除设备
 	DeleteLedScreen(context.Context, *IDReq, *Response) error
 	// 修改相应设备参数
-	UpdateLedScreen(context.Context, *LedScreen, *Response) error
+	UpdateLedScreen(context.Context, *UpdateLedScreenReq, *Response) error
 	//根据设备id,获取设备
 	GetLedScreen(context.Context, *IDReq, *LedScreen) error
 	//返回所有设备
@@ -180,7 +181,7 @@ func RegisterLedscreenHandler(s server.Server, hdlr LedscreenHandler, opts ...se
 		TimeCalibration(ctx context.Context, in *IDReq, out *Response) error
 		AddLedScreen(ctx context.Context, in *LedScreen, out *Response) error
 		DeleteLedScreen(ctx context.Context, in *IDReq, out *Response) error
-		UpdateLedScreen(ctx context.Context, in *LedScreen, out *Response) error
+		UpdateLedScreen(ctx context.Context, in *UpdateLedScreenReq, out *Response) error
 		GetLedScreen(ctx context.Context, in *IDReq, out *LedScreen) error
 		GetLedScreens(ctx context.Context, in *Query, out *LedScreens) error
 	}
@@ -215,7 +216,7 @@ func (h *ledscreenHandler) DeleteLedScreen(ctx context.Context, in *IDReq, out *
 	return h.LedscreenHandler.DeleteLedScreen(ctx, in, out)
 }
 
-func (h *ledscreenHandler) UpdateLedScreen(ctx context.Context, in *LedScreen, out *Response) error {
+func (h *ledscreenHandler) UpdateLedScreen(ctx context.Context, in *UpdateLedScreenReq, out *Response) error {
 	return h.LedscreenHandler.UpdateLedScreen(ctx, in, out)
 }
 

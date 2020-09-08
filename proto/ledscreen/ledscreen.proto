@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// import "google/protobuf/wrappers.proto";
+import "google/protobuf/wrappers.proto";
 
 package go.micro.srv.ledscreen;
 option go_package = "proto/ledscreen;go_micro_srv_ledscreen";
@@ -18,7 +18,7 @@ service Ledscreen {
   // 删除设备
   rpc DeleteLedScreen(IDReq) returns (Response) {}
   // 修改相应设备参数
-  rpc UpdateLedScreen(LedScreen) returns (Response) {}
+  rpc UpdateLedScreen(UpdateLedScreenReq) returns (Response) {}
 
   //根据设备id,获取设备
   rpc GetLedScreen(IDReq) returns (LedScreen) {}
@@ -82,4 +82,17 @@ message Query {
   uint32 page = 3;
   uint32 perPage = 4;
   LedScreenFilter filter = 5;
+}
+
+message UpdateLedScreenReq {
+  uint32 id = 1;
+  UpdateLedScreen ledscreen = 2;
+}
+
+message UpdateLedScreen {
+    google.protobuf.UInt32Value id = 1;
+    google.protobuf.StringValue name = 2;
+    google.protobuf.StringValue ip = 3;
+    google.protobuf.Int32Value port = 4;
+    google.protobuf.StringValue description = 5;
 }
