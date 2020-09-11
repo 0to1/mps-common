@@ -52,7 +52,12 @@ message Lpr {
   string description = 8;
 }
 
-message Lprs { repeated Lpr lprs = 1; }
+message Lprs {
+  repeated Lpr lprs = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+  uint32 totals = 4;
+}
 
 message Response { int32 id = 1; }
 
