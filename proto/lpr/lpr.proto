@@ -36,6 +36,7 @@ message LprRequest {
   string name = 2;
   string ip = 3;
   int32 port = 4;
+  string description = 5;
 }
 
 message LprRequests { repeated LprRequest lprs = 1; }
@@ -45,6 +46,10 @@ message Lpr {
   string name = 2;
   string ip = 3;
   int32 port = 4;
+  string licensePlate = 5;
+  string time = 6;
+  bool status = 7;
+  string description = 8;
 }
 
 message Lprs { repeated Lpr lprs = 1; }
