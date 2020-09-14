@@ -2,34 +2,33 @@ syntax = "proto3";
 
 package go.micro.srv.racklot;
 
+option go_package = "proto/racklot;go_micro_srv_racklot";
+
 import "google/protobuf/wrappers.proto";
 
 service RacklotService {
+  // 根据查询条件获取货位
+  rpc GetRacklots(RacklotQuery) returns (Racklots);
+  // 根据ID获取货位信息
+  rpc GetRacklot(RacklotIDReq) returns (Racklot);
 
-    // 根据查询条件获取货位
-    rpc GetRacklots(RacklotQuery) returns (Racklots);
-    // 根据ID获取货位信息
-    rpc GetRacklot(RacklotIDReq) returns (Racklot);
-
-      // 获取货位类型
+  // 获取货位类型
   rpc GetRacklotTypes(RacklotTypeQuery) returns (RacklotTypes);
   // 获取货位类型
   rpc GetRacklotType(RacklotIDReq) returns (RacklotType);
 
-
-    // 添加货位
-    rpc AddRacklot(Racklot) returns (AddResp);
-    // 批量导入货位
-    rpc BatchAddRacklots(Racklots) returns (Response);
-    // 删除货位
-    rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
-    // 批量删除货位
-    rpc BatchDeleteRacklots(DeleteRacklotsReq) returns (Response);
-    // 更新货位基础信息
-    rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
-      // 批量修改货位
-      rpc BatchUpdateRacklots(UpdateRacklotsReq) returns (Response);
-
+  // 添加货位
+  rpc AddRacklot(Racklot) returns (AddResp);
+  // 批量导入货位
+  rpc BatchAddRacklots(Racklots) returns (Response);
+  // 删除货位
+  rpc DeleteRacklot(RacklotIDReq) returns (DeleteResp);
+  // 批量删除货位
+  rpc BatchDeleteRacklots(DeleteRacklotsReq) returns (Response);
+  // 更新货位基础信息
+  rpc UpdateRacklot(UpdateRacklotReq) returns (UpdateResp);
+  // 批量修改货位
+  rpc BatchUpdateRacklots(UpdateRacklotsReq) returns (Response);
 
   // 添加货位类型
   rpc AddRacklotType(RacklotType) returns (AddResp);
@@ -37,7 +36,6 @@ service RacklotService {
   rpc UpdateRacklotType(UpdateRacklotTypeReq) returns (UpdateResp);
   // 删除货GetBindedRack位类型
   rpc DeleteRacklotType(RacklotType) returns (DeleteResp);
-
 
   // 设置重列组
   rpc SetMultipleGroup(MultipleGroup) returns (Response);
@@ -53,23 +51,19 @@ service RacklotService {
   rpc OccupyRacklots(RacklotIDsReq) returns (Response);
   rpc ReleaseRacklots(RacklotIDsReq) returns (Response);
 
-    // 设置是否允许存车
-    rpc SetInbound(FlagReq) returns (Response);
-    // 设置是否允许取车
-    rpc SetOutbound(FlagReq) returns (Response);
+  // 设置是否允许存车
+  rpc SetInbound(FlagReq) returns (Response);
+  // 设置是否允许取车
+  rpc SetOutbound(FlagReq) returns (Response);
 
-    rpc AddProperties(PropertiesReq)returns (Response);
+  rpc AddProperties(PropertiesReq) returns (Response);
 
-    rpc GetRacklotReport(RacklotReportReq)returns(RacklotReport);
+  rpc GetRacklotReport(RacklotReportReq) returns (RacklotReport);
 }
 
-message IDReq {
-  uint32 id = 1;
-}
+message IDReq { uint32 id = 1; }
 
-message RacklotReportReq {
-
-}
+message RacklotReportReq {}
 
 message RacklotReport {
   uint32 total = 1;
@@ -84,23 +78,23 @@ message RacklotType {
   uint32 id = 1;
   string name = 2;
   string description = 3;
-  uint32 length  = 4 ;
-  uint32 width  = 5;
+  uint32 length = 4;
+  uint32 width = 5;
   string properties = 6;
 }
 
 message UpdateRacklotType {
-    google.protobuf.UInt32Value id = 1;
-    google.protobuf.StringValue name = 2;
-    google.protobuf.StringValue description = 3;
-    google.protobuf.UInt32Value length  = 4 ;
-    google.protobuf.UInt32Value width  = 5;
-    string properties = 6;
-  }
+  google.protobuf.UInt32Value id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.UInt32Value length = 4;
+  google.protobuf.UInt32Value width = 5;
+  string properties = 6;
+}
 
 message UpdateRacklotTypeReq {
-    uint32 id = 1;
-    UpdateRacklotType update = 2;
+  uint32 id = 1;
+  UpdateRacklotType update = 2;
 }
 
 message RacklotTypes {
@@ -117,7 +111,6 @@ message MultipleGroup {
   uint32 item = 3;
 }
 
-
 // Racklot 货位
 message Racklot {
   uint32 id = 1;
@@ -128,7 +121,7 @@ message Racklot {
   uint32 length = 6;
   uint32 width = 7;
   // 站台重列分组信息
-  MultipleGroup multiGroup = 8;
+  repeated MultipleGroup multipleGroups = 8;
   string description = 10;
   // 站台是否有效，被禁用则无效，启用则有效，默认为有效
   bool isValid = 11;
@@ -148,25 +141,20 @@ message Racklot {
 }
 
 message UpdateRacklotReq {
-    uint32 id = 1;
-    UpdateRacklot racklot = 2;
+  uint32 id = 1;
+  UpdateRacklot racklot = 2;
 }
 
 message UpdateRacklot {
-
-      // 区域ID
   google.protobuf.UInt32Value id = 20;
-  // 
   google.protobuf.UInt32Value x = 1;
   google.protobuf.UInt32Value y = 2;
   google.protobuf.FloatValue angle = 3;
   google.protobuf.UInt32Value length = 4;
   google.protobuf.UInt32Value width = 5;
 
-  google.protobuf.UInt32Value group = 7;
-  google.protobuf.UInt32Value item =8;
-  
-  // 
+  repeated MultipleGroup multipleGroups = 7;
+
   google.protobuf.UInt32Value racklotType = 24;
   google.protobuf.UInt32Value stationID = 25;
   google.protobuf.UInt32Value rackID = 26;
@@ -180,18 +168,17 @@ message UpdateRacklot {
   google.protobuf.StringValue description = 30;
 
   string properties = 6;
-
 }
 
 message UpdateRacklotsReq {
-    repeated uint32 ids = 1;
-    UpdateRacklot update = 2;
-  }
+  repeated uint32 ids = 1;
+  UpdateRacklot update = 2;
+}
 
-  message DeleteRacklotsReq {
-    repeated uint32 ids = 1;
-    repeated uint32 stationIDs = 2;
-  }
+message DeleteRacklotsReq {
+  repeated uint32 ids = 1;
+  repeated uint32 stationIDs = 2;
+}
 
 // message RacklotsReq {
 // 	repeated Racklot racklots = 1;
@@ -207,7 +194,7 @@ message DeleteResp {}
 
 message UpdateResp {}
 
-message Racklots { 
+message Racklots {
   repeated Racklot racklots = 1;
   uint32 totals = 4;
   uint32 totalpages = 2;
@@ -219,9 +206,7 @@ message RackIDReq {
   uint32 rackID = 2;
 }
 
-message RackIDsReq {
-  repeated RackIDReq rackID = 1;
-}
+message RackIDsReq { repeated RackIDReq rackID = 1; }
 
 message RacklotIDsReq { repeated uint32 ids = 1; }
 
@@ -231,79 +216,79 @@ message RacklotGroupsReq {
 }
 
 message Parameter {
-    string key = 1;
-    string value = 2;
+  string key = 1;
+  string value = 2;
 }
 
 message RacklotQuery {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 perPage = 4;
-    RacklotFilter filter = 7;
-  }
-  
-  message RacklotTypeQuery {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 perPage = 4;
-    RacklotTypeFilter filter = 7;
-  }
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  RacklotFilter filter = 7;
+}
 
-  message RacklotFilter {
-    repeated RacklotFilter and = 1;
-    repeated RacklotFilter or = 2;
-    repeated uint32 idIn = 3;
-    repeated uint32 idNotIn = 14;
-    repeated uint32 rackIdNotIn = 15;
-    repeated uint32 rackIdIn = 16;                 
-    google.protobuf.UInt32Value stationID = 4;          
-    repeated uint32 stationIDIn = 10;                        
-    google.protobuf.UInt32Value rackID = 5; 
-    google.protobuf.BoolValue isInbound = 6;             
-    google.protobuf.BoolValue isOutbound = 7;             
-    google.protobuf.BoolValue isValid = 8;     
-    google.protobuf.BoolValue isOccupied = 9; 
-    RacklotTypeFilter type  = 11;
-    repeated PropertyFilter  properties = 12;     
-    google.protobuf.BoolValue isHasRack = 17;   
-    google.protobuf.UInt32Value multiGroup = 18;
-    google.protobuf.UInt32Value multiNumber =19;
-  }
-  
-  message RacklotTypeFilter {
-    repeated RacklotTypeFilter and = 1;
-    repeated RacklotTypeFilter or = 2;
-    repeated uint32 idIn = 3;
-    repeated string nameIn = 4;
-    google.protobuf.UInt32Value id = 5;  
-    google.protobuf.StringValue name = 6;  
-  }
+message RacklotTypeQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  RacklotTypeFilter filter = 7;
+}
 
-  message PropertyFilter {
-    string key  = 1;
-    string value = 2; 
-    string type = 3;
-  }
+message RacklotFilter {
+  repeated RacklotFilter and = 1;
+  repeated RacklotFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated uint32 idNotIn = 14;
+  repeated uint32 rackIdNotIn = 15;
+  repeated uint32 rackIdIn = 16;
+  google.protobuf.UInt32Value stationID = 4;
+  repeated uint32 stationIDIn = 10;
+  google.protobuf.UInt32Value rackID = 5;
+  google.protobuf.BoolValue isInbound = 6;
+  google.protobuf.BoolValue isOutbound = 7;
+  google.protobuf.BoolValue isValid = 8;
+  google.protobuf.BoolValue isOccupied = 9;
+  RacklotTypeFilter type = 11;
+  repeated PropertyFilter properties = 12;
+  google.protobuf.BoolValue isHasRack = 17;
+  google.protobuf.UInt32Value multiGroup = 18;
+  google.protobuf.UInt32Value multiItem = 19;
+}
 
-  message Property{
-    string key = 1;
-    string value = 2;
+message RacklotTypeFilter {
+  repeated RacklotTypeFilter and = 1;
+  repeated RacklotTypeFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string nameIn = 4;
+  google.protobuf.UInt32Value id = 5;
+  google.protobuf.StringValue name = 6;
+}
+
+message PropertyFilter {
+  string key = 1;
+  string value = 2;
+  string type = 3;
+}
+
+message Property {
+  string key = 1;
+  string value = 2;
 }
 
 message FlagReq {
-    uint32 id = 1;
-    bool flag = 2;
-  }
+  uint32 id = 1;
+  bool flag = 2;
+}
 
-  message TypeReq {
-    uint32 id = 1;
-    uint32 type = 2;
-    string name = 3;
-  }
+message TypeReq {
+  uint32 id = 1;
+  uint32 type = 2;
+  string name = 3;
+}
 
-  message PropertiesReq {
-    uint32 id = 1;
-    string properties = 2;
-  }
+message PropertiesReq {
+  uint32 id = 1;
+  string properties = 2;
+}
