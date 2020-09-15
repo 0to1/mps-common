@@ -251,8 +251,8 @@ message RacklotFilter {
   RacklotTypeFilter type = 11;
   repeated PropertyFilter properties = 12;
   google.protobuf.BoolValue isHasRack = 17;
-  google.protobuf.UInt32Value multiGroup = 18;
-  google.protobuf.UInt32Value multiItem = 19;
+  google.protobuf.UInt32Value multipleGroup = 18;
+  google.protobuf.UInt32Value multipleItem = 19;
 }
 
 message RacklotTypeFilter {
