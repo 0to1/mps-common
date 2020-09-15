@@ -107,8 +107,12 @@ message RacklotTypes {
 // MultipleGroup 货位重列组
 message MultipleGroup {
   uint32 racklotID = 1;
+  // 重列组编号
   uint32 group = 2;
-  uint32 item = 3;
+  // 父重列号
+  uint32 parentItem = 3;
+  // 重列号
+  uint32 item = 4;
 }
 
 // Racklot 货位
@@ -121,7 +125,7 @@ message Racklot {
   uint32 length = 6;
   uint32 width = 7;
   // 站台重列分组信息
-  repeated MultipleGroup multipleGroups = 8;
+  MultipleGroup multipleGroup = 8;
   string description = 10;
   // 站台是否有效，被禁用则无效，启用则有效，默认为有效
   bool isValid = 11;
@@ -146,28 +150,22 @@ message UpdateRacklotReq {
 }
 
 message UpdateRacklot {
-  google.protobuf.UInt32Value id = 20;
-  google.protobuf.UInt32Value x = 1;
-  google.protobuf.UInt32Value y = 2;
-  google.protobuf.FloatValue angle = 3;
-  google.protobuf.UInt32Value length = 4;
-  google.protobuf.UInt32Value width = 5;
-
-  repeated MultipleGroup multipleGroups = 7;
-
-  google.protobuf.UInt32Value racklotType = 24;
-  google.protobuf.UInt32Value stationID = 25;
-  google.protobuf.UInt32Value rackID = 26;
-
-  //是否有效
-  google.protobuf.BoolValue isValid = 27;
-  google.protobuf.BoolValue isInbound = 28;
-  google.protobuf.BoolValue isOutbound = 29;
-  google.protobuf.BoolValue isOccupied = 31;
-
-  google.protobuf.StringValue description = 30;
-
-  string properties = 6;
+  google.protobuf.UInt32Value id = 1;
+  google.protobuf.UInt32Value x = 2;
+  google.protobuf.UInt32Value y = 3;
+  google.protobuf.FloatValue angle = 4;
+  google.protobuf.UInt32Value length = 5;
+  google.protobuf.UInt32Value width = 6;
+  MultipleGroup multipleGroup = 7;
+  google.protobuf.UInt32Value racklotType = 8;
+  google.protobuf.UInt32Value stationID = 9;
+  google.protobuf.UInt32Value rackID = 10;
+  google.protobuf.BoolValue isValid = 11;
+  google.protobuf.BoolValue isInbound = 12;
+  google.protobuf.BoolValue isOutbound = 13;
+  google.protobuf.BoolValue isOccupied = 14;
+  google.protobuf.StringValue description = 15;
+  string properties = 17;
 }
 
 message UpdateRacklotsReq {
