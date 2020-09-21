@@ -25,6 +25,8 @@ service LprService {
   rpc Close(IDReq) returns (Response);
   //根据出入口id编号 返回车牌识别结果
   rpc GetLicense(IDReq) returns (License);
+  //根据出入口id编号 清除车牌识别结果
+  rpc ClearLicense(IDReq) returns (License);
   //根据条件查询车牌识别结果
   rpc GetLicenses(Query) returns (Licenses);
 }

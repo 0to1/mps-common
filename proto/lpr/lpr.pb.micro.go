@@ -60,6 +60,8 @@ type LprService interface {
 	Close(ctx context.Context, in *IDReq, opts ...client.CallOption) (*Response, error)
 	//根据出入口id编号 返回车牌识别结果
 	GetLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error)
+	//根据出入口id编号 清除车牌识别结果
+	ClearLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error)
 	//根据条件查询车牌识别结果
 	GetLicenses(ctx context.Context, in *Query, opts ...client.CallOption) (*Licenses, error)
 }
@@ -256,6 +258,16 @@ func (c *lprService) GetLicense(ctx context.Context, in *IDReq, opts ...client.C
 	return out, nil
 }
 
+func (c *lprService) ClearLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error) {
+	req := c.c.NewRequest(c.name, "LprService.ClearLicense", in)
+	out := new(License)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *lprService) GetLicenses(ctx context.Context, in *Query, opts ...client.CallOption) (*Licenses, error) {
 	req := c.c.NewRequest(c.name, "LprService.GetLicenses", in)
 	out := new(Licenses)
@@ -286,6 +298,8 @@ type LprServiceHandler interface {
 	Close(context.Context, *IDReq, *Response) error
 	//根据出入口id编号 返回车牌识别结果
 	GetLicense(context.Context, *IDReq, *License) error
+	//根据出入口id编号 清除车牌识别结果
+	ClearLicense(context.Context, *IDReq, *License) error
 	//根据条件查询车牌识别结果
 	GetLicenses(context.Context, *Query, *Licenses) error
 }
@@ -302,6 +316,7 @@ func RegisterLprServiceHandler(s server.Server, hdlr LprServiceHandler, opts ...
 		Start(ctx context.Context, in *IDReq, out *Response) error
 		Close(ctx context.Context, in *IDReq, out *Response) error
 		GetLicense(ctx context.Context, in *IDReq, out *License) error
+		ClearLicense(ctx context.Context, in *IDReq, out *License) error
 		GetLicenses(ctx context.Context, in *Query, out *Licenses) error
 	}
 	type LprService struct {
@@ -430,6 +445,10 @@ func (h *lprServiceHandler) Close(ctx context.Context, in *IDReq, out *Response)
 
 func (h *lprServiceHandler) GetLicense(ctx context.Context, in *IDReq, out *License) error {
 	return h.LprServiceHandler.GetLicense(ctx, in, out)
+}
+
+func (h *lprServiceHandler) ClearLicense(ctx context.Context, in *IDReq, out *License) error {
+	return h.LprServiceHandler.ClearLicense(ctx, in, out)
 }
 
 func (h *lprServiceHandler) GetLicenses(ctx context.Context, in *Query, out *Licenses) error {
