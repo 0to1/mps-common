@@ -6,11 +6,13 @@ package go_micro_srv_config
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
 	math "math"
 )
 
 import (
 	context "context"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -27,9 +29,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for ConfigService service
+
+func NewConfigServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for ConfigService service
 
@@ -60,6 +69,11 @@ type ConfigService interface {
 	GetScriptButton(ctx context.Context, in *IkeyRequest, opts ...client.CallOption) (*ScriptButton, error)
 	// 查询所有的脚本按钮
 	GetScriptButtons(ctx context.Context, in *Query, opts ...client.CallOption) (*ScriptButtons, error)
+	GetAlias(ctx context.Context, in *AliasQuery, opts ...client.CallOption) (*Aliases, error)
+	AddAlias(ctx context.Context, in *AliasRequest, opts ...client.CallOption) (*Response, error)
+	DeleteAlias(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*Alias, error)
+	UpdateAlias(ctx context.Context, in *AliasUpdateRequest, opts ...client.CallOption) (*Response, error)
+	ResetAlias(ctx context.Context, in *ResetAliasRequest, opts ...client.CallOption) (*Response, error)
 }
 
 type configService struct {
@@ -204,6 +218,56 @@ func (c *configService) GetScriptButtons(ctx context.Context, in *Query, opts ..
 	return out, nil
 }
 
+func (c *configService) GetAlias(ctx context.Context, in *AliasQuery, opts ...client.CallOption) (*Aliases, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.GetAlias", in)
+	out := new(Aliases)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) AddAlias(ctx context.Context, in *AliasRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.AddAlias", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) DeleteAlias(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*Alias, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.DeleteAlias", in)
+	out := new(Alias)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) UpdateAlias(ctx context.Context, in *AliasUpdateRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.UpdateAlias", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) ResetAlias(ctx context.Context, in *ResetAliasRequest, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.ResetAlias", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ConfigService service
 
 type ConfigServiceHandler interface {
@@ -233,6 +297,11 @@ type ConfigServiceHandler interface {
 	GetScriptButton(context.Context, *IkeyRequest, *ScriptButton) error
 	// 查询所有的脚本按钮
 	GetScriptButtons(context.Context, *Query, *ScriptButtons) error
+	GetAlias(context.Context, *AliasQuery, *Aliases) error
+	AddAlias(context.Context, *AliasRequest, *Response) error
+	DeleteAlias(context.Context, *IDRequest, *Alias) error
+	UpdateAlias(context.Context, *AliasUpdateRequest, *Response) error
+	ResetAlias(context.Context, *ResetAliasRequest, *Response) error
 }
 
 func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, opts ...server.HandlerOption) error {
@@ -250,6 +319,11 @@ func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, op
 		DeleteScriptButton(ctx context.Context, in *IkeyRequest, out *Response) error
 		GetScriptButton(ctx context.Context, in *IkeyRequest, out *ScriptButton) error
 		GetScriptButtons(ctx context.Context, in *Query, out *ScriptButtons) error
+		GetAlias(ctx context.Context, in *AliasQuery, out *Aliases) error
+		AddAlias(ctx context.Context, in *AliasRequest, out *Response) error
+		DeleteAlias(ctx context.Context, in *IDRequest, out *Alias) error
+		UpdateAlias(ctx context.Context, in *AliasUpdateRequest, out *Response) error
+		ResetAlias(ctx context.Context, in *ResetAliasRequest, out *Response) error
 	}
 	type ConfigService struct {
 		configService
@@ -312,4 +386,24 @@ func (h *configServiceHandler) GetScriptButton(ctx context.Context, in *IkeyRequ
 
 func (h *configServiceHandler) GetScriptButtons(ctx context.Context, in *Query, out *ScriptButtons) error {
 	return h.ConfigServiceHandler.GetScriptButtons(ctx, in, out)
+}
+
+func (h *configServiceHandler) GetAlias(ctx context.Context, in *AliasQuery, out *Aliases) error {
+	return h.ConfigServiceHandler.GetAlias(ctx, in, out)
+}
+
+func (h *configServiceHandler) AddAlias(ctx context.Context, in *AliasRequest, out *Response) error {
+	return h.ConfigServiceHandler.AddAlias(ctx, in, out)
+}
+
+func (h *configServiceHandler) DeleteAlias(ctx context.Context, in *IDRequest, out *Alias) error {
+	return h.ConfigServiceHandler.DeleteAlias(ctx, in, out)
+}
+
+func (h *configServiceHandler) UpdateAlias(ctx context.Context, in *AliasUpdateRequest, out *Response) error {
+	return h.ConfigServiceHandler.UpdateAlias(ctx, in, out)
+}
+
+func (h *configServiceHandler) ResetAlias(ctx context.Context, in *ResetAliasRequest, out *Response) error {
+	return h.ConfigServiceHandler.ResetAlias(ctx, in, out)
 }

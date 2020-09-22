@@ -1,90 +1,146 @@
 syntax = "proto3";
 
 package go.micro.srv.config;
+option go_package = "proto/config;go_micro_srv_config";
+
+import "google/protobuf/wrappers.proto";
 
 service ConfigService {
-	// 修改仓库信息
-	rpc UpdateWarehouse(Warehouse) returns (Response);
-	// 切换自动
-	rpc UpdateAuto(BoolReq) returns (Response);
-	// 获取仓库信息
-	rpc GetWarehouse(Request) returns (Warehouse);
-	// 增加脚本参数
-	rpc AddScriptParameter(ScriptParameter) returns (Response);
-	// 修改脚本参数
-	rpc UpdateScriptParameter(ScriptParameter) returns (Response);
-	// 删除脚本参数
-	rpc DeleteScriptParameter(IkeyRequest) returns (Response);
-	// 查询单个脚本参数
-	rpc GetScriptParameter(IkeyRequest) returns (ScriptParameter);
-	// 查询所有的脚本参数
-	rpc GetScriptParameters(Query) returns (ScriptParameters);
+  // 修改仓库信息
+  rpc UpdateWarehouse(Warehouse) returns (Response);
+  // 切换自动
+  rpc UpdateAuto(BoolReq) returns (Response);
+  // 获取仓库信息
+  rpc GetWarehouse(Request) returns (Warehouse);
+  // 增加脚本参数
+  rpc AddScriptParameter(ScriptParameter) returns (Response);
+  // 修改脚本参数
+  rpc UpdateScriptParameter(ScriptParameter) returns (Response);
+  // 删除脚本参数
+  rpc DeleteScriptParameter(IkeyRequest) returns (Response);
+  // 查询单个脚本参数
+  rpc GetScriptParameter(IkeyRequest) returns (ScriptParameter);
+  // 查询所有的脚本参数
+  rpc GetScriptParameters(Query) returns (ScriptParameters);
 
-	// 增加脚本按钮
-	rpc AddScriptButton(InputScriptButton) returns (Response);
-	// 修改脚本按钮
-	rpc UpdateScriptButton(InputScriptButton) returns (Response);
-	// 删除脚本按钮
-	rpc DeleteScriptButton(IkeyRequest) returns (Response);
-	// 查询单个脚本按钮
-	rpc GetScriptButton(IkeyRequest) returns (ScriptButton);
-	// 查询所有的脚本按钮
-	rpc GetScriptButtons(Query) returns (ScriptButtons);
+  // 增加脚本按钮
+  rpc AddScriptButton(InputScriptButton) returns (Response);
+  // 修改脚本按钮
+  rpc UpdateScriptButton(InputScriptButton) returns (Response);
+  // 删除脚本按钮
+  rpc DeleteScriptButton(IkeyRequest) returns (Response);
+  // 查询单个脚本按钮
+  rpc GetScriptButton(IkeyRequest) returns (ScriptButton);
+  // 查询所有的脚本按钮
+  rpc GetScriptButtons(Query) returns (ScriptButtons);
+
+  rpc GetAlias(AliasQuery) returns (Aliases);
+
+  rpc AddAlias(AliasRequest) returns (Response);
+
+  rpc DeleteAlias(IDRequest) returns (Alias);
+
+  rpc UpdateAlias(AliasUpdateRequest) returns (Response);
+
+  rpc ResetAlias(ResetAliasRequest) returns (Response);
 }
 
-message BoolReq {
-	bool res = 1;
+message Alias {
+  int32 id = 1;
+  string name = 2;
+  string alias = 3;
+  string language = 4;
+  string properties = 5;
 }
+
+message Aliases {
+  repeated Alias aliases = 1;
+  uint32 totalpages = 2;
+  uint32 totals = 3;
+}
+
+message AliasRequest {
+  string name = 1;
+  string alias = 2;
+  string language = 3;
+  string properties = 4;
+}
+
+message IDRequest { uint32 id = 1; }
+
+message AliasUpdateRequest {
+  uint32 id = 1;
+  string name = 2;
+  string alias = 3;
+  string language = 4;
+  string properties = 5;
+}
+
+message ResetAliasRequest {}
+
+message AliasQuery {
+  uint32 page = 1;
+  uint32 perPage = 2;
+  AliasFilter filter = 3;
+}
+
+message AliasFilter {
+  repeated AliasFilter and = 1;
+  repeated AliasFilter or = 2;
+  repeated string nameIn = 3;
+  repeated string aliasIn = 4;
+  google.protobuf.StringValue language = 5;
+}
+
+message BoolReq { bool res = 1; }
 
 message Warehouse {
-	string ikey = 1;
-	string name = 2;
-	string address = 3;
-	uint32 longitude = 4;
-	uint32 latitude = 5;
-	uint32 floorNumber = 6;
-	uint32 length = 7;
-	uint32 width = 8;
-	bool isAuto = 9;
+  string ikey = 1;
+  string name = 2;
+  string address = 3;
+  uint32 longitude = 4;
+  uint32 latitude = 5;
+  uint32 floorNumber = 6;
+  uint32 length = 7;
+  uint32 width = 8;
+  bool isAuto = 9;
 }
 
 message InputScriptButton {
-	string ikey = 1;
-	string name = 2;
-	uint32 scriptId = 3;
-	repeated string parameterIkeys = 4;
+  string ikey = 1;
+  string name = 2;
+  uint32 scriptId = 3;
+  repeated string parameterIkeys = 4;
 }
 
 message ScriptButton {
-	string ikey = 1;
-	string name = 2;
-	uint32 scriptId = 3;
-	repeated ScriptParameter parameter = 4;
+  string ikey = 1;
+  string name = 2;
+  uint32 scriptId = 3;
+  repeated ScriptParameter parameter = 4;
 }
 
 message ScriptButtons {
-	uint32 totalCount = 1;
-	repeated ScriptButton button = 2;
+  uint32 totalCount = 1;
+  repeated ScriptButton button = 2;
 }
 
 message ScriptParameter {
-	string ikey = 1;
-	string name = 2;
+  string ikey = 1;
+  string name = 2;
 }
 
 message ScriptParameters {
-	uint32 totalCount = 1; 
-	repeated ScriptParameter parameter = 2;
+  uint32 totalCount = 1;
+  repeated ScriptParameter parameter = 2;
 }
 
 message Request {}
 message Response {}
 
-message IkeyRequest {
-	string ikey = 1;
-}
+message IkeyRequest { string ikey = 1; }
 
 message Query {
-	uint32 page = 1;
-  	uint32 perPage = 2;
+  uint32 page = 1;
+  uint32 perPage = 2;
 }
