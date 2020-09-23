@@ -16,6 +16,7 @@ protos="
     rack
     racklot
     racktype
+    report
     role
     route
     script
@@ -24,6 +25,7 @@ protos="
     system
     task
     user
+    warehouse
 "
 
 if [ ! -n "${srv}" ]; then
@@ -35,4 +37,3 @@ else
     echo protoc --proto_path=. --micro_out=. --go_out=. proto/${srv}/${srv}.proto
     protoc --proto_path=. --micro_out=. --go_out=. proto/${srv}/${srv}.proto 
 fi
-

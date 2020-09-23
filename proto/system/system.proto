@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.agv.system;
+option go_package = "proto/system;go_micro_srv_system";
 
 service System {
   //更新参数，调度系统的IP地址和端口//

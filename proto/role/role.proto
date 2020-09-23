@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.role;
+option go_package = "proto/role;go_micro_srv_role";
 
 service Role {
   // 添加角色

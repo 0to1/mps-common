@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.user;
+option go_package = "proto/user;go_micro_srv_user";
 
 service User {
   // 注册用户

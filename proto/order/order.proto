@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.agv.order;
+option go_package = "proto/order;go_micro_srv_order";
 
 service Order {
   //取消任务

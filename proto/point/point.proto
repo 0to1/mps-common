@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.point;
+option go_package = "proto/point;go_micro_srv_point";
 
 service Point{
 

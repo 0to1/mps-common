@@ -4,6 +4,8 @@ syntax = "proto3";
 // import "google/protobuf/timestamp.proto";
 
 package go.micro.srv.task;
+option go_package = "proto/task;go_micro_srv_task";
+
 import "google/protobuf/wrappers.proto";
 
 service TaskService {

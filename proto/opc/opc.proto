@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.opc;
+option go_package = "proto/opc;go_micro_srv_opc";
 
 service OpcService {
 	rpc UpdateServer(Server) returns (Response);

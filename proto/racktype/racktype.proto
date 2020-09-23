@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.racktype;
+option go_package = "proto/racktype;go_micro_srv_racktype";
 
 import "google/protobuf/wrappers.proto";
 

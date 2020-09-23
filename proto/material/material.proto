@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.material;
+option go_package = "proto/material;go_micro_srv_material";
 
 import "google/protobuf/wrappers.proto";
 

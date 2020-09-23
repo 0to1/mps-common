@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.agv;
+option go_package = "proto/agv;go_micro_srv_agv";
 
 service Agv {
   //获取AGV故障报表//

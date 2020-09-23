@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.station;
+option go_package = "proto/station;go_micro_srv_station";
 
 service Station{
 

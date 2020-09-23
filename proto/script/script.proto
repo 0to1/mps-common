@@ -3,6 +3,7 @@ syntax = "proto3";
 // import "google/protobuf/timestamp.proto"
 
 package go.micro.srv.task.script;
+option go_package = "proto/script;go_micro_srv_task_script";
 
 import "google/protobuf/wrappers.proto";
 

@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.route;
+option go_package = "proto/route;go_micro_srv_route";
 
 service Route{
 

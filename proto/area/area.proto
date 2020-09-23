@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.area;
+option go_package = "proto/area;go_micro_srv_area";
 
 import "google/protobuf/wrappers.proto";
 

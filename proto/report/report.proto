@@ -4,6 +4,7 @@ syntax = "proto3";
 // import "google/protobuf/timestamp.proto";
 
 package go.micro.srv.report;
+option go_package = "proto/report;go_micro_srv_report";
 // import "google/protobuf/wrappers.proto";
 
 service ReportService {

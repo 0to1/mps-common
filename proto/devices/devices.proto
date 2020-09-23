@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 
 package go.micro.service.devices;
+option go_package = "proto/devices;go_micro_srv_devices";
 
 service DevicesService {
 	rpc GetDevice (IDReq) returns (Device);
