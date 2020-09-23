@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package go.micro.srv.warehouse;
+option go_package = "proto/warehouse;go_micro_srv_warehouse";
+
+service Warehouse {
+  rpc Create(WarehouseReq) returns (WarehouseResp) {}
+  // 修改仓库信息
+  rpc Update(WarehouseReq) returns (WarehouseResp) {}
+
+  rpc DeleteByID(IdReq) returns (DeleteResp);
+
+  rpc GetByID(IdReq) returns (WarehouseResp) {}
+
+  //根据分页，条件查询等返回列表
+  rpc GetQuery(Query) returns (WarehousesResp) {}
+
+  rpc SetOperation(WarehouseReq) returns (WarehouseResp);
+}
+
+enum StatusType {
+  INITIAL = 0;
+  RUN = 1;
+  SUSPEND = 2;
+  STOP = 3;
+}
+
+message EarthCoordinate {
+  uint32 longitude = 1;
+  uint32 latitude = 2;
+}
+
+// message Coordinate {
+// 	uint32 x = 1;
+// 	uint32 y = 2;
+// }
+
+message GeometricProperty {
+  EarthCoordinate ecord = 1;
+  uint32 floorNum = 2;
+  uint32 length = 3;
+  uint32 width = 4;
+  uint32 height = 5;
+}
+
+// message Station {
+// 	uint32 id = 1;
+// 	Coordinate coordinate = 2;
+// }
+
+// message Stations {
+// 	repeated Station stations = 1;
+// 	uint32 num = 2;
+// }
+
+message LayoutReq {
+  string name = 1;
+  uint32 size = 2;
+  bytes data = 3;
+}
+
+message LayoutResp {}
+
+message WarehouseReq {
+  uint32 id = 1;
+  string name = 2;
+  string location = 3;
+  StatusType status = 4;
+  string ikey = 5;
+  GeometricProperty property = 6;
+}
+
+message WarehouseResp {
+  uint32 id = 1;
+  string name = 2;
+  string location = 3;
+  StatusType status = 4;
+  string ikey = 5;
+  GeometricProperty property = 6;
+}
+
+message WarehousesResp {
+  repeated WarehouseResp warehouses = 1;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message DeleteResp {}
+
+message Query {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 per_page = 4;
+  string queryString = 5;
+}
+
+message IdReq { uint32 id = 1; }
+
+message OpReq { StatusType op = 1; }
+
+message OpResp {}
