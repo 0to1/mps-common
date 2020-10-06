@@ -35,6 +35,19 @@ message ContentReq {
   string content = 3;
   // 是否持久化保存到LED屏
   bool persistence = 4;
+  ContentStyle style = 5;
+}
+
+message ContentStyle {
+  google.protobuf.UInt32Value fontColor = 1;
+  google.protobuf.UInt32Value fontId = 2;
+  google.protobuf.UInt32Value entry = 3;
+  google.protobuf.UInt32Value spEntry = 4;
+  google.protobuf.UInt32Value duEntry = 5;
+  google.protobuf.UInt32Value horizontalAlign = 6;
+  google.protobuf.UInt32Value verticalAlign = 7;
+  google.protobuf.UInt32Value singleText = 8;
+  google.protobuf.UInt32Value wordwarp = 9;
 }
 
 message Area {
