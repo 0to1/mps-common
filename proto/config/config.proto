@@ -76,7 +76,7 @@ message AliasUpdateRequest {
   string properties = 5;
 }
 
-message ResetAliasRequest {}
+message ResetAliasRequest {string language = 1;}
 
 message AliasQuery {
   uint32 page = 1;
