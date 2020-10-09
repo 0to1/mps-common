@@ -45,19 +45,25 @@ service TaskService {
   rpc DelGP(GPKey) returns (Response);
   rpc GetGP(GPKey) returns (GpParameter);
   rpc GetGPs(GPQuery) returns (GpParameters);
+
+  rpc ConfigSystemGo(SystemGoReq) returns (Response);
+  rpc RestartSystemGo(Nop) returns (Response);
 }
+
+// 无参数
+message Nop {}
+
+message SystemGoReq { uint32 scriptIndex = 1; }
 
 message GPQuery {
   uint32 page = 1;
   uint32 perPage = 2;
 }
 
-message GPKey {
-  string key = 1;
-}
+message GPKey { string key = 1; }
 
 message GpParameter {
-  string type = 1; 
+  string type = 1;
   string key = 2;
   string value = 3;
   string description = 4;
@@ -87,7 +93,7 @@ message TaskIDs { repeated uint32 ids = 1; }
 message TaskParameterFilter {
   string key = 1;
   string value = 2;
-  string type = 3; 
+  string type = 3;
 }
 
 message UpdateTaskReq {
@@ -155,14 +161,12 @@ message Query {
 
 message Parameter {
   //参数类型，支持string, int, float64，bool四种种类型，默认为string类型
-  string type = 1; 
+  string type = 1;
   string key = 2;
   string value = 3;
 }
 
-message ParameterKey {
-  string name = 1;
-}
+message ParameterKey { string name = 1; }
 
 // 局部参数需携带任务编号
 message LpParameter {

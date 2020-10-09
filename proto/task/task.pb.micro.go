@@ -72,6 +72,8 @@ type TaskService interface {
 	DelGP(ctx context.Context, in *GPKey, opts ...client.CallOption) (*Response, error)
 	GetGP(ctx context.Context, in *GPKey, opts ...client.CallOption) (*GpParameter, error)
 	GetGPs(ctx context.Context, in *GPQuery, opts ...client.CallOption) (*GpParameters, error)
+	ConfigSystemGo(ctx context.Context, in *SystemGoReq, opts ...client.CallOption) (*Response, error)
+	RestartSystemGo(ctx context.Context, in *Nop, opts ...client.CallOption) (*Response, error)
 }
 
 type taskService struct {
@@ -266,6 +268,26 @@ func (c *taskService) GetGPs(ctx context.Context, in *GPQuery, opts ...client.Ca
 	return out, nil
 }
 
+func (c *taskService) ConfigSystemGo(ctx context.Context, in *SystemGoReq, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.ConfigSystemGo", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) RestartSystemGo(ctx context.Context, in *Nop, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "TaskService.RestartSystemGo", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TaskService service
 
 type TaskServiceHandler interface {
@@ -298,6 +320,8 @@ type TaskServiceHandler interface {
 	DelGP(context.Context, *GPKey, *Response) error
 	GetGP(context.Context, *GPKey, *GpParameter) error
 	GetGPs(context.Context, *GPQuery, *GpParameters) error
+	ConfigSystemGo(context.Context, *SystemGoReq, *Response) error
+	RestartSystemGo(context.Context, *Nop, *Response) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
@@ -320,6 +344,8 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		DelGP(ctx context.Context, in *GPKey, out *Response) error
 		GetGP(ctx context.Context, in *GPKey, out *GpParameter) error
 		GetGPs(ctx context.Context, in *GPQuery, out *GpParameters) error
+		ConfigSystemGo(ctx context.Context, in *SystemGoReq, out *Response) error
+		RestartSystemGo(ctx context.Context, in *Nop, out *Response) error
 	}
 	type TaskService struct {
 		taskService
@@ -402,4 +428,12 @@ func (h *taskServiceHandler) GetGP(ctx context.Context, in *GPKey, out *GpParame
 
 func (h *taskServiceHandler) GetGPs(ctx context.Context, in *GPQuery, out *GpParameters) error {
 	return h.TaskServiceHandler.GetGPs(ctx, in, out)
+}
+
+func (h *taskServiceHandler) ConfigSystemGo(ctx context.Context, in *SystemGoReq, out *Response) error {
+	return h.TaskServiceHandler.ConfigSystemGo(ctx, in, out)
+}
+
+func (h *taskServiceHandler) RestartSystemGo(ctx context.Context, in *Nop, out *Response) error {
+	return h.TaskServiceHandler.RestartSystemGo(ctx, in, out)
 }
