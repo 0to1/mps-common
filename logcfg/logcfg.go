@@ -44,11 +44,15 @@ func Config(opts ...Option) error {
 		logrus.AddHook(v)
 	}
 
-	// 设置允许打印函数调用信息
-	// logrus.SetReportCaller(true)
+	// 设置是否允许打印函数调用信息
+	if options.ReportCaller == true {
+		logrus.SetReportCaller(true)
+	} 
 
-	// 设置日志级别
-	logrus.SetLevel(logrus.TraceLevel)
+	// 设置默认日志级别
+	if options.Level != logrus.InfoLevel{
+		logrus.SetLevel(options.Level)
+	}
 
 	dir := createLogDir()
 
@@ -83,4 +87,14 @@ func createLogDir() string {
 	os.MkdirAll(logdir, os.ModePerm)
 
 	return logdir
+}
+
+// GetLogLevel 获取日志等级
+func GetLogLevel() logrus.Level {
+	return logrus.GetLevel()
+}
+
+//SetLogLevel 设置日志等级
+func SetLogLevel(level logrus.Level) {
+	logrus.SetLevel(logrus.TraceLevel)
 }
