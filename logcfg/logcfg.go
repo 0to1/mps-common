@@ -96,5 +96,5 @@ func GetLogLevel() logrus.Level {
 
 //SetLogLevel 设置日志等级
 func SetLogLevel(level logrus.Level) {
-	logrus.SetLevel(logrus.TraceLevel)
+	logrus.SetLevel(level)
 }

@@ -8,6 +8,34 @@ service Log {
   rpc GetConfig(Request) returns (LogConfig);
   rpc GetLogs(Query) returns (LogContents);
   rpc WriteLog(LogContent) returns (Response);
+  //获取服务日志等级
+  rpc GetLogLevel(LogRequest) returns (Loglevel);
+  //设置服务日志等级
+  rpc SetLogLevel(Loglevel) returns (LogResponse);
+  //获取全部服务日志等级
+  rpc GetLogsLevel(LogRequest) returns (Logslevel);
+  //设置全部服务日志等级
+  rpc SetLogsLevel(Logslevel) returns (LogsResponse);
+}
+
+message Logslevel{
+  repeated Loglevel Logslevel = 1;
+}
+
+message LogsResponse{
+  repeated LogResponse LogsResponse = 1;
+}
+
+message LogRequest{
+  
+}
+message Loglevel{
+  string name = 1;
+  uint32 level = 2;
+}
+
+message LogResponse{
+  string name = 1;
 }
 
 message LogConfig {
