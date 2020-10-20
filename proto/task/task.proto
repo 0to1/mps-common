@@ -10,44 +10,44 @@ import "google/protobuf/wrappers.proto";
 
 service TaskService {
   //新任务
-  rpc New(NewTaskReq) returns (Response);
+  rpc New(NewTaskReq) returns(Response);
   // 暂停任务
-  rpc Pause(TaskID) returns (Response);
+  rpc Pause(TaskID) returns(Response);
   // 取消任务
-  rpc Cancel(TaskID) returns (Response);
+  rpc Cancel(CancelReq) returns(Response);
 
-  rpc UpdateTask(UpdateTaskReq) returns (Response);
+  rpc UpdateTask(UpdateTaskReq) returns(Response);
 
-  rpc BatchNew(NewTasksReq) returns (Response);
+  rpc BatchNew(NewTasksReq) returns(Response);
 
-  rpc BatchCancel(TaskIDs) returns (Response);
+  rpc BatchCancel(TaskIDs) returns(Response);
 
   // 设置任务参数
-  rpc SetParameters(LpParameters) returns (Response);
+  rpc SetParameters(LpParameters) returns(Response);
   // 删除任务参数
-  rpc DeleteParameters(LpParameterKeys) returns (Response);
+  rpc DeleteParameters(LpParameterKeys) returns(Response);
 
   // 根据查询条件获取任务
-  rpc GetTask(TaskID) returns (TaskInfo);
+  rpc GetTask(TaskID) returns(TaskInfo);
   // 根据查询条件获取历史任务
-  rpc GetHistoryTask(TaskID) returns (TaskInfo);
+  rpc GetHistoryTask(TaskID) returns(TaskInfo);
   // 根据查询条件获取任务
-  rpc GetTasks(Query) returns (TaskInfos);
+  rpc GetTasks(Query) returns(TaskInfos);
   // 根据查询条件获取历史任务
-  rpc GetHistoryTasks(Query) returns (TaskInfos);
+  rpc GetHistoryTasks(Query) returns(TaskInfos);
 
   // 调用脚本的函数
-  rpc Call(CallOptions) returns (CallResponse);
+  rpc Call(CallOptions) returns(CallResponse);
   // 执行脚本
-  rpc Execute(ExecuteOptions) returns (ExecuteResponse);
+  rpc Execute(ExecuteOptions) returns(ExecuteResponse);
 
-  rpc SetGP(GpParameter) returns (Response);
-  rpc DelGP(GPKey) returns (Response);
-  rpc GetGP(GPKey) returns (GpParameter);
-  rpc GetGPs(GPQuery) returns (GpParameters);
+  rpc SetGP(GpParameter) returns(Response);
+  rpc DelGP(GPKey) returns(Response);
+  rpc GetGP(GPKey) returns(GpParameter);
+  rpc GetGPs(GPQuery) returns(GpParameters);
 
-  rpc ConfigSystemGo(SystemGoReq) returns (Response);
-  rpc RestartSystemGo(Nop) returns (Response);
+  rpc ConfigSystemGo(SystemGoReq) returns(Response);
+  rpc RestartSystemGo(Nop) returns(Response);
 }
 
 // 无参数
@@ -249,3 +249,9 @@ message ExecuteOptions {
 }
 
 message ExecuteResponse {}
+
+message CancelReq {
+  uint32 taskID = 1;
+  // 是否强制取消任务，true为强制取消
+  bool forcedExit = 2;
+}
