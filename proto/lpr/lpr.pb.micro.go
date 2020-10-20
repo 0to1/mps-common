@@ -64,6 +64,10 @@ type LprService interface {
 	ClearLicense(ctx context.Context, in *IDReq, opts ...client.CallOption) (*License, error)
 	//根据条件查询车牌识别结果
 	GetLicenses(ctx context.Context, in *Query, opts ...client.CallOption) (*Licenses, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type lprService struct {
@@ -278,6 +282,26 @@ func (c *lprService) GetLicenses(ctx context.Context, in *Query, opts ...client.
 	return out, nil
 }
 
+func (c *lprService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "LprService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lprService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "LprService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for LprService service
 
 type LprServiceHandler interface {
@@ -302,6 +326,10 @@ type LprServiceHandler interface {
 	ClearLicense(context.Context, *IDReq, *License) error
 	//根据条件查询车牌识别结果
 	GetLicenses(context.Context, *Query, *Licenses) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterLprServiceHandler(s server.Server, hdlr LprServiceHandler, opts ...server.HandlerOption) error {
@@ -318,6 +346,8 @@ func RegisterLprServiceHandler(s server.Server, hdlr LprServiceHandler, opts ...
 		GetLicense(ctx context.Context, in *IDReq, out *License) error
 		ClearLicense(ctx context.Context, in *IDReq, out *License) error
 		GetLicenses(ctx context.Context, in *Query, out *Licenses) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type LprService struct {
 		lprService
@@ -453,4 +483,12 @@ func (h *lprServiceHandler) ClearLicense(ctx context.Context, in *IDReq, out *Li
 
 func (h *lprServiceHandler) GetLicenses(ctx context.Context, in *Query, out *Licenses) error {
 	return h.LprServiceHandler.GetLicenses(ctx, in, out)
+}
+
+func (h *lprServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.LprServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *lprServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.LprServiceHandler.SetLogLevel(ctx, in, out)
 }

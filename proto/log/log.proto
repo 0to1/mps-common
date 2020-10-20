@@ -26,9 +26,8 @@ message LogsResponse{
   repeated LogResponse LogsResponse = 1;
 }
 
-message LogRequest{
-  
-}
+message LogRequest{}
+
 message Loglevel{
   string name = 1;
   uint32 level = 2;
