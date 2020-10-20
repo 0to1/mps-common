@@ -6,64 +6,60 @@ option go_package = "proto/rack;go_micro_srv_rack";
 import "google/protobuf/wrappers.proto";
 
 service RackService {
+  // 根据货架ID获取货架信息
+  rpc GetRack(IDReq) returns(Rack);
+  // 根据查询条件获取满足条件的货架
+  rpc GetRacks(RackQuery) returns(Racks);
 
-    // 根据货架ID获取货架信息
-    rpc GetRack(IDReq) returns (Rack);
-    // 根据查询条件获取满足条件的货架
-    rpc GetRacks(RackQuery) returns (Racks);
+  rpc GetCell(IDReq) returns(Cell);
+  // 根据查询条件获取满足条件的货架
+  rpc GetCells(CellQuery) returns(Cells);
 
-    rpc GetCell(IDReq) returns (Cell);
-    // 根据查询条件获取满足条件的货架
-    rpc GetCells(CellQuery) returns (Cells);
+  rpc AddRack(Rack) returns(Response);
+  rpc BatchAddRacks(Racks) returns(Response);
+  rpc DeleteRack(IDReq) returns(Response);
+  rpc BatchDeleteRacks(IDsReq) returns(Response);
+  rpc UpdateRack(UpdateRackReq) returns(Response);
 
-  rpc AddRack(Rack) returns (Response);
-  rpc BatchAddRacks(Racks) returns (Response);
-  rpc DeleteRack(IDReq) returns (Response);
-  rpc BatchDeleteRacks(IDsReq) returns (Response);
-  rpc UpdateRack(UpdateRackReq) returns (Response);
-
-
-    // 添加储位
-  rpc AddCell(Cell) returns (Response);
-  rpc BatchAddCells(Cells) returns (Response);
-  rpc DeleteCell(IDReq) returns (Response);
-  rpc BatchDeleteCells(IDsReq) returns (Response);
-  rpc UpdateCell(UpdateCellReq) returns (Response);
+  // 添加储位
+  rpc AddCell(Cell) returns(Response);
+  rpc BatchAddCells(Cells) returns(Response);
+  rpc DeleteCell(IDReq) returns(Response);
+  rpc BatchDeleteCells(IDsReq) returns(Response);
+  rpc UpdateCell(UpdateCellReq) returns(Response);
 
   // 启用一组货架
-  rpc EnableRacks(IDsReq) returns (Response);
+  rpc EnableRacks(IDsReq) returns(Response);
   // 禁用一组货架
-  rpc DisableRacks(IDsReq) returns (Response);
+  rpc DisableRacks(IDsReq) returns(Response);
 
-  rpc BindRacklot(RacklotReq) returns (Response);
-  rpc UnbindRacklot(IDReq) returns (Response);
-  rpc OccupyRack(IDReq) returns (Response);
-  rpc ReleaseRack(IDReq) returns (Response);
+  rpc BindRacklot(RacklotReq) returns(Response);
+  rpc UnbindRacklot(IDReq) returns(Response);
+  rpc OccupyRack(IDReq) returns(Response);
+  rpc ReleaseRack(IDReq) returns(Response);
 
   // 启用储位
-  rpc EnableCells(IDsReq) returns (Response);
+  rpc EnableCells(IDsReq) returns(Response);
   // 禁用储位
-  rpc DisableCells(IDsReq) returns (Response);
+  rpc DisableCells(IDsReq) returns(Response);
   // 绑定物料
-  rpc BindMaterial(MaterialReq) returns (Response);
+  rpc BindMaterial(MaterialReq) returns(Response);
   // 解绑物料
-  rpc UnbindMaterial(IDReq) returns (Response);
+  rpc UnbindMaterial(IDReq) returns(Response);
 
   rpc OccupyCell(IDReq) returns(Response);
   rpc ReleaseCell(IDReq) returns(Response);
-    //增加属性
-    rpc AddCellProperties(PropertiesReq) returns(Response);
+  //增加属性
+  rpc AddCellProperties(PropertiesReq) returns(Response);
   // 更新Cell 储位状态
-  rpc SetCellStatus(CellStatusReq) returns (Response);
+  rpc SetCellStatus(CellStatusReq) returns(Response);
 
-  rpc GetRackReport(RackReportReq)returns(RackReport);
+  rpc GetRackReport(RackReportReq) returns(RackReport);
 
-  rpc GetCellReport(CellReportReq)returns(CellReport);
+  rpc GetCellReport(CellReportReq) returns(CellReport);
 }
 
-message CellReportReq {
-
-}
+message CellReportReq {}
 
 message CellReport {
   uint32 total = 1;
@@ -73,12 +69,9 @@ message CellReport {
   uint32 invalidTotal = 5;
 }
 
-message RackReportReq {
-}
+message RackReportReq {}
 
-message RackReport {
-  uint32 total = 1;
-}
+message RackReport { uint32 total = 1; }
 
 message RackType {
   uint32 id = 1;
@@ -113,10 +106,10 @@ message Cell {
   uint32 length = 25;
   uint32 width = 26;
   uint32 height = 27;
-	// 储位在货架的哪一层
-	uint32 row = 34;
-	// 储位在货架上的编号
-	uint32 column = 35;
+  // 储位在货架的哪一层
+  uint32 row = 34;
+  // 储位在货架上的编号
+  uint32 column = 35;
   // 是否禁用
   bool isValid = 30;
   // 存放的物料对于的编号
@@ -128,7 +121,7 @@ message Cell {
   //储位状态
   int32 status = 36;
 
-  string properties= 37;
+  string properties = 37;
 }
 
 message Rack {
@@ -153,31 +146,29 @@ message Rack {
   repeated Cell cells = 29;
   // 是否禁用
   bool isValid = 22;
-    //是否被占用
-    bool isOccupied = 33;
+  //是否被占用
+  bool isOccupied = 33;
 }
 
 message Response {}
 
 message UpdateRackReq {
-    uint32 id = 1;
-    UpdateRack rack = 2;
+  uint32 id = 1;
+  UpdateRack rack = 2;
 }
 
 message UpdateRack {
-    google.protobuf.UInt32Value id = 1;                                 
-    google.protobuf.StringValue name = 2;       
-    google.protobuf.UInt32Value rackType = 3;   
-    google.protobuf.UInt32Value length = 4;   
-    google.protobuf.UInt32Value width = 5;   
-    google.protobuf.UInt32Value height = 6;   
-    google.protobuf.UInt32Value layers = 7;   
-    google.protobuf.UInt32Value pickingSurface = 8;   
-    google.protobuf.StringValue description = 9; 
-    google.protobuf.BoolValue isValid = 10;    
-    
+  google.protobuf.UInt32Value id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.UInt32Value rackType = 3;
+  google.protobuf.UInt32Value length = 4;
+  google.protobuf.UInt32Value width = 5;
+  google.protobuf.UInt32Value height = 6;
+  google.protobuf.UInt32Value layers = 7;
+  google.protobuf.UInt32Value pickingSurface = 8;
+  google.protobuf.StringValue description = 9;
+  google.protobuf.BoolValue isValid = 10;
 }
-
 
 message UpdateCellReq {
   uint32 id = 1;
@@ -185,29 +176,29 @@ message UpdateCellReq {
 }
 
 message UpdateCell {
-  google.protobuf.UInt32Value id = 1;                                 
+  google.protobuf.UInt32Value id = 1;
   google.protobuf.StringValue name = 2;
-  google.protobuf.StringValue tag = 3;          
-  google.protobuf.UInt32Value length = 4;   
-  google.protobuf.UInt32Value width = 5;   
-  google.protobuf.UInt32Value height = 6;   
-  google.protobuf.UInt32Value layer = 7;     
-  google.protobuf.UInt32Value cellCode = 10;   
-  google.protobuf.UInt32Value rackID = 11; 
+  google.protobuf.StringValue tag = 3;
+  google.protobuf.UInt32Value length = 4;
+  google.protobuf.UInt32Value width = 5;
+  google.protobuf.UInt32Value height = 6;
+  google.protobuf.UInt32Value layer = 7;
+  google.protobuf.UInt32Value cellCode = 10;
+  google.protobuf.UInt32Value rackID = 11;
   //是否禁用
   google.protobuf.BoolValue isValid = 12;
   //存放的物料对于的编号
   google.protobuf.Int64Value materialID = 13;
   //物料类型
   google.protobuf.StringValue materialType = 14;
-  //cell类型id
+  // cell类型id
   google.protobuf.UInt32Value cellType = 15;
   //是否被占用
-  google.protobuf.BoolValue isOccupied = 16;  
+  google.protobuf.BoolValue isOccupied = 16;
   //储位状态
   google.protobuf.UInt32Value status = 17;
 
-  string properties= 18;
+  string properties = 18;
 }
 
 message CellStatusReq {
@@ -236,104 +227,113 @@ message Cells {
 
 message MaterialReq {
   uint32 rackID = 1;
-  uint32 cellID = 2;  //或者使用Cell的tag字段
-  int64  materialID = 3;
+  uint32 cellID = 2; //或者使用Cell的tag字段
+  int64 materialID = 3;
   string materialType = 4;
 }
 
 message RackQuery {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 perPage = 4;
-    RackFilter filter = 7;
-  }
-
-  message CellQuery {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 perPage = 4;
-    CellFilter filter = 7;
-  }
-  
-  message RackTypeQuery {
-    uint32 limit = 1;
-    uint32 offset = 2;
-    uint32 page = 3;
-    uint32 perPage = 4;
-    RackTypeFilter filter = 7;
-  }
-
-  message RackFilter {
-    repeated RackFilter and = 1;
-    repeated RackFilter or = 2;
-    repeated uint32 idIn = 3;
-    repeated uint32 racklotIdIn = 14;                                   
-
-    google.protobuf.UInt32Value racklotID = 5;
-    google.protobuf.BoolValue hasBindRacklot = 15;    
-         
-    google.protobuf.BoolValue isValid = 8;     
-    google.protobuf.BoolValue isOccupied = 9; 
-    RackTypeFilter type= 11;
-    CellFilter cell = 13;  
-  }
-
-  message CellFilter {
-    repeated CellFilter and = 1;
-    repeated CellFilter or = 2;
-    google.protobuf.UInt32Value id = 5;
-    repeated uint32 idIn = 3;
-    google.protobuf.StringValue name = 6;
-    repeated string nameIn = 4;
-    repeated int64 materialIDIn= 10;
-    google.protobuf.Int64Value materialID= 13;
-    google.protobuf.UInt32Value rackID = 7;     
-    google.protobuf.BoolValue isValid = 8;     
-    google.protobuf.BoolValue isOccupied = 9; 
-    repeated PropertyFilter  properties= 14;  
-    google.protobuf.BoolValue isHasMaterial= 15;
-  }
-  
-  message RackTypeFilter {
-    repeated RackTypeFilter and = 1;
-    repeated RackTypeFilter or = 2;
-    repeated uint32 idIn = 3;
-    repeated string nameIn = 4;
-    google.protobuf.UInt32Value id = 5;  
-    google.protobuf.StringValue name = 6;  
-  }
-
-  message PropertyFilter {
-    string key  = 1;
-    string value = 2; 
-    string type = 3;
-  }
-
-
-message FlagReq {
-    uint32 id = 1;
-    bool flag = 2;
-  }
-
-  message RacklotReq {
-    uint32 rackID = 1;
-    uint32 racklotID = 2;
-  }
-
-  message TypeReq {
-    uint32 id = 1;
-    uint32 type = 2;
-    string name = 3;
-  }
-
-  message Property{
-    string key = 1;
-    string value = 2;
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  RackFilter filter = 7;
 }
 
-  message PropertiesReq {
-    uint32 id = 1;
-    string properties= 2;
-  }
+message CellQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  CellFilter filter = 7;
+}
+
+message RackTypeQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  RackTypeFilter filter = 7;
+}
+
+message RackFilter {
+  repeated RackFilter and = 1;
+  repeated RackFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated uint32 racklotIdIn = 14;
+
+  google.protobuf.UInt32Value racklotID = 5;
+  google.protobuf.BoolValue hasBindRacklot = 15;
+
+  google.protobuf.BoolValue isValid = 8;
+  google.protobuf.BoolValue isOccupied = 9;
+  RackTypeFilter type = 11;
+  CellFilter cell = 13;
+}
+
+message CellFilter {
+  repeated CellFilter and = 1;
+  repeated CellFilter or = 2;
+  CellTypeFilter type = 11;
+  google.protobuf.UInt32Value id = 5;
+  repeated uint32 idIn = 3;
+  google.protobuf.StringValue name = 6;
+  repeated string nameIn = 4;
+  repeated int64 materialIDIn = 10;
+  google.protobuf.Int64Value materialID = 13;
+  google.protobuf.UInt32Value rackID = 7;
+  google.protobuf.BoolValue isValid = 8;
+  google.protobuf.BoolValue isOccupied = 9;
+  repeated PropertyFilter properties = 14;
+  google.protobuf.BoolValue isHasMaterial = 15;
+}
+
+message RackTypeFilter {
+  repeated RackTypeFilter and = 1;
+  repeated RackTypeFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string nameIn = 4;
+  google.protobuf.UInt32Value id = 5;
+  google.protobuf.StringValue name = 6;
+}
+
+message CellTypeFilter {
+  repeated CellTypeFilter and = 1;
+  repeated CellTypeFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string nameIn = 4;
+  google.protobuf.UInt32Value id = 5;
+  google.protobuf.StringValue name = 6;
+}
+
+message PropertyFilter {
+  string key = 1;
+  string value = 2;
+  string type = 3;
+}
+
+message FlagReq {
+  uint32 id = 1;
+  bool flag = 2;
+}
+
+message RacklotReq {
+  uint32 rackID = 1;
+  uint32 racklotID = 2;
+}
+
+message TypeReq {
+  uint32 id = 1;
+  uint32 type = 2;
+  string name = 3;
+}
+
+message Property {
+  string key = 1;
+  string value = 2;
+}
+
+message PropertiesReq {
+  uint32 id = 1;
+  string properties = 2;
+}
