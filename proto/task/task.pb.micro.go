@@ -48,7 +48,7 @@ type TaskService interface {
 	// 暂停任务
 	Pause(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
 	// 取消任务
-	Cancel(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
+	Cancel(ctx context.Context, in *CancelReq, opts ...client.CallOption) (*Response, error)
 	UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...client.CallOption) (*Response, error)
 	BatchNew(ctx context.Context, in *NewTasksReq, opts ...client.CallOption) (*Response, error)
 	BatchCancel(ctx context.Context, in *TaskIDs, opts ...client.CallOption) (*Response, error)
@@ -108,7 +108,7 @@ func (c *taskService) Pause(ctx context.Context, in *TaskID, opts ...client.Call
 	return out, nil
 }
 
-func (c *taskService) Cancel(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Cancel(ctx context.Context, in *CancelReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Cancel", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -296,7 +296,7 @@ type TaskServiceHandler interface {
 	// 暂停任务
 	Pause(context.Context, *TaskID, *Response) error
 	// 取消任务
-	Cancel(context.Context, *TaskID, *Response) error
+	Cancel(context.Context, *CancelReq, *Response) error
 	UpdateTask(context.Context, *UpdateTaskReq, *Response) error
 	BatchNew(context.Context, *NewTasksReq, *Response) error
 	BatchCancel(context.Context, *TaskIDs, *Response) error
@@ -328,7 +328,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 	type taskService interface {
 		New(ctx context.Context, in *NewTaskReq, out *Response) error
 		Pause(ctx context.Context, in *TaskID, out *Response) error
-		Cancel(ctx context.Context, in *TaskID, out *Response) error
+		Cancel(ctx context.Context, in *CancelReq, out *Response) error
 		UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error
 		BatchNew(ctx context.Context, in *NewTasksReq, out *Response) error
 		BatchCancel(ctx context.Context, in *TaskIDs, out *Response) error
@@ -366,7 +366,7 @@ func (h *taskServiceHandler) Pause(ctx context.Context, in *TaskID, out *Respons
 	return h.TaskServiceHandler.Pause(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Cancel(ctx context.Context, in *TaskID, out *Response) error {
+func (h *taskServiceHandler) Cancel(ctx context.Context, in *CancelReq, out *Response) error {
 	return h.TaskServiceHandler.Cancel(ctx, in, out)
 }
 
