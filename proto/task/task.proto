@@ -132,6 +132,12 @@ message TaskFilter {
   google.protobuf.Int32Value orderIndex = 7;
   google.protobuf.Int32Value scriptIndex = 9;
   google.protobuf.Int32Value phase = 21;
+  repeated int32 phaseIn = 29;
+  repeated int32 phaseNotIn = 31;
+  google.protobuf.Int32Value phaseGT = 32;
+  google.protobuf.Int32Value phaseLT = 33;
+  google.protobuf.Int32Value phaseGE = 34;
+  google.protobuf.Int32Value phaseLE = 35;
   google.protobuf.Int32Value originStation = 14;
   google.protobuf.Int32Value targetStation = 15;
   google.protobuf.Int32Value agvID = 16;
@@ -142,13 +148,9 @@ message TaskFilter {
   google.protobuf.StringValue error = 22;
   google.protobuf.Int32Value entranceID = 23;
   google.protobuf.Int32Value orderType = 24;
-  google.protobuf.Int32Value rackID = 25;
-  google.protobuf.Int32Value greaterThenPhase = 26;
-  google.protobuf.Int32Value lessThenPhase = 27;
   repeated int32 orderTypeIn = 28;
-  repeated int32 phaseIn = 29;
   repeated int32 orderTypeNotIn = 30;
-  repeated int32 phaseNotIn = 31;
+  google.protobuf.Int32Value rackID = 25;
 }
 
 message Query {
