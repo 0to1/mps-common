@@ -98,8 +98,8 @@ message Warehouse {
   string ikey = 1;
   string name = 2;
   string address = 3;
-  uint32 longitude = 4;
-  uint32 latitude = 5;
+  string longitude = 4;
+  string latitude = 5;
   uint32 floorNumber = 6;
   uint32 length = 7;
   uint32 width = 8;
