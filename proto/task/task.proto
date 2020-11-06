@@ -51,15 +51,7 @@ service TaskService {
 
   rpc Debug(DebugReq) returns (Response);
   rpc DebugConfig(DebugConfigReq) returns (Response);
-}
-
-message DebugReq {
-  bool debug = 1;
-}
-
-message DebugConfigReq {
-  string address = 1;
-  int32 port = 2;
+  rpc GetDebugConfig(Nop) returns (DebugConfigResponse);
 }
 
 // 无参数
@@ -268,4 +260,19 @@ message CancelReq {
   uint32 taskID = 1;
   // 是否强制取消任务，true为强制取消
   bool forcedExit = 2;
+}
+
+message DebugReq {
+  bool debug = 1;
+}
+
+message DebugConfigReq {
+  string address = 1;
+  int32 port = 2;
+}
+
+message DebugConfigResponse {
+  bool debug = 1;
+  string address = 2;
+  int32 port = 3;
 }

@@ -76,6 +76,7 @@ type TaskService interface {
 	RestartSystemGo(ctx context.Context, in *Nop, opts ...client.CallOption) (*Response, error)
 	Debug(ctx context.Context, in *DebugReq, opts ...client.CallOption) (*Response, error)
 	DebugConfig(ctx context.Context, in *DebugConfigReq, opts ...client.CallOption) (*Response, error)
+	GetDebugConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*DebugConfigResponse, error)
 }
 
 type taskService struct {
@@ -310,6 +311,16 @@ func (c *taskService) DebugConfig(ctx context.Context, in *DebugConfigReq, opts 
 	return out, nil
 }
 
+func (c *taskService) GetDebugConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*DebugConfigResponse, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetDebugConfig", in)
+	out := new(DebugConfigResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TaskService service
 
 type TaskServiceHandler interface {
@@ -346,6 +357,7 @@ type TaskServiceHandler interface {
 	RestartSystemGo(context.Context, *Nop, *Response) error
 	Debug(context.Context, *DebugReq, *Response) error
 	DebugConfig(context.Context, *DebugConfigReq, *Response) error
+	GetDebugConfig(context.Context, *Nop, *DebugConfigResponse) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
@@ -372,6 +384,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		RestartSystemGo(ctx context.Context, in *Nop, out *Response) error
 		Debug(ctx context.Context, in *DebugReq, out *Response) error
 		DebugConfig(ctx context.Context, in *DebugConfigReq, out *Response) error
+		GetDebugConfig(ctx context.Context, in *Nop, out *DebugConfigResponse) error
 	}
 	type TaskService struct {
 		taskService
@@ -470,4 +483,8 @@ func (h *taskServiceHandler) Debug(ctx context.Context, in *DebugReq, out *Respo
 
 func (h *taskServiceHandler) DebugConfig(ctx context.Context, in *DebugConfigReq, out *Response) error {
 	return h.TaskServiceHandler.DebugConfig(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetDebugConfig(ctx context.Context, in *Nop, out *DebugConfigResponse) error {
+	return h.TaskServiceHandler.GetDebugConfig(ctx, in, out)
 }
