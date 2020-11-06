@@ -74,6 +74,7 @@ type TaskService interface {
 	GetGPs(ctx context.Context, in *GPQuery, opts ...client.CallOption) (*GpParameters, error)
 	ConfigSystemGo(ctx context.Context, in *SystemGoReq, opts ...client.CallOption) (*Response, error)
 	RestartSystemGo(ctx context.Context, in *Nop, opts ...client.CallOption) (*Response, error)
+	GetSystemGoConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*SystemGoResponse, error)
 	Debug(ctx context.Context, in *DebugReq, opts ...client.CallOption) (*Response, error)
 	DebugConfig(ctx context.Context, in *DebugConfigReq, opts ...client.CallOption) (*Response, error)
 	GetDebugConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*DebugConfigResponse, error)
@@ -291,6 +292,16 @@ func (c *taskService) RestartSystemGo(ctx context.Context, in *Nop, opts ...clie
 	return out, nil
 }
 
+func (c *taskService) GetSystemGoConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*SystemGoResponse, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetSystemGoConfig", in)
+	out := new(SystemGoResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskService) Debug(ctx context.Context, in *DebugReq, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Debug", in)
 	out := new(Response)
@@ -355,6 +366,7 @@ type TaskServiceHandler interface {
 	GetGPs(context.Context, *GPQuery, *GpParameters) error
 	ConfigSystemGo(context.Context, *SystemGoReq, *Response) error
 	RestartSystemGo(context.Context, *Nop, *Response) error
+	GetSystemGoConfig(context.Context, *Nop, *SystemGoResponse) error
 	Debug(context.Context, *DebugReq, *Response) error
 	DebugConfig(context.Context, *DebugConfigReq, *Response) error
 	GetDebugConfig(context.Context, *Nop, *DebugConfigResponse) error
@@ -382,6 +394,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		GetGPs(ctx context.Context, in *GPQuery, out *GpParameters) error
 		ConfigSystemGo(ctx context.Context, in *SystemGoReq, out *Response) error
 		RestartSystemGo(ctx context.Context, in *Nop, out *Response) error
+		GetSystemGoConfig(ctx context.Context, in *Nop, out *SystemGoResponse) error
 		Debug(ctx context.Context, in *DebugReq, out *Response) error
 		DebugConfig(ctx context.Context, in *DebugConfigReq, out *Response) error
 		GetDebugConfig(ctx context.Context, in *Nop, out *DebugConfigResponse) error
@@ -475,6 +488,10 @@ func (h *taskServiceHandler) ConfigSystemGo(ctx context.Context, in *SystemGoReq
 
 func (h *taskServiceHandler) RestartSystemGo(ctx context.Context, in *Nop, out *Response) error {
 	return h.TaskServiceHandler.RestartSystemGo(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetSystemGoConfig(ctx context.Context, in *Nop, out *SystemGoResponse) error {
+	return h.TaskServiceHandler.GetSystemGoConfig(ctx, in, out)
 }
 
 func (h *taskServiceHandler) Debug(ctx context.Context, in *DebugReq, out *Response) error {

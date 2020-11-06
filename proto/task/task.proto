@@ -48,16 +48,19 @@ service TaskService {
 
   rpc ConfigSystemGo(SystemGoReq) returns(Response);
   rpc RestartSystemGo(Nop) returns(Response);
+  rpc GetSystemGoConfig(Nop) returns(SystemGoResponse);
 
-  rpc Debug(DebugReq) returns (Response);
-  rpc DebugConfig(DebugConfigReq) returns (Response);
-  rpc GetDebugConfig(Nop) returns (DebugConfigResponse);
+  rpc Debug(DebugReq) returns(Response);
+  rpc DebugConfig(DebugConfigReq) returns(Response);
+  rpc GetDebugConfig(Nop) returns(DebugConfigResponse);
 }
 
 // 无参数
 message Nop {}
 
 message SystemGoReq { uint32 scriptIndex = 1; }
+
+message SystemGoResponse { uint32 scriptIndex = 1; }
 
 message GPQuery {
   uint32 page = 1;
@@ -262,9 +265,7 @@ message CancelReq {
   bool forcedExit = 2;
 }
 
-message DebugReq {
-  bool debug = 1;
-}
+message DebugReq { bool debug = 1; }
 
 message DebugConfigReq {
   string address = 1;
