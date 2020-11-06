@@ -48,6 +48,18 @@ service TaskService {
 
   rpc ConfigSystemGo(SystemGoReq) returns(Response);
   rpc RestartSystemGo(Nop) returns(Response);
+
+  rpc Debug(DebugReq) returns (Response);
+  rpc DebugConfig(DebugConfigReq) returns (Response);
+}
+
+message DebugReq {
+  bool debug = 1;
+}
+
+message DebugConfigReq {
+  string address = 1;
+  int32 port = 2;
 }
 
 // 无参数
