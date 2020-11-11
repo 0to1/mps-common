@@ -132,6 +132,8 @@ message TaskFilter {
   google.protobuf.Int32Value id = 3;
   repeated int32 idIn = 4;
   google.protobuf.Int32Value priority = 8;
+  google.protobuf.Int32Value priorityLT = 36;
+  google.protobuf.Int32Value priorityGT = 37;
   google.protobuf.StringValue beginLT = 10;
   google.protobuf.StringValue beginGT = 11;
   google.protobuf.StringValue endLT = 12;
