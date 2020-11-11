@@ -10,7 +10,7 @@ import "google/protobuf/wrappers.proto";
 
 service TaskService {
   //新任务
-  rpc New(NewTaskReq) returns(Response);
+  rpc New(NewTaskReq) returns(TaskID);
   // 暂停任务
   rpc Pause(TaskID) returns(Response);
   // 取消任务

@@ -44,7 +44,7 @@ func NewTaskServiceEndpoints() []*api.Endpoint {
 
 type TaskService interface {
 	//新任务
-	New(ctx context.Context, in *NewTaskReq, opts ...client.CallOption) (*Response, error)
+	New(ctx context.Context, in *NewTaskReq, opts ...client.CallOption) (*TaskID, error)
 	// 暂停任务
 	Pause(ctx context.Context, in *TaskID, opts ...client.CallOption) (*Response, error)
 	// 取消任务
@@ -92,9 +92,9 @@ func NewTaskService(name string, c client.Client) TaskService {
 	}
 }
 
-func (c *taskService) New(ctx context.Context, in *NewTaskReq, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) New(ctx context.Context, in *NewTaskReq, opts ...client.CallOption) (*TaskID, error) {
 	req := c.c.NewRequest(c.name, "TaskService.New", in)
-	out := new(Response)
+	out := new(TaskID)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -336,7 +336,7 @@ func (c *taskService) GetDebugConfig(ctx context.Context, in *Nop, opts ...clien
 
 type TaskServiceHandler interface {
 	//新任务
-	New(context.Context, *NewTaskReq, *Response) error
+	New(context.Context, *NewTaskReq, *TaskID) error
 	// 暂停任务
 	Pause(context.Context, *TaskID, *Response) error
 	// 取消任务
@@ -374,7 +374,7 @@ type TaskServiceHandler interface {
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
 	type taskService interface {
-		New(ctx context.Context, in *NewTaskReq, out *Response) error
+		New(ctx context.Context, in *NewTaskReq, out *TaskID) error
 		Pause(ctx context.Context, in *TaskID, out *Response) error
 		Cancel(ctx context.Context, in *CancelReq, out *Response) error
 		UpdateTask(ctx context.Context, in *UpdateTaskReq, out *Response) error
@@ -410,7 +410,7 @@ type taskServiceHandler struct {
 	TaskServiceHandler
 }
 
-func (h *taskServiceHandler) New(ctx context.Context, in *NewTaskReq, out *Response) error {
+func (h *taskServiceHandler) New(ctx context.Context, in *NewTaskReq, out *TaskID) error {
 	return h.TaskServiceHandler.New(ctx, in, out)
 }
 
