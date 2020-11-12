@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"time"
 )
+var LOC, _ = time.LoadLocation("Local")
 
 func Interface2String(value interface{}) string {
 	var val string
@@ -21,6 +23,9 @@ func Interface2String(value interface{}) string {
 		val = strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case bool:
 		val = strconv.FormatBool(value.(bool))
+	case time.Time:
+		t1 := value.(time.Time).In(LOC)
+		val = t1.Format("2006-01-02 15:04:05")
 	default:
 		val = ""
 	}
@@ -49,6 +54,8 @@ func String2Interface(value string, vtype string) (interface{}, error) {
 		val, err = strconv.ParseFloat(value, 64)
 	case "bool":
 		val, err = strconv.ParseBool(value)
+	case "time.Time":
+		val, err = time.ParseInLocation("2006-01-02 15:04:05", value, LOC)
 	default:
 		val = value
 		err = fmt.Errorf("未知类型%s", vtype)
