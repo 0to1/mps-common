@@ -160,6 +160,7 @@ message TaskFilter {
   repeated int32 orderTypeIn = 28;
   repeated int32 orderTypeNotIn = 30;
   google.protobuf.Int32Value rackID = 25;
+  google.protobuf.BoolValue orderByTime =40;
 }
 
 message Query {
@@ -230,6 +231,7 @@ message TaskInfo {
   uint32 entranceID = 17;
   uint32 orderType = 18;
   uint32 rackID = 19;
+  uint32 timeDuration=20;
 }
 
 message TaskInfos {
