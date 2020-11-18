@@ -74,6 +74,10 @@ type ConfigService interface {
 	DeleteAlias(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*Alias, error)
 	UpdateAlias(ctx context.Context, in *AliasUpdateRequest, opts ...client.CallOption) (*Response, error)
 	ResetAlias(ctx context.Context, in *ResetAliasRequest, opts ...client.CallOption) (*Response, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type configService struct {
@@ -268,6 +272,26 @@ func (c *configService) ResetAlias(ctx context.Context, in *ResetAliasRequest, o
 	return out, nil
 }
 
+func (c *configService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "ConfigService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ConfigService service
 
 type ConfigServiceHandler interface {
@@ -302,6 +326,10 @@ type ConfigServiceHandler interface {
 	DeleteAlias(context.Context, *IDRequest, *Alias) error
 	UpdateAlias(context.Context, *AliasUpdateRequest, *Response) error
 	ResetAlias(context.Context, *ResetAliasRequest, *Response) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, opts ...server.HandlerOption) error {
@@ -324,6 +352,8 @@ func RegisterConfigServiceHandler(s server.Server, hdlr ConfigServiceHandler, op
 		DeleteAlias(ctx context.Context, in *IDRequest, out *Alias) error
 		UpdateAlias(ctx context.Context, in *AliasUpdateRequest, out *Response) error
 		ResetAlias(ctx context.Context, in *ResetAliasRequest, out *Response) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type ConfigService struct {
 		configService
@@ -406,4 +436,12 @@ func (h *configServiceHandler) UpdateAlias(ctx context.Context, in *AliasUpdateR
 
 func (h *configServiceHandler) ResetAlias(ctx context.Context, in *ResetAliasRequest, out *Response) error {
 	return h.ConfigServiceHandler.ResetAlias(ctx, in, out)
+}
+
+func (h *configServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.ConfigServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *configServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.ConfigServiceHandler.SetLogLevel(ctx, in, out)
 }
