@@ -86,6 +86,10 @@ type RacklotService interface {
 	SetOutbound(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	AddProperties(ctx context.Context, in *PropertiesReq, opts ...client.CallOption) (*Response, error)
 	GetRacklotReport(ctx context.Context, in *RacklotReportReq, opts ...client.CallOption) (*RacklotReport, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type racklotService struct {
@@ -340,6 +344,26 @@ func (c *racklotService) GetRacklotReport(ctx context.Context, in *RacklotReport
 	return out, nil
 }
 
+func (c *racklotService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *racklotService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "RacklotService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RacklotService service
 
 type RacklotServiceHandler interface {
@@ -386,6 +410,10 @@ type RacklotServiceHandler interface {
 	SetOutbound(context.Context, *FlagReq, *Response) error
 	AddProperties(context.Context, *PropertiesReq, *Response) error
 	GetRacklotReport(context.Context, *RacklotReportReq, *RacklotReport) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, opts ...server.HandlerOption) error {
@@ -414,6 +442,8 @@ func RegisterRacklotServiceHandler(s server.Server, hdlr RacklotServiceHandler, 
 		SetOutbound(ctx context.Context, in *FlagReq, out *Response) error
 		AddProperties(ctx context.Context, in *PropertiesReq, out *Response) error
 		GetRacklotReport(ctx context.Context, in *RacklotReportReq, out *RacklotReport) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type RacklotService struct {
 		racklotService
@@ -520,4 +550,12 @@ func (h *racklotServiceHandler) AddProperties(ctx context.Context, in *Propertie
 
 func (h *racklotServiceHandler) GetRacklotReport(ctx context.Context, in *RacklotReportReq, out *RacklotReport) error {
 	return h.RacklotServiceHandler.GetRacklotReport(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.RacklotServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *racklotServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.RacklotServiceHandler.SetLogLevel(ctx, in, out)
 }
