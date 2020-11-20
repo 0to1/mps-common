@@ -22,7 +22,22 @@ service Agv {
   rpc GetStatusConfigs(Request) returns (StatusMsgs);
   //获取一个状态配置信息//
   rpc GetStatusConfig(IDRequest) returns (StatusMsg);
+  //获取服务日志等级
+  rpc GetLogLevel(LogLevelRequest) returns (Loglevel);
+  //设置服务日志等级
+  rpc SetLogLevel(Loglevel) returns (LogResponse);
 }
+
+message LogResponse{
+  string name = 1;
+}
+
+message Loglevel{
+  string name = 1;
+  uint32 level = 2;
+}
+
+message LogLevelRequest{}
 
 message StatusMsg{
   uint32 statusID = 1;

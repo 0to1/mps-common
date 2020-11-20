@@ -60,6 +60,10 @@ type AgvService interface {
 	GetStatusConfigs(ctx context.Context, in *Request, opts ...client.CallOption) (*StatusMsgs, error)
 	//获取一个状态配置信息//
 	GetStatusConfig(ctx context.Context, in *IDRequest, opts ...client.CallOption) (*StatusMsg, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type agvService struct {
@@ -164,6 +168,26 @@ func (c *agvService) GetStatusConfig(ctx context.Context, in *IDRequest, opts ..
 	return out, nil
 }
 
+func (c *agvService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "Agv.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agvService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "Agv.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Agv service
 
 type AgvHandler interface {
@@ -185,6 +209,10 @@ type AgvHandler interface {
 	GetStatusConfigs(context.Context, *Request, *StatusMsgs) error
 	//获取一个状态配置信息//
 	GetStatusConfig(context.Context, *IDRequest, *StatusMsg) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.HandlerOption) error {
@@ -198,6 +226,8 @@ func RegisterAgvHandler(s server.Server, hdlr AgvHandler, opts ...server.Handler
 		UpdateStatusConfig(ctx context.Context, in *StatusMsg, out *Response) error
 		GetStatusConfigs(ctx context.Context, in *Request, out *StatusMsgs) error
 		GetStatusConfig(ctx context.Context, in *IDRequest, out *StatusMsg) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type Agv struct {
 		agv
@@ -244,4 +274,12 @@ func (h *agvHandler) GetStatusConfigs(ctx context.Context, in *Request, out *Sta
 
 func (h *agvHandler) GetStatusConfig(ctx context.Context, in *IDRequest, out *StatusMsg) error {
 	return h.AgvHandler.GetStatusConfig(ctx, in, out)
+}
+
+func (h *agvHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.AgvHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *agvHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.AgvHandler.SetLogLevel(ctx, in, out)
 }
