@@ -82,11 +82,12 @@ message GpParameters {
 }
 
 message NewTaskReq {
-  uint32 taskID = 1;
-  uint32 priority = 2;
-  uint32 scriptIndex = 3;
-  repeated Parameter parameters = 4;
-  string description = 5;
+  google.protobuf.UInt32Value scriptIndex = 1;
+  google.protobuf.StringValue scriptName = 2;
+  repeated Parameter parameters = 3;
+  google.protobuf.UInt32Value taskID = 4;
+  google.protobuf.UInt32Value priority = 5;
+  google.protobuf.StringValue description = 6;
 }
 
 message NewTasksReq { repeated NewTaskReq tasks = 1; }
