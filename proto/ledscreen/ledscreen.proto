@@ -24,7 +24,22 @@ service Ledscreen {
   rpc GetLedScreen(IDReq) returns (LedScreen) {}
   //返回所有设备
   rpc GetLedScreens(Query) returns (LedScreens) {}
+  //获取服务日志等级
+  rpc GetLogLevel(LogLevelRequest) returns (Loglevel);
+  //设置服务日志等级
+  rpc SetLogLevel(Loglevel) returns (LogResponse);
 }
+
+message LogResponse{
+  string name = 1;
+}
+
+message Loglevel{
+  string name = 1;
+  uint32 level = 2;
+}
+
+message LogLevelRequest{}
 
 message ContentReq {
   // 导引屏编号

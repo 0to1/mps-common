@@ -59,6 +59,10 @@ type LedscreenService interface {
 	GetLedScreen(ctx context.Context, in *IDReq, opts ...client.CallOption) (*LedScreen, error)
 	//返回所有设备
 	GetLedScreens(ctx context.Context, in *Query, opts ...client.CallOption) (*LedScreens, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type ledscreenService struct {
@@ -153,6 +157,26 @@ func (c *ledscreenService) GetLedScreens(ctx context.Context, in *Query, opts ..
 	return out, nil
 }
 
+func (c *ledscreenService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "Ledscreen.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ledscreenService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "Ledscreen.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Ledscreen service
 
 type LedscreenHandler interface {
@@ -172,6 +196,10 @@ type LedscreenHandler interface {
 	GetLedScreen(context.Context, *IDReq, *LedScreen) error
 	//返回所有设备
 	GetLedScreens(context.Context, *Query, *LedScreens) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterLedscreenHandler(s server.Server, hdlr LedscreenHandler, opts ...server.HandlerOption) error {
@@ -184,6 +212,8 @@ func RegisterLedscreenHandler(s server.Server, hdlr LedscreenHandler, opts ...se
 		UpdateLedScreen(ctx context.Context, in *UpdateLedScreenReq, out *Response) error
 		GetLedScreen(ctx context.Context, in *IDReq, out *LedScreen) error
 		GetLedScreens(ctx context.Context, in *Query, out *LedScreens) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type Ledscreen struct {
 		ledscreen
@@ -226,4 +256,12 @@ func (h *ledscreenHandler) GetLedScreen(ctx context.Context, in *IDReq, out *Led
 
 func (h *ledscreenHandler) GetLedScreens(ctx context.Context, in *Query, out *LedScreens) error {
 	return h.LedscreenHandler.GetLedScreens(ctx, in, out)
+}
+
+func (h *ledscreenHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.LedscreenHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *ledscreenHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.LedscreenHandler.SetLogLevel(ctx, in, out)
 }
