@@ -79,6 +79,10 @@ type AreaService interface {
 	SetValid(ctx context.Context, in *FlagReq, opts ...client.CallOption) (*Response, error)
 	//设置父区域
 	SetParentArea(ctx context.Context, in *ParentReq, opts ...client.CallOption) (*Response, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type areaService struct {
@@ -283,6 +287,26 @@ func (c *areaService) SetParentArea(ctx context.Context, in *ParentReq, opts ...
 	return out, nil
 }
 
+func (c *areaService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "AreaService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *areaService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "AreaService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for AreaService service
 
 type AreaServiceHandler interface {
@@ -322,6 +346,10 @@ type AreaServiceHandler interface {
 	SetValid(context.Context, *FlagReq, *Response) error
 	//设置父区域
 	SetParentArea(context.Context, *ParentReq, *Response) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts ...server.HandlerOption) error {
@@ -345,6 +373,8 @@ func RegisterAreaServiceHandler(s server.Server, hdlr AreaServiceHandler, opts .
 		SetOutbound(ctx context.Context, in *FlagReq, out *Response) error
 		SetValid(ctx context.Context, in *FlagReq, out *Response) error
 		SetParentArea(ctx context.Context, in *ParentReq, out *Response) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type AreaService struct {
 		areaService
@@ -431,4 +461,12 @@ func (h *areaServiceHandler) SetValid(ctx context.Context, in *FlagReq, out *Res
 
 func (h *areaServiceHandler) SetParentArea(ctx context.Context, in *ParentReq, out *Response) error {
 	return h.AreaServiceHandler.SetParentArea(ctx, in, out)
+}
+
+func (h *areaServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.AreaServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *areaServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.AreaServiceHandler.SetLogLevel(ctx, in, out)
 }
