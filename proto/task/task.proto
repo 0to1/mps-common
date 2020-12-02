@@ -217,7 +217,7 @@ message TaskInfo {
   uint32 priority = 2;
   string beginTime = 3;
   string endTime = 4;
-  uint32 orderIndex = 5;
+  int32 orderIndex = 5;
   uint32 scriptIndex = 6;
   int32 phase = 7;
   uint32 originStation = 8;
