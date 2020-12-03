@@ -14,6 +14,8 @@ service Log {
   rpc SetLogLevel(Loglevel) returns (LogResponse);
   //获取全部服务日志等级
   rpc GetLogsLevel(LogRequest) returns (Logslevel);
+  //获取日志上下文
+  rpc GetContextLog(Query) returns (LogContents);
   //设置全部服务日志等级
   rpc SetLogsLevel(Logslevel) returns (LogsResponse);
 }
@@ -77,6 +79,8 @@ message LogFilter {
   repeated string ipIn = 10;
   repeated string msgIn = 11; 
   uint32 taskID = 12;
+  uint32 perNum=13;
+  uint32 nexNum=14;
 }
 
 message LogContents { 

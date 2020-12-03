@@ -52,6 +52,8 @@ type LogService interface {
 	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 	//获取全部服务日志等级
 	GetLogsLevel(ctx context.Context, in *LogRequest, opts ...client.CallOption) (*Logslevel, error)
+	//获取日志上下文
+	GetContextLog(ctx context.Context, in *Query, opts ...client.CallOption) (*LogContents, error)
 	//设置全部服务日志等级
 	SetLogsLevel(ctx context.Context, in *Logslevel, opts ...client.CallOption) (*LogsResponse, error)
 }
@@ -138,6 +140,16 @@ func (c *logService) GetLogsLevel(ctx context.Context, in *LogRequest, opts ...c
 	return out, nil
 }
 
+func (c *logService) GetContextLog(ctx context.Context, in *Query, opts ...client.CallOption) (*LogContents, error) {
+	req := c.c.NewRequest(c.name, "Log.GetContextLog", in)
+	out := new(LogContents)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *logService) SetLogsLevel(ctx context.Context, in *Logslevel, opts ...client.CallOption) (*LogsResponse, error) {
 	req := c.c.NewRequest(c.name, "Log.SetLogsLevel", in)
 	out := new(LogsResponse)
@@ -161,6 +173,8 @@ type LogHandler interface {
 	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 	//获取全部服务日志等级
 	GetLogsLevel(context.Context, *LogRequest, *Logslevel) error
+	//获取日志上下文
+	GetContextLog(context.Context, *Query, *LogContents) error
 	//设置全部服务日志等级
 	SetLogsLevel(context.Context, *Logslevel, *LogsResponse) error
 }
@@ -174,6 +188,7 @@ func RegisterLogHandler(s server.Server, hdlr LogHandler, opts ...server.Handler
 		GetLogLevel(ctx context.Context, in *LogRequest, out *Loglevel) error
 		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 		GetLogsLevel(ctx context.Context, in *LogRequest, out *Logslevel) error
+		GetContextLog(ctx context.Context, in *Query, out *LogContents) error
 		SetLogsLevel(ctx context.Context, in *Logslevel, out *LogsResponse) error
 	}
 	type Log struct {
@@ -213,6 +228,10 @@ func (h *logHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResp
 
 func (h *logHandler) GetLogsLevel(ctx context.Context, in *LogRequest, out *Logslevel) error {
 	return h.LogHandler.GetLogsLevel(ctx, in, out)
+}
+
+func (h *logHandler) GetContextLog(ctx context.Context, in *Query, out *LogContents) error {
+	return h.LogHandler.GetContextLog(ctx, in, out)
 }
 
 func (h *logHandler) SetLogsLevel(ctx context.Context, in *Logslevel, out *LogsResponse) error {
