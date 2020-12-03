@@ -26,6 +26,7 @@ protos="
     task
     user
     warehouse
+    notification
 "
 
 if [ ! -n "${srv}" ]; then

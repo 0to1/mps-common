@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package go.micro.srv.notification;
+option go_package = "proto/notification;go_micro_srv_notification";
+
+import "google/protobuf/wrappers.proto";
+
+service NotificationService {
+  rpc AddNotification (NotificationReq) returns (Response);
+  rpc GetNotification(IDReq) returns(Notification);
+  rpc GetNotifications(NotificationQuery) returns(Notifications);
+  rpc DeleteNotifications(NotificationFilter) returns(Response);
+  // 标记通知为已读
+  rpc MarkAsRead(IDsReq) returns(Response);
+}
+
+message NotificationReq {
+  // 哪个服务触发的通知
+  string service = 1;
+  string content = 2;
+}
+
+message IDReq { uint32 id = 1; }
+
+message IDsReq { repeated uint32 ids = 1; }
+
+message Notification {
+  // 通知ID
+  uint32 id = 1;
+  // 哪个服务触发的通知
+  string service = 2;
+  string content = 3;
+  bool isReaded = 4;
+  // 通知创建时间
+  string createAt = 5;
+  // 通知删除时间
+  string deleteAt = 6;
+}
+
+message Response {}
+
+message Notifications {
+  repeated Notification notifications = 1;
+  uint32 totals = 4;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message NotificationQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  NotificationFilter filter = 7;
+}
+
+message NotificationFilter {
+  repeated NotificationFilter and = 1;
+  repeated NotificationFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string serviceIn = 4;
+  google.protobuf.StringValue content = 5;
+  google.protobuf.BoolValue isReaded = 6;
+  google.protobuf.StringValue createAtLT = 7;
+  google.protobuf.StringValue createAtGT = 8;
+  google.protobuf.StringValue createAtLE = 9;
+  google.protobuf.StringValue createAtGE = 10;
+}
