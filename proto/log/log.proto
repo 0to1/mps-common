@@ -64,6 +64,7 @@ message Query {
   uint32 page = 1;
   uint32 perPage = 2;
   LogFilter filter = 3;
+  uint32 subPage =4;
 }
 
 message LogFilter {
