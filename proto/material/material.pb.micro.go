@@ -71,6 +71,12 @@ type MaterialService interface {
 	BindCell(ctx context.Context, in *CellReq, opts ...client.CallOption) (*Response, error)
 	// 移除物料
 	UnbindCell(ctx context.Context, in *MaterialIDReq, opts ...client.CallOption) (*Response, error)
+	// rpc AddMaterialProperties(Material) returns(Response);
+	// rpc DeleteAddMaterialProperties()
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type materialService struct {
@@ -235,6 +241,26 @@ func (c *materialService) UnbindCell(ctx context.Context, in *MaterialIDReq, opt
 	return out, nil
 }
 
+func (c *materialService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *materialService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "MaterialService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for MaterialService service
 
 type MaterialServiceHandler interface {
@@ -266,6 +292,12 @@ type MaterialServiceHandler interface {
 	BindCell(context.Context, *CellReq, *Response) error
 	// 移除物料
 	UnbindCell(context.Context, *MaterialIDReq, *Response) error
+	// rpc AddMaterialProperties(Material) returns(Response);
+	// rpc DeleteAddMaterialProperties()
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler, opts ...server.HandlerOption) error {
@@ -285,6 +317,8 @@ func RegisterMaterialServiceHandler(s server.Server, hdlr MaterialServiceHandler
 		BatchDeleteMaterials(ctx context.Context, in *MaterialIDsReq, out *Response) error
 		BindCell(ctx context.Context, in *CellReq, out *Response) error
 		UnbindCell(ctx context.Context, in *MaterialIDReq, out *Response) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type MaterialService struct {
 		materialService
@@ -355,4 +389,12 @@ func (h *materialServiceHandler) BindCell(ctx context.Context, in *CellReq, out 
 
 func (h *materialServiceHandler) UnbindCell(ctx context.Context, in *MaterialIDReq, out *Response) error {
 	return h.MaterialServiceHandler.UnbindCell(ctx, in, out)
+}
+
+func (h *materialServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.MaterialServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *materialServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.MaterialServiceHandler.SetLogLevel(ctx, in, out)
 }
