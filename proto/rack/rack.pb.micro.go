@@ -85,6 +85,10 @@ type RackService interface {
 	SetCellStatus(ctx context.Context, in *CellStatusReq, opts ...client.CallOption) (*Response, error)
 	GetRackReport(ctx context.Context, in *RackReportReq, opts ...client.CallOption) (*RackReport, error)
 	GetCellReport(ctx context.Context, in *CellReportReq, opts ...client.CallOption) (*CellReport, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type rackService struct {
@@ -399,6 +403,26 @@ func (c *rackService) GetCellReport(ctx context.Context, in *CellReportReq, opts
 	return out, nil
 }
 
+func (c *rackService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "RackService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rackService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "RackService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for RackService service
 
 type RackServiceHandler interface {
@@ -444,6 +468,10 @@ type RackServiceHandler interface {
 	SetCellStatus(context.Context, *CellStatusReq, *Response) error
 	GetRackReport(context.Context, *RackReportReq, *RackReport) error
 	GetCellReport(context.Context, *CellReportReq, *CellReport) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts ...server.HandlerOption) error {
@@ -478,6 +506,8 @@ func RegisterRackServiceHandler(s server.Server, hdlr RackServiceHandler, opts .
 		SetCellStatus(ctx context.Context, in *CellStatusReq, out *Response) error
 		GetRackReport(ctx context.Context, in *RackReportReq, out *RackReport) error
 		GetCellReport(ctx context.Context, in *CellReportReq, out *CellReport) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type RackService struct {
 		rackService
@@ -608,4 +638,12 @@ func (h *rackServiceHandler) GetRackReport(ctx context.Context, in *RackReportRe
 
 func (h *rackServiceHandler) GetCellReport(ctx context.Context, in *CellReportReq, out *CellReport) error {
 	return h.RackServiceHandler.GetCellReport(ctx, in, out)
+}
+
+func (h *rackServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.RackServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *rackServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.RackServiceHandler.SetLogLevel(ctx, in, out)
 }
