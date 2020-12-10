@@ -57,6 +57,10 @@ type OpcService interface {
 	WriteItem(ctx context.Context, in *ItemValueReq, opts ...client.CallOption) (*Response, error)
 	ReadItem(ctx context.Context, in *ItemReq, opts ...client.CallOption) (*ItemValueResp, error)
 	UpdateFile(ctx context.Context, in *FileReq, opts ...client.CallOption) (*Response, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type opcService struct {
@@ -221,6 +225,26 @@ func (c *opcService) UpdateFile(ctx context.Context, in *FileReq, opts ...client
 	return out, nil
 }
 
+func (c *opcService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "OpcService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *opcService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "OpcService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for OpcService service
 
 type OpcServiceHandler interface {
@@ -239,6 +263,10 @@ type OpcServiceHandler interface {
 	WriteItem(context.Context, *ItemValueReq, *Response) error
 	ReadItem(context.Context, *ItemReq, *ItemValueResp) error
 	UpdateFile(context.Context, *FileReq, *Response) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...server.HandlerOption) error {
@@ -258,6 +286,8 @@ func RegisterOpcServiceHandler(s server.Server, hdlr OpcServiceHandler, opts ...
 		WriteItem(ctx context.Context, in *ItemValueReq, out *Response) error
 		ReadItem(ctx context.Context, in *ItemReq, out *ItemValueResp) error
 		UpdateFile(ctx context.Context, in *FileReq, out *Response) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type OpcService struct {
 		opcService
@@ -328,4 +358,12 @@ func (h *opcServiceHandler) ReadItem(ctx context.Context, in *ItemReq, out *Item
 
 func (h *opcServiceHandler) UpdateFile(ctx context.Context, in *FileReq, out *Response) error {
 	return h.OpcServiceHandler.UpdateFile(ctx, in, out)
+}
+
+func (h *opcServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.OpcServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *opcServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.OpcServiceHandler.SetLogLevel(ctx, in, out)
 }
