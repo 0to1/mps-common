@@ -86,7 +86,11 @@ message CellReport {
 
 message RackReportReq {}
 
-message RackReport { uint32 total = 1; }
+message RackReport { 
+  uint32 total = 1; 
+  uint32 MaterialTotal=2;
+  uint32 NoMaterialTotal=3;
+}
 
 message RackType {
   uint32 id = 1;

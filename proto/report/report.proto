@@ -12,8 +12,21 @@ service ReportService {
   rpc GetAgvTaskReport(AgvTaskReportReq)returns(AgvTaskReportItems);
   rpc GetMaterialReport(MaterialReportReq)returns(MaterialReportItems);
   rpc GetTaskTimeReport(TaskTimeReportReq)returns(TimeReportItems);
+  rpc GetHistoryReport(HistoryReportReq) returns(HistoryTaskReportItems);
 }
 
+message  HistoryTaskReportItems{
+  repeated TaskItem items = 1;
+}
+
+message TaskItem{
+  sint64 type=1;
+  uint32 total=2;
+}
+message HistoryReportReq {
+  string startTime = 1;
+  string endTime = 2;
+}
 message Task {
   uint32 taskID = 1;
   uint32 agvID = 2;

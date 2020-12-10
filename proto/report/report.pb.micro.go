@@ -46,6 +46,7 @@ type ReportService interface {
 	GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, opts ...client.CallOption) (*AgvTaskReportItems, error)
 	GetMaterialReport(ctx context.Context, in *MaterialReportReq, opts ...client.CallOption) (*MaterialReportItems, error)
 	GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, opts ...client.CallOption) (*TimeReportItems, error)
+	GetHistoryReport(ctx context.Context, in *HistoryReportReq, opts ...client.CallOption) (*HistoryTaskReportItems, error)
 }
 
 type reportService struct {
@@ -100,6 +101,16 @@ func (c *reportService) GetTaskTimeReport(ctx context.Context, in *TaskTimeRepor
 	return out, nil
 }
 
+func (c *reportService) GetHistoryReport(ctx context.Context, in *HistoryReportReq, opts ...client.CallOption) (*HistoryTaskReportItems, error) {
+	req := c.c.NewRequest(c.name, "ReportService.GetHistoryReport", in)
+	out := new(HistoryTaskReportItems)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ReportService service
 
 type ReportServiceHandler interface {
@@ -107,6 +118,7 @@ type ReportServiceHandler interface {
 	GetAgvTaskReport(context.Context, *AgvTaskReportReq, *AgvTaskReportItems) error
 	GetMaterialReport(context.Context, *MaterialReportReq, *MaterialReportItems) error
 	GetTaskTimeReport(context.Context, *TaskTimeReportReq, *TimeReportItems) error
+	GetHistoryReport(context.Context, *HistoryReportReq, *HistoryTaskReportItems) error
 }
 
 func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, opts ...server.HandlerOption) error {
@@ -115,6 +127,7 @@ func RegisterReportServiceHandler(s server.Server, hdlr ReportServiceHandler, op
 		GetAgvTaskReport(ctx context.Context, in *AgvTaskReportReq, out *AgvTaskReportItems) error
 		GetMaterialReport(ctx context.Context, in *MaterialReportReq, out *MaterialReportItems) error
 		GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, out *TimeReportItems) error
+		GetHistoryReport(ctx context.Context, in *HistoryReportReq, out *HistoryTaskReportItems) error
 	}
 	type ReportService struct {
 		reportService
@@ -141,4 +154,8 @@ func (h *reportServiceHandler) GetMaterialReport(ctx context.Context, in *Materi
 
 func (h *reportServiceHandler) GetTaskTimeReport(ctx context.Context, in *TaskTimeReportReq, out *TimeReportItems) error {
 	return h.ReportServiceHandler.GetTaskTimeReport(ctx, in, out)
+}
+
+func (h *reportServiceHandler) GetHistoryReport(ctx context.Context, in *HistoryReportReq, out *HistoryTaskReportItems) error {
+	return h.ReportServiceHandler.GetHistoryReport(ctx, in, out)
 }
