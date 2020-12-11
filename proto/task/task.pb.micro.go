@@ -78,6 +78,10 @@ type TaskService interface {
 	Debug(ctx context.Context, in *DebugReq, opts ...client.CallOption) (*Response, error)
 	DebugConfig(ctx context.Context, in *DebugConfigReq, opts ...client.CallOption) (*Response, error)
 	GetDebugConfig(ctx context.Context, in *Nop, opts ...client.CallOption) (*DebugConfigResponse, error)
+	//获取服务日志等级
+	GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error)
+	//设置服务日志等级
+	SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error)
 }
 
 type taskService struct {
@@ -332,6 +336,26 @@ func (c *taskService) GetDebugConfig(ctx context.Context, in *Nop, opts ...clien
 	return out, nil
 }
 
+func (c *taskService) GetLogLevel(ctx context.Context, in *LogLevelRequest, opts ...client.CallOption) (*Loglevel, error) {
+	req := c.c.NewRequest(c.name, "TaskService.GetLogLevel", in)
+	out := new(Loglevel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) SetLogLevel(ctx context.Context, in *Loglevel, opts ...client.CallOption) (*LogResponse, error) {
+	req := c.c.NewRequest(c.name, "TaskService.SetLogLevel", in)
+	out := new(LogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TaskService service
 
 type TaskServiceHandler interface {
@@ -370,6 +394,10 @@ type TaskServiceHandler interface {
 	Debug(context.Context, *DebugReq, *Response) error
 	DebugConfig(context.Context, *DebugConfigReq, *Response) error
 	GetDebugConfig(context.Context, *Nop, *DebugConfigResponse) error
+	//获取服务日志等级
+	GetLogLevel(context.Context, *LogLevelRequest, *Loglevel) error
+	//设置服务日志等级
+	SetLogLevel(context.Context, *Loglevel, *LogResponse) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
@@ -398,6 +426,8 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 		Debug(ctx context.Context, in *DebugReq, out *Response) error
 		DebugConfig(ctx context.Context, in *DebugConfigReq, out *Response) error
 		GetDebugConfig(ctx context.Context, in *Nop, out *DebugConfigResponse) error
+		GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error
+		SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error
 	}
 	type TaskService struct {
 		taskService
@@ -504,4 +534,12 @@ func (h *taskServiceHandler) DebugConfig(ctx context.Context, in *DebugConfigReq
 
 func (h *taskServiceHandler) GetDebugConfig(ctx context.Context, in *Nop, out *DebugConfigResponse) error {
 	return h.TaskServiceHandler.GetDebugConfig(ctx, in, out)
+}
+
+func (h *taskServiceHandler) GetLogLevel(ctx context.Context, in *LogLevelRequest, out *Loglevel) error {
+	return h.TaskServiceHandler.GetLogLevel(ctx, in, out)
+}
+
+func (h *taskServiceHandler) SetLogLevel(ctx context.Context, in *Loglevel, out *LogResponse) error {
+	return h.TaskServiceHandler.SetLogLevel(ctx, in, out)
 }

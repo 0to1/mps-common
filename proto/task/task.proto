@@ -53,7 +53,22 @@ service TaskService {
   rpc Debug(DebugReq) returns(Response);
   rpc DebugConfig(DebugConfigReq) returns(Response);
   rpc GetDebugConfig(Nop) returns(DebugConfigResponse);
+  //获取服务日志等级
+  rpc GetLogLevel(LogLevelRequest) returns (Loglevel);
+  //设置服务日志等级
+  rpc SetLogLevel(Loglevel) returns (LogResponse);
 }
+
+message LogResponse{
+  string name = 1;
+}
+
+message Loglevel{
+  string name = 1;
+  uint32 level = 2;
+}
+
+message LogLevelRequest{}
 
 // 无参数
 message Nop {}
