@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package go.micro.srv.payment;
+option go_package = "proto/payment;go_micro_srv_payment";
+
+import "google/protobuf/wrappers.proto";
+
+service PaymentService {
+  rpc AddPaymentPlatform(PaymentConfigReq) returns(Response);
+  rpc GetPaymentPlatformConfig(IDReq) returns(PaymentConfig);
+  rpc GetPaymentPlatformConfigs(PaymentQuery) returns(Payments);
+  rpc DeletePaymentPlatform(IDReq) returns(Response);
+  rpc UpdatePaymentPlatform(UpdateConfigRequest) returns(Response);
+  
+  rpc Start(IDReq) returns(Response);
+  rpc Close(IDReq) returns(Response);
+}
+
+message PaymentConfigReq {
+  string name = 1;
+  // 车库云平台ID
+  uint32 platformID = 2;
+  // 平台类型
+  uint32 platformType = 3;
+  // 车库云平台终端ID
+  string platformTerminalID = 4;
+  // 车库编号
+  uint32 garageID = 5;
+  string ip = 6;
+  int32 httpPort = 7;
+  int32 tcpPort = 8;
+  string loginName = 10;
+  string password = 11;
+  string description = 9;
+}
+
+message UpdateConfigRequest {
+    google.protobuf.StringValue name = 1;
+    // 车库云平台ID
+    google.protobuf.UInt32Value platformID = 2;
+    // 平台类型
+    google.protobuf.UInt32Value platformType = 3;
+    // 车库云平台终端ID
+    google.protobuf.StringValue platformTerminalID = 4;
+    // 车库编号
+    google.protobuf.UInt32Value garageID = 5;
+    // 缴费平台ip
+    google.protobuf.StringValue ip = 6;
+    // 缴费平台http通信端口
+    google.protobuf.Int32Value httpPort = 7;
+    // 缴费平台tcp通信端口
+    google.protobuf.Int32Value tcpPort = 8;
+    google.protobuf.StringValue loginName = 10;
+    google.protobuf.StringValue password = 11;
+    google.protobuf.StringValue description = 9;
+}
+
+message IDReq { uint32 id = 1; }
+
+message PaymentConfig {
+    uint32 id = 1;
+    string name = 2;
+    // 车库云平台ID
+    uint32 platformID = 3;
+    // 平台类型
+    uint32 platformType = 4;
+    // 车库云平台终端ID
+    string platformTerminalID = 5;
+    // 车库编号
+    uint32 garageID = 6;
+    // 缴费平台ip
+    string ip = 7;
+    // 缴费平台http通信端口
+    int32 httpPort = 8;
+    // 缴费平台tcp通信端口
+    int32 tcpPort = 9;
+    string loginName = 10;
+    string password = 11;
+    string description = 12;
+    bool connectStatus = 13;
+}
+
+message Response {}
+
+message Payments {
+  repeated PaymentConfig paymentConfigs = 1;
+  uint32 totals = 4;
+  uint32 totalpages = 2;
+  uint32 currpages = 3;
+}
+
+message PaymentQuery {
+  uint32 limit = 1;
+  uint32 offset = 2;
+  uint32 page = 3;
+  uint32 perPage = 4;
+  PaymentFilter filter = 7;
+}
+
+message PaymentFilter {
+  repeated PaymentFilter and = 1;
+  repeated PaymentFilter or = 2;
+  repeated uint32 idIn = 3;
+  repeated string nameIn = 4;
+  repeated uint32 platformIDIn = 5;
+  repeated uint32 platformTypeID = 6;
+  repeated string platformTerminalIDIn = 7;
+  repeated uint32 garageIDIn = 8;
+}
