@@ -30,7 +30,7 @@ message SegmentResponse{
     uint32 travelTime = 6;
     uint32 startsAsStartPoint = 7;  
     uint32 endsAsEndPoint = 8; 
-    uint32 direction = 9;     
+    sint32 direction = 9;     
     uint32 plcBits = 10;
     uint32 plcWord = 11;
     uint32 plcWord2 = 12;
